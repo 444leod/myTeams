@@ -33,3 +33,8 @@
 .vscode/settings.json
 .vscode/launch.json
 .vscode/c_cpp_properties.json
+
+myteams_server
+myteams_cli
+logging_server.h
+logging_client.h
