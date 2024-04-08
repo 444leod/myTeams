@@ -5,9 +5,9 @@
 ** main
 */
 
-#include "teams_client.h"
+#include "client_teams.h"
 
-int main(UNUSED int argc, UNUSED char const *argv[])
+int main(int argc, char *argv[])
 {
-    return 0;
+    return client(argc, argv);
 }

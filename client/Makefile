@@ -1,13 +1,42 @@
 ##
 ## EPITECH PROJECT, 2024
-## myteams_server
+## myteams_client
 ## File description:
 ## Makefile
 ##
 
 NAME = myteams_cli
 
-SRC = main.c
+SRC = main.c \
+	$(addprefix src/, $(SRC_SRC)) \
+	$(addprefix src/lib/, $(LIB_SRC)) \
+	$(addprefix src/network/, $(NETWORK_SRC)) \
+	$(addprefix src/network/client_linked_list/, $(CLIENT_LLIST_SRC)) \
+	$(addprefix src/commands/, $(COMMANDS_SRC)) \
+
+SRC_SRC = client.c \
+	check_args.c \
+
+LIB_SRC = exit.c \
+	my_error.c \
+	garbage_collector.c \
+	garbage_llist.c \
+	my_strdup.c \
+	str_to_word_array.c \
+	tablen.c \
+	supercat.c \
+	get_current_dir.c \
+	my_snprintf.c \
+	replace_char.c \
+	debug_print.c \
+
+NETWORK_SRC = get_socket.c \
+	connect_to_server.c \
+	listen_socket.c \
+	accept_socket.c \
+	reply_code.c \
+	print_fd_set.c \
+	get_port.c \
 
 OBJ = $(SRC:.c=.o)
 

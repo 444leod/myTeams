@@ -9,5 +9,5 @@
 
 int main(int argc, char *argv[])
 {
-    return teams(argc, argv);
+    return server(argc, argv);
 }

@@ -23,15 +23,11 @@ UNUSED static char *dev_get_full_buffer(
     offset += sprintf(buffer + offset, "[DEBUG] read fds: [");
     for (int i = 0; i < rcount - 1; ++i)
         offset += sprintf(buffer + offset, "%d, ", rfds[i]);
-    if (rcount > 0)
-        offset += sprintf(buffer + offset, "%d", rfds[rcount - 1]);
-    offset += sprintf(buffer + offset, "]\n");
+    offset += sprintf(buffer + offset, "%d]\n", rfds[rcount - 1]);
     offset += sprintf(buffer + offset, "[DEBUG] write fds: [");
     for (int i = 0; i < wcount - 1; ++i)
         offset += sprintf(buffer + offset, "%d, ", wfds[i]);
-    if (wcount > 0)
-        offset += sprintf(buffer + offset, "%d", wfds[wcount - 1]);
-    offset += sprintf(buffer + offset, "]\n");
+    offset += sprintf(buffer + offset, "%d]\n", wfds[wcount - 1]);
     return my_strdup(buffer);
 }
 
@@ -61,7 +57,7 @@ UNUSED static void dev_print_fd_set(fd_set *readfds, fd_set *writefds)
         }
     }
     buffer = dev_get_full_buffer(rfds, rcount, wfds, wcount);
-    SOMETIMES_DEBUG(&print, 10000, "%s", buffer);
+    SOMETIMES_DEBUG(&print, 5000, "%s", buffer);
 }
 
 /**

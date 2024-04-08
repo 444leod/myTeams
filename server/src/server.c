@@ -166,7 +166,7 @@ void teams_loop(int socketFd, server_info_t server_info)
  *
  * @return 0 if the program exited correctly
 */
-int teams(int argc, char *argv[])
+int server(int argc, char *argv[])
 {
     int socketFd = -1;
     server_info_t server_info;

@@ -9,7 +9,6 @@
 
 #include <errno.h>
 #include <string.h>
-#include "escaped.h"
 
 void my_error(char *str);
 void prepare_exit(int socketFd);

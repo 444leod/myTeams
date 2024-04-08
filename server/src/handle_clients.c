@@ -75,6 +75,7 @@ static void queue_command(client_t client)
     char *after_crlf = NULL;
     int i = 0;
 
+    print_escaped(client->next_commands);
     if (client->next_commands) {
         after_crlf = strstr(client->next_commands, "\r\n");
         if (after_crlf) {
@@ -99,14 +100,14 @@ static void queue_command(client_t client)
  * @param server_info the server_info
 */
 static void trigger_action(client_t client, fd_set *readfds,
-    fd_set *writefds, server_info_t server_info)
+    fd_set *writefds, UNUSED server_info_t server_info)
 {
     if (FD_ISSET(client->fd, readfds))
         read_buffer(client);
     if (client->data_status == PROCESSING) {
         queue_command(client);
         if (client->command)
-            handle_command(client, readfds, server_info);
+            printf("Command: %s\n", client->command);
         else
             client->data_status = READING;
         client->command = NULL;

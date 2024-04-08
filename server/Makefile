@@ -14,7 +14,7 @@ SRC = main.c \
 	$(addprefix src/network/client_linked_list/, $(CLIENT_LLIST_SRC)) \
 	$(addprefix src/commands/, $(COMMANDS_SRC)) \
 
-SRC_SRC = teams.c \
+SRC_SRC = server.c \
 	check_args.c \
 	handle_clients.c \
 	handle_commands.c \
@@ -31,6 +31,7 @@ LIB_SRC = exit.c \
 	my_snprintf.c \
 	replace_char.c \
 	debug_print.c \
+	escaped_print.c \
 
 COMMANDS_SRC = commands.c \
 	user.c \
