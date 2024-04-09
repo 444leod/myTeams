@@ -75,26 +75,37 @@ void display_message(int socketFd)
     if (valread == 0) {
         my_error("Server disconnected");
     }
-    printf("%s\n", buffer);
+    printf("%s", buffer);
 }
 
 void send_message(int socketFd, char **message)
 {
+    char *str = *message;
+
     if (*message == NULL)
         return;
-    printf("sending message: %s\n", *message);
-    send(socketFd, *message, strlen(*message), 0);
+    str[strlen(str) - 1] = 0;
+    str = supercat(2, str, "\r\n");
+    send(socketFd, str, strlen(str), 0);
     my_free(*message);
     *message = NULL;
+    DEBUG_PRINT("Sent message %s\n", str);
 }
 
 void get_input(char **message)
 {
-    char buffer[1024] = {0};
+    char *buffer = NULL;
+    size_t size = 1024;
 
-    printf("Enter your message: ");
-    fgets(buffer, 1024, stdin);
+    if (getline(&buffer, &size, stdin) == -1)
+        my_error("getline failed");
+    if (buffer[0] != '/') {
+        dprintf(2, "Invalid command\n");
+        my_free(buffer);
+        return;
+    }
     *message = my_strdup(buffer);
+    DEBUG_PRINT("Message len is: %ld\n", strlen(*message));
 }
 
 static void trigger_action(int socketFd, fd_set *readfds,
@@ -131,7 +142,6 @@ void client_loop(int socketFd, UNUSED server_info_t server_info)
             FD_SET(socketFd, &writefds);
         else
             FD_SET(0, &readfds);
-        print_fd_set(&readfds, &writefds);
         select_wrapper(&readfds, &writefds, socketFd + 1);
         trigger_action(socketFd, &readfds, &writefds, &message);
     }

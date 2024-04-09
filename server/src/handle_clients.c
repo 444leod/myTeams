@@ -43,7 +43,7 @@ static void send_buffer(client_t client)
 */
 static void read_buffer(client_t client)
 {
-    char buffer[1024] = {0};
+    char buffer[1025] = {0};
     int valread = 0;
 
     valread = read(client->fd, buffer, 1024);
@@ -53,6 +53,7 @@ static void read_buffer(client_t client)
         remove_client(client->fd);
         return;
     }
+    buffer[valread] = '\0';
     if (valread > 0) {
         if (client->next_commands)
             client->next_commands = supercat(2, client->next_commands, buffer);
@@ -75,8 +76,9 @@ static void queue_command(client_t client)
     char *after_crlf = NULL;
     int i = 0;
 
-    print_escaped(client->next_commands);
     if (client->next_commands) {
+        DEBUG_PRINT("Next commands: %s\n",
+            get_escaped_string(client->next_commands));
         after_crlf = strstr(client->next_commands, "\r\n");
         if (after_crlf) {
             i = after_crlf - client->next_commands;
@@ -107,7 +109,7 @@ static void trigger_action(client_t client, fd_set *readfds,
     if (client->data_status == PROCESSING) {
         queue_command(client);
         if (client->command)
-            printf("Command: %s\n", client->command);
+            DEBUG_PRINT("Command is: %s\n", client->command);
         else
             client->data_status = READING;
         client->command = NULL;

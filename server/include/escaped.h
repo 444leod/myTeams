@@ -14,3 +14,4 @@ struct special_char_s {
 };
 
 void print_escaped(const char *str);
+char *get_escaped_string(const char *str);

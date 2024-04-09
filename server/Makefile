@@ -31,7 +31,7 @@ LIB_SRC = exit.c \
 	my_snprintf.c \
 	replace_char.c \
 	debug_print.c \
-	escaped_print.c \
+	escaped_string.c \
 
 COMMANDS_SRC = commands.c \
 	user.c \
