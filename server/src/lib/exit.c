@@ -6,8 +6,19 @@
 */
 
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include "server_teams.h"
+
+/**
+ * @brief Create the save folder
+ * @details Create the save folder if it doesn't exist
+*/
+void create_save_folder(void)
+{
+    mkdir(".save", 0777);
+}
 
 /**
  * @brief Clean exit
@@ -28,6 +39,8 @@ static void my_clean_exit(int status, int fd)
     if (actualFd != -1)
         close(actualFd);
     clear_clients();
+    create_save_folder();
+    dump_users();
     my_free_all();
     exit(status);
 }

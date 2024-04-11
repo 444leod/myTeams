@@ -9,6 +9,7 @@
 #include <sys/select.h>
 #include "lib.h"
 #include "server_teams.h"
+#include "commands.h"
 #include <unistd.h>
 #include <stdio.h>
 
@@ -108,9 +109,9 @@ static void trigger_action(client_t client, fd_set *readfds,
         read_buffer(client);
     if (client->data_status == PROCESSING) {
         queue_command(client);
-        if (client->command)
-            DEBUG_PRINT("Command is: %s\n", client->command);
-        else
+        if (client->command) {
+            handle_command(client);
+        } else
             client->data_status = READING;
         client->command = NULL;
     }

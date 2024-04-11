@@ -12,6 +12,7 @@ SRC = main.c \
 	$(addprefix src/lib/, $(LIB_SRC)) \
 	$(addprefix src/network/, $(NETWORK_SRC)) \
 	$(addprefix src/network/client_linked_list/, $(CLIENT_LLIST_SRC)) \
+	$(addprefix src/network/user_linked_list/, $(USER_LLIST_SRC)) \
 	$(addprefix src/commands/, $(COMMANDS_SRC)) \
 
 SRC_SRC = server.c \
@@ -32,24 +33,32 @@ LIB_SRC = exit.c \
 	replace_char.c \
 	debug_print.c \
 	escaped_string.c \
+	get_uuid_as_string.c \
+	magic_number.c \
 
 COMMANDS_SRC = commands.c \
-	user.c \
-	quit.c \
-	unknown_command.c \
-	pwd.c \
-	cwd.c \
-	noop.c \
-	dele.c \
+	create.c \
 	help.c \
-	type.c \
+	info.c \
+	list.c \
+	login.c \
+	logout.c \
+	messages.c \
+	send.c \
+	subscribe.c \
+	subscribed.c \
+	unsubscribe.c \
+	use.c \
+	user.c \
+	users.c \
+	unknown_command.c \
 
 NETWORK_SRC = get_socket.c \
 	bind_socket.c \
 	listen_socket.c \
 	accept_socket.c \
 	reply_code.c \
-	print_fd_set.c \
+	special_print.c \
 	get_port.c \
 
 CLIENT_LLIST_SRC = add_client.c \
@@ -58,11 +67,16 @@ CLIENT_LLIST_SRC = add_client.c \
 	get_clients.c \
 	clear_clients.c \
 
+USER_LLIST_SRC = add_user.c \
+	dump_users.c \
+	get_users.c \
+	init_users.c \
+
 OBJ = $(SRC:.c=.o)
 
 CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror -Wpedantic -I./include
+CFLAGS = -Wall -Wextra -Werror -Wpedantic -I./include -luuid
 
 all: $(NAME)
 

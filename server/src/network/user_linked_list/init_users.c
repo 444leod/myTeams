@@ -10,6 +10,7 @@
 #include "lib.h"
 #include "garbage_collector.h"
 #include "magic_number.h"
+#include "debug.h"
 #include <unistd.h>
 #include <stdlib.h>
 

@@ -38,7 +38,6 @@ static server_info_t init_server_info(char *argv[])
     server_info_t server_info = my_malloc(sizeof(struct server_info_s));
 
     server_info->port = atoi(argv[1]);
-    DEBUG_PRINT("Server port: %d\n", server_info->port);
     server_info->ip = my_malloc(sizeof(char) * INET_ADDRSTRLEN + 1);
     server_info->ip[INET_ADDRSTRLEN] = '\0';
     return server_info;
@@ -97,9 +96,9 @@ static void add_new_client(int socketFd)
     if (new_socket < 0)
         my_error("new client: accept failed");
     if (*clients == NULL)
-        *clients = create_client(new_socket, inet_ntoa(address.sin_addr));
+        *clients = create_client(new_socket);
     else
-        add_client(create_client(new_socket, inet_ntoa(address.sin_addr)));
+        add_client(create_client(new_socket));
 }
 
 /**
@@ -146,7 +145,7 @@ void teams_loop(int socketFd, server_info_t server_info)
         FD_SET(socketFd, &readfds);
         max_sd = socketFd;
         add_clients_to_set(clients, &readfds, &writefds, &max_sd);
-        print_fd_set(&readfds, &writefds);
+        special_print(&readfds, &writefds);
         select_wrapper(max_sd + 1, &readfds, &writefds, clients);
         if (FD_ISSET(socketFd, &readfds))
             add_new_client(socketFd);
@@ -177,11 +176,11 @@ int server(int argc, char *argv[])
     check_args(argc, argv);
     server_info = init_server_info(argv);
     socketFd = get_socket();
-    DEBUG_PRINT("Socket fd: %d\n", socketFd);
     prepare_exit(socketFd);
     bind_socket(socketFd, server_info->port, &(server_info->ip));
     DEBUG_PRINT("Server info: %s:%d\n", server_info->ip, server_info->port);
     listen_socket(socketFd, 1024);
+    init_users();
     teams_loop(socketFd, server_info);
     close(socketFd);
     return 0;
