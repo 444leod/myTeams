@@ -8,24 +8,37 @@
 #pragma once
 
 #include <stdlib.h>
+#include <uuid/uuid.h>
+
+#define USER_SAVE_PATH ".save/.users"
+
+typedef struct user_s {
+    char username[33];
+    uuid_t uuid;
+    struct user_s *next;
+    enum {
+        STATUS_NOT_LOGGED_IN,
+        STATUS_LOGGED_IN,
+    } status;
+} *user_t;
+
+void init_users(void);
+user_t *get_users(void);
+void add_user_by_username(char *username);
+void add_user(user_t new_user);
+void dump_users(void);
+user_t get_user_by_uuid(uuid_t uuid);
+user_t get_user_by_username(char *username);
+
 
 typedef struct client_s {
     int fd;
-    char *ip;
-    int id;
+    struct user_s *user;
     char *command;
     char *next_commands;
-    char *username;
-    int current_code;
-    char *pwd;
     char *buffer;
     char **args;
-    char *message;
-    enum {
-        STATUS_NOT_LOGGED_IN,
-        STATUS_USERNAME_OK,
-        STATUS_LOGGED_IN,
-    } status;
+    int current_code;
     enum {
         READING,
         WRITING,
@@ -36,6 +49,9 @@ typedef struct client_s {
 
 void add_client(client_t new_client);
 void remove_client(int fd);
-client_t create_client(int fd, char *ip);
+client_t create_client(int fd);
 client_t *get_clients(void);
+client_t get_client_by_fd(int fd);
+client_t get_client_by_username(char *username);
+client_t get_client_by_uuid(uuid_t uuid);
 void clear_clients(void);
