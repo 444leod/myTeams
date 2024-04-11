@@ -13,118 +13,73 @@
 #include "lib.h"
 #include "garbage_collector.h"
 
+const enum REPLY_CODES custom_messages_list[] = {
+    USERS_LIST,
+    USER_INFO,
+    TEAM_LIST,
+    CHANNEL_LIST,
+    THREAD_LIST,
+    REPLY_LIST,
+    CURRENT_USER_INFO,
+    TEAM_INFO,
+    CHANNEL_INFO,
+    THREAD_INFO,
+};
+
 /**
  * @brief The server messages
  * @details The messages that the server can send to the client based on the
  * current code
 */
-const server_message_s serverMessages[] = {
-    {SERVICE_READY,
-        "%d Service ready in %d minutes.\n"},
-    {DATA_CONNECTION_ALREADY_OPEN,
-        "%d Data connection already open; transfer starting.\n"},
-    {FILE_STATUS_OK,
-        "%d File status okay; about to open data connection.\n"},
-    {COMMAND_OK,
-        "%d Command okay.\n"},
-    {HELP_MESSAGE,
-        "%d-%s\n%d Help message.\n"},
-    {SERVICE_READY_NEW_USER,
-        "%d Service ready for new user.\n"},
-    {SERVICE_CLOSING_CONTROL_CONNECTION,
-        "%d Service closing control connection.\n"},
-    {CLOSING_DATA_CONNECTION,
-        "%d Closing data connection.\n"},
-    {ENTERING_PASSIVE_MODE,
-        "%d Entering Passive Mode (%s).\n"},
-    {USER_LOGGED_IN,
-        "%d User logged in, proceed.\n"},
-    {REQUESTED_FILE_ACTION_COMPLETED,
-        "%d Requested file action okay, completed.\n"},
-    {PATHNAME_CREATED,
-        "%d \"%s\".\n"},
-    {USERNAME_OK_NEED_PASSWORD,
-        "%d Username okay, need password.\n"},
-    {NEED_ACCOUNT_FOR_LOGIN,
-        "%d Need account for login.\n"},
-    {SYNTAX_ERROR,
-        "%d Syntax error, command unrecognized.\n"},
+const server_message_t serverMessages[] = {
+    {COMMAND_OK, "%d Command okay.\n"},
+    {HELP_MESSAGE, "%d-%s\n%d Help message.\n"},
+    {GLOBAL_CONTEXT_SET, "%d Global context set.\n"},
+    {TEAM_CONTEXT_SET, "%d Team context set.\n"},
+    {CHANNEL_CONTEXT_SET, "%d Channel context set.\n"},
+    {THREAD_CONTEXT_SET, "%d Thread context set.\n"},
+    {USER_CREATED,
+        "%d User created (username: \"%s\", uuid: \"%s\"). User logged in.\n"},
+    {USER_LOGGED_IN, "%d User logged in, proceed.\n"},
+    {USER_LOGGED_OUT, "%d User logged out.\n"},
+    {SERVICE_READY_NEW_USER, "%d Service ready for new user.\n"},
+    {MESSAGE_SENT, "%d Message sent.\n"},
+    {TEAM_SUBSCRIBED, "%d Team subscribed.\n"},
+    {TEAM_UNSUBSCRIBED, "%d Team unsubscribed.\n"},
+    {TEAM_IS_SUBSCRIBED, "%d Current user is subscribed.\n"},
+    {TEAM_IS_NOT_SUBSCRIBED, "%d Current user is not subscribed.\n"},
+    {TEAM_CREATED, "%d Team created.\n"},
+    {CHANNEL_CREATED, "%d Channel created.\n"},
+    {THREAD_CREATED, "%d Thread created.\n"},
+    {REPLY_CREATED, "%d Reply created.\n"},
+
+    {SYNTAX_ERROR, "%d Syntax error, command unrecognized.\n"},
     {SYNTAX_ERROR_IN_PARAMETERS,
         "%d Syntax error in parameters or arguments.\n"},
-    {COMMAND_NOT_IMPLEMENTED,
-        "%d Command not implemented.\n"},
-    {BAD_COMMAND_SEQUENCE,
-        "%d Bad sequence of commands.\n"},
+    {COMMAND_NOT_IMPLEMENTED, "%d Command not implemented.\n"},
+    {BAD_COMMAND_SEQUENCE, "%d Bad sequence of commands.\n"},
     {COMMAND_NOT_IMPLEMENTED_FOR_PARAMETER,
         "%d Command not implemented for that parameter.\n"},
-    {NOT_LOGGED_IN,
-        "%d Not logged in.\n"},
-    {NEED_ACCOUNT_FOR_STORING_FILES,
-        "%d Need account for storing files.\n"},
-    {FILE_UNAVAILABLE,
-        "%d File unavailable (e.g., file not found, no access).\n"},
-    {PAGE_TYPE_UNKNOWN,
-        "%d Page type unknown.\n"},
-    {EXCEEDED_STORAGE_ALLOCATION,
-        "%d Exceeded storage allocation.\n"},
-    {BAD_FILENAME,
-        "%d Bad filename.\n"},
-    {CANT_OPEN_DATA_CONNECTION,
-        "%d Can't open data connection.\n"},
+    {NAME_TOO_LONG, "%d Name too long.\n"},
+    {DESCRIPTION_TOO_LONG, "%d Description too long.\n"},
+    {BODY_TOO_LONG, "%d Body too long.\n"},
+    {INEXISTANT_TEAM, "%d Inexistant team.\n"},
+    {INEXISTANT_CHANNEL, "%d Inexistant channel.\n"},
+    {INEXISTANT_THREAD, "%d Inexistant thread.\n"},
+    {INEXISTANT_USER, "%d Inexistant user.\n"},
+    {ALREADY_SUBSCRIBED, "%d Already subscribed.\n"},
+    {NOT_SUBSCRIBED, "%d Not subscribed.\n"},
+    {ALREADY_LOGGED_IN, "%d Already logged in.\n"},
+    {ALREADY_LOGGED_OUT, "%d Already logged out.\n"},
+    {ALREADY_EXISTS, "%d Already exists.\n"},
+    {UNSUFFICIENT_PERMISSIONS,
+        "%d Unsufficient permissions to perform this action.\n"},
+    {FORBIDDEN_CHARACTERS,
+        "%d Forbidden characters used, only alphanumerical "
+        "characters are allowed.\n"},
+    {NOT_LOGGED_IN, "%d Not logged in.\n"},
     {-1, (void *)0}
 };
-
-/**
- * @brief Display the current pwd to the client
- * @details Send the current pwd to the client
- *
- * @param client the client to send the pwd to
- * @param socketFd the socket to send the pwd to
- * @param code the code to send
- *
- * @return true if the pwd was sent
-*/
-static bool display_pwd(client_t client, int socketFd, int code)
-{
-    char *pwd = my_strdup(client->pwd);
-
-    if (strlen(pwd) > 2 && pwd[strlen(pwd) - 1] == '/')
-        pwd[strlen(pwd) - 1] = '\0';
-    dprintf(socketFd, serverMessages[11].message, code, pwd);
-    my_free(pwd);
-    return true;
-}
-
-/**
- * @brief Check if the current code is a special reply code
- * @details Check if the current code is a special reply code, if it is, reply
- *  to the client with the special message and return true
- *
- * @param client the client to check
- * @param code the code to check
- * @param socketFd the socket to reply to
- *
- * @return true if the current code is a special reply code
-*/
-static bool special_reply_codes2(client_t client, int code, int socketFd)
-{
-    switch (code) {
-        case PATHNAME_CREATED:
-            return display_pwd(client, socketFd, code);
-        case ENTERING_PASSIVE_MODE:
-            dprintf(socketFd, serverMessages[8].message, code, client->buffer);
-            return true;
-        case SERVICE_CLOSING_CONTROL_CONNECTION:
-            dprintf(socketFd, serverMessages[6].message, code);
-            remove_client(client->fd);
-            return true;
-        case HELP_MESSAGE:
-            dprintf(socketFd, serverMessages[4].message, code,
-                client->buffer, code);
-            return true;
-    }
-    return false;
-}
 
 /**
  * @brief Check if the current code is a special reply code
@@ -141,14 +96,19 @@ static bool special_reply_code(client_t client)
     int code = client->current_code;
 
     switch (code) {
-        case SERVICE_READY:
-            dprintf(socketFd, serverMessages[0].message, code, 0);
+        case USER_LOGGED_OUT:
+            dprintf(socketFd, serverMessages[6].message, code);
+            remove_client(client->fd);
             return true;
         case HELP_MESSAGE:
-        case PATHNAME_CREATED:
-        case ENTERING_PASSIVE_MODE:
-        case SERVICE_CLOSING_CONTROL_CONNECTION:
-            return special_reply_codes2(client, code, socketFd);
+            dprintf(socketFd, serverMessages[4].message, code,
+                client->buffer, code);
+            return true;
+        case USER_CREATED:
+            dprintf(socketFd, serverMessages[6].message, code,
+                client->user->username,
+                get_uuid_as_string(client->user->uuid));
+            return true;
     }
     return false;
 }
@@ -172,4 +132,5 @@ void reply_code(client_t client)
             return;
         }
     }
+    dprintf(socketFd, "%d Unknown reply code.\n", code);
 }
