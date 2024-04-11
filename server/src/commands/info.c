@@ -2,12 +2,12 @@
 ** EPITECH PROJECT, 2024
 ** myTeams
 ** File description:
-** help
+** info
 */
 
 #include "commands.h"
 
-void help(client_t client, char **command)
+void info(client_t client, char **command)
 {
     (void)client;
     (void)command;

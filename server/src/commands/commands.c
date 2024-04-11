@@ -7,18 +7,20 @@
 
 #include "commands.h"
 
-/**
- * @brief Commands array
- * @details Array of commands, with their name and function
-*/
 const command_t commands[] = {
-    {"USER", &user},
-    {"CWD", &cwd},
-    {"QUIT", &quit},
-    {"DELE", &dele},
-    {"PWD", &pwd},
-    {"HELP", &help},
-    {"NOOP", &noop},
-    {"TYPE", &type},
+    {"/create", &create},
+    {"/help", &help},
+    {"/info", &info},
+    {"/list", &list},
+    {"/login", &login},
+    {"/logout", &logout},
+    {"/messages", &messages},
+    {"/send", &my_send},
+    {"/subscribe", &subscribe},
+    {"/subscribed", &subscribed},
+    {"/unsubscribe", &unsubscribe},
+    {"/use", &use},
+    {"/user", &user},
+    {"/users", &users},
     {NULL, &unknown_command}
 };
