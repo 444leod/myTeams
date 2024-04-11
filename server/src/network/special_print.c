@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** myTeams
 ** File description:
-** print_fd_set
+** special_print
 */
 
 #include <stdio.h>
@@ -10,6 +10,7 @@
 #include "debug.h"
 #include "macros.h"
 #include "lib.h"
+#include "clientllist.h"
 
 UNUSED static char *dev_get_full_buffer(
     int *rfds,
@@ -64,16 +65,37 @@ UNUSED static void dev_print_fd_set(fd_set *readfds, fd_set *writefds)
     SOMETIMES_DEBUG(&print, 10000, "%s", buffer);
 }
 
+UNUSED static void dev_print_users(void)
+{
+    UNUSED static int print = 0;
+    UNUSED char buffer[1024];
+    UNUSED char *string;
+    int offset = 0;
+    user_t *users = get_users();
+    user_t user = *users;
+
+    while (user) {
+        offset += sprintf(buffer + offset, "username: %s, ", user->username);
+        offset += sprintf(buffer + offset, "UUID: %s, ",
+            get_uuid_as_string(user->uuid));
+        offset += sprintf(buffer + offset, "logged in: %s\n",
+            user->status == STATUS_LOGGED_IN ? "true" : "false");
+        user = user->next;
+    }
+    SOMETIMES_DEBUG(&print, 10000, "%s", buffer);
+}
+
 /**
  * @brief Print a fd_set (debug)
  * @details Print a fd_set (only in dev mode)
  *
  * @param set the fd_set to print
 */
-void print_fd_set(UNUSED fd_set *readfds, UNUSED fd_set *writefds)
+void special_print(UNUSED fd_set *readfds, UNUSED fd_set *writefds)
 {
     #ifndef DEV_MODE
     #else
     dev_print_fd_set(readfds, writefds);
+    dev_print_users();
     #endif
 }
