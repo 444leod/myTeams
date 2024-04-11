@@ -64,18 +64,6 @@ static void select_wrapper(fd_set *readfds, fd_set *writefds, int max_sd)
         my_error("select wrapper failed");
 }
 
-void display_message(int socketFd)
-{
-    char buffer[1024] = {0};
-    int valread = 0;
-
-    valread = read(socketFd, buffer, 1024);
-    if (valread == 0) {
-        my_error("Server disconnected");
-    }
-    printf("%s", buffer);
-}
-
 void send_message(int socketFd, char **message)
 {
     char *str = *message;
@@ -94,8 +82,10 @@ void get_input(char **message)
     char *buffer = NULL;
     size_t size = 1024;
 
-    if (getline(&buffer, &size, stdin) == -1)
-        my_error("getline failed");
+    if (getline(&buffer, &size, stdin) == -1) {
+        printf("Closed connexion.\n");
+        my_exit(0);
+    }
     *message = my_strdup(buffer);
     DEBUG_PRINT("Message len is: %ld\n", strlen(*message));
 }
@@ -104,7 +94,7 @@ static void trigger_action(int socketFd, fd_set *readfds,
     fd_set *writefds, char **message)
 {
     if (FD_ISSET(socketFd, readfds))
-        display_message(socketFd);
+        parse_reply(socketFd);
     if (FD_ISSET(socketFd, writefds))
         send_message(socketFd, message);
     if (FD_ISSET(0, readfds))

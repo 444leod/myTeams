@@ -9,13 +9,14 @@ NAME = myteams_cli
 
 SRC = main.c \
 	$(addprefix src/, $(SRC_SRC)) \
-	$(addprefix src/lib/, $(LIB_SRC)) \
-	$(addprefix src/network/, $(NETWORK_SRC)) \
 	$(addprefix src/network/client_linked_list/, $(CLIENT_LLIST_SRC)) \
 	$(addprefix src/commands/, $(COMMANDS_SRC)) \
+	$(addprefix src/packet_handlers/, $(PACKET_HANDLER_SRC)) \
 
 SRC_SRC = client.c \
 	check_args.c \
+	parse_reply.c \
+	exit.c \
 
 LIB_SRC = exit.c \
 	my_error.c \
@@ -29,6 +30,7 @@ LIB_SRC = exit.c \
 	my_snprintf.c \
 	replace_char.c \
 	debug_print.c \
+	get_uuid_as_string.c \
 
 NETWORK_SRC = get_socket.c \
 	connect_to_server.c \
@@ -37,11 +39,16 @@ NETWORK_SRC = get_socket.c \
 	print_fd_set.c \
 	get_port.c \
 
+PACKET_HANDLER_SRC = buffer.c \
+	userinfo.c \
+	error.c
+
 OBJ = $(SRC:.c=.o)
 
 CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror -Wpedantic -I./include
+CFLAGS = -Wall -Wextra -Werror -Wpedantic -I./include -I../include \
+	-luuid -L ../libs/myteams/ -lmyteams -L ../ -lmy -lnetwork
 
 all: $(NAME)
 

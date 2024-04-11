@@ -9,6 +9,7 @@
 
 #include <errno.h>
 #include <string.h>
+#include <uuid/uuid.h>
 
 void my_error(char *str);
 void prepare_exit(int socketFd);
@@ -21,3 +22,4 @@ char *my_strndup(char const *src, int n);
 char *get_current_dir(void);
 char *my_snprintf(const char *format, ...);
 char *replace_char(char *str, char find, char replace);
+char *get_uuid_as_string(uuid_t uuid);

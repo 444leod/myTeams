@@ -36,3 +36,4 @@ void accept_socket(int socketFd, void (*func)(int));
 void print_fd_set(fd_set *readfds, fd_set *writefds);
 void get_port(int fd, int *port);
 void connect_to_server(int sockfd, char *ip, int port);
+void parse_reply(int socketFd);
