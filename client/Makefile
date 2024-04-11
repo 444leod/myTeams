@@ -34,7 +34,6 @@ NETWORK_SRC = get_socket.c \
 	connect_to_server.c \
 	listen_socket.c \
 	accept_socket.c \
-	reply_code.c \
 	print_fd_set.c \
 	get_port.c \
 

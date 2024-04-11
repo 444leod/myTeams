@@ -42,8 +42,6 @@ static server_info_t init_server_info(char *argv[])
     addr_list = (struct in_addr **)he->h_addr_list;
     server_info->port = atoi(argv[2]);
     server_info->ip = inet_ntoa(*addr_list[0]);
-    DEBUG_PRINT("Server port: %d\n", server_info->port);
-    DEBUG_PRINT("Server ip: %s\n", server_info->ip);
     return server_info;
 }
 
@@ -89,7 +87,6 @@ void send_message(int socketFd, char **message)
     send(socketFd, str, strlen(str), 0);
     my_free(*message);
     *message = NULL;
-    DEBUG_PRINT("Sent message %s\n", str);
 }
 
 void get_input(char **message)
@@ -99,11 +96,6 @@ void get_input(char **message)
 
     if (getline(&buffer, &size, stdin) == -1)
         my_error("getline failed");
-    if (buffer[0] != '/') {
-        dprintf(2, "Invalid command\n");
-        my_free(buffer);
-        return;
-    }
     *message = my_strdup(buffer);
     DEBUG_PRINT("Message len is: %ld\n", strlen(*message));
 }
