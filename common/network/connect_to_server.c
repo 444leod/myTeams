@@ -5,7 +5,6 @@
 ** connect_to_socket
 */
 
-#include "client_teams.h"
 #include "lib.h"
 #include <stdio.h>
 #include <netdb.h>
@@ -14,6 +13,7 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <arpa/inet.h>
 
 /**
  * @brief Connect client socket to server

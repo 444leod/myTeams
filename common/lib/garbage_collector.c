@@ -7,6 +7,7 @@
 
 #include "garbage_collector.h"
 #include "lib.h"
+#include <unistd.h>
 
 /**
  * @brief Malloc wrapper with garbage collector
@@ -24,6 +25,7 @@ void *my_malloc(size_t size)
 
     if (variable == NULL)
         my_error("Malloc failed");
+    memset(variable, 0, size);
     *llist = g_insert_end(variable, *llist);
     if (*llist == NULL)
         my_error("Malloc failed");

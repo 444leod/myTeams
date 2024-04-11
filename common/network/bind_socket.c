@@ -7,7 +7,6 @@
 
 #include <arpa/inet.h>
 #include "lib.h"
-#include "server_teams.h"
 
 /**
  * @brief Bind a socket

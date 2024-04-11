@@ -11,6 +11,7 @@ NC=\033[0m
 INFO = ${GREEN}[INFO]${NC}
 
 all:
+	make -C ./common -s
 	make -C ./server -s
 	@mv ./server/myteams_server ./myteams_server
 	make -C ./client -s
@@ -18,11 +19,13 @@ all:
 	@echo -ne "\n${INFO} Server and client compiled successfully.${NC}\n"
 
 clean:
+	make clean -C ./common -s
 	make clean -C ./server -s
 	make clean -C ./client -s
 	@echo -ne "\n${INFO} Server and client cleaned.${NC}\n"
 
 fclean: clean
+	make fclean -C ./common -s
 	make fclean -C ./server -s
 	make fclean -C ./client -s
 	rm -f myteams_server
@@ -37,6 +40,7 @@ tests_run:
 	@echo -ne "\n${INFO} Tests run.${NC}\n"
 
 debug:
+	make debug -C ./common -s
 	make debug -C ./server -s
 	@mv ./server/myteams_server ./myteams_server
 	make debug -C ./client -s
@@ -44,6 +48,7 @@ debug:
 	@echo -ne "\n${INFO} Debug mode compiled successfully.${NC}\n"
 
 dev:
+	make dev -C ./common -s
 	make dev -C ./server -s
 	@mv ./server/myteams_server ./myteams_server
 	make dev -C ./client -s

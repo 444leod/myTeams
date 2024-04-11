@@ -5,7 +5,9 @@
 ** my_error
 */
 
-#include "client_teams.h"
+#include <stdio.h>
+
+void my_exit(int status);
 
 /**
  * @brief Print an error message and exit the program

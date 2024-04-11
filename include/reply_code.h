@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** myTeams
 ** File description:
-** reply_code
+** reply_codes
 */
 
 #pragma once
@@ -34,6 +34,9 @@ enum REPLY_CODES {
     SERVICE_READY_NEW_USER = 220,
 
     MESSAGE_SENT = 230,
+    MESSAGE_RECEIVED = 231,
+    MESSAGES_LIST = 232,
+    THREAD_REPLY_RECEIVED = 233,
 
     TEAM_SUBSCRIBED = 240,
     TEAM_UNSUBSCRIBED = 241,
@@ -81,5 +84,6 @@ enum ERROR_CODES {
     ALREADY_EXISTS = 516,
     UNSUFFICIENT_PERMISSIONS = 517,
     FORBIDDEN_CHARACTERS = 518,
-    NOT_LOGGED_IN = 530
+    NOT_LOGGED_IN = 530,
+    UNKNOWN_ERROR = 540
 };
