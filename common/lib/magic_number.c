@@ -12,6 +12,7 @@
 /**
  * @brief Check if the magic number is valid
  * @details Read the file descriptor and check if the magic number is valid
+ * It should be sent before the packets and written before saves files.
  *
  * @param fd the file descriptor
  *
