@@ -9,6 +9,7 @@
 #include <sys/select.h>
 #include "lib.h"
 #include "server_teams.h"
+#include "commands.h"
 #include <unistd.h>
 #include <stdio.h>
 
@@ -22,9 +23,8 @@
 */
 static void send_buffer(client_t client)
 {
-    if (client->current_code) {
+    if (client->packet) {
         reply_code(client);
-        client->current_code = 0;
         if (client->next_commands == NULL) {
             client->data_status = READING;
             return;
@@ -43,7 +43,7 @@ static void send_buffer(client_t client)
 */
 static void read_buffer(client_t client)
 {
-    char buffer[1024] = {0};
+    char buffer[1025] = {0};
     int valread = 0;
 
     valread = read(client->fd, buffer, 1024);
@@ -53,6 +53,7 @@ static void read_buffer(client_t client)
         remove_client(client->fd);
         return;
     }
+    buffer[valread] = '\0';
     if (valread > 0) {
         if (client->next_commands)
             client->next_commands = supercat(2, client->next_commands, buffer);
@@ -76,6 +77,8 @@ static void queue_command(client_t client)
     int i = 0;
 
     if (client->next_commands) {
+        DEBUG_PRINT("Next commands: %s\n",
+            get_escaped_string(client->next_commands));
         after_crlf = strstr(client->next_commands, "\r\n");
         if (after_crlf) {
             i = after_crlf - client->next_commands;
@@ -99,15 +102,15 @@ static void queue_command(client_t client)
  * @param server_info the server_info
 */
 static void trigger_action(client_t client, fd_set *readfds,
-    fd_set *writefds, server_info_t server_info)
+    fd_set *writefds, UNUSED server_info_t server_info)
 {
     if (FD_ISSET(client->fd, readfds))
         read_buffer(client);
     if (client->data_status == PROCESSING) {
         queue_command(client);
-        if (client->command)
-            handle_command(client, readfds, server_info);
-        else
+        if (client->command) {
+            handle_command(client);
+        } else
             client->data_status = READING;
         client->command = NULL;
     }

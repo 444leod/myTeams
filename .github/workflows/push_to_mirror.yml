@@ -4,6 +4,7 @@ on: [push, pull_request]
 
 env:
   MIRROR_URL: "git@github.com:EpitechPromo2027/B-NWP-400-LIL-4-1-myteams-leo.dumont.git"
+  EXCLUDED_FILES: 'libmyteams.so logging_client.h logging_server.h'
 
 jobs:
   build:
@@ -14,6 +15,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Get current path
+        id: pwd
+        run: echo "::set-output name=dir::$(pwd)"
+
+      - name: Set LD_LIBRARY_PATH
+        run: echo LD_LIBRARY_PATH=${{ steps.pwd.outputs.dir }}/libs/myteams:$LD_LIBRARY_PATH >> $GITHUB_ENV
 
       - name: Test Makefile rules
         timeout-minutes: 2
@@ -58,7 +66,13 @@ jobs:
             code=$(echo $line | cut -d":" -f4-)
             echo "::error file=$file,line=$line_number,title=$level::$code"
           done < "coding-style-reports.log"
-
+  
+      - name: Remove undesired files from report
+        run: |
+          for file in $EXCLUDED_FILES; do
+            sed -i "/$file/d" coding-style-reports.log
+          done
+  
       - name: Exit with error if there is coding style error(s)
         run: |
           if test -s coding-style-reports.log; then

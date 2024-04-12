@@ -20,25 +20,23 @@
  *
  * @param command the command to execute with its arguments
  * @param client the client to execute the command for
- * @param readfds the readfds
- * @param server_info the server_info
 */
-static void execute_command(char **command, client_t client,
-    fd_set *readfds, server_info_t server_info)
+static void execute_command(UNUSED char **command, UNUSED client_t client)
 {
     size_t i = 0;
 
+    DEBUG_PRINT("Executing command: %s\n", command[0]);
     if (command[0] == NULL) {
-        unknown_command(client, command, readfds, server_info);
+        unknown_command(client, command);
         return;
     }
     for (; commands[i].command; i++) {
         if (strcmp(commands[i].command, command[0]) == 0) {
-            commands[i].func(client, command, readfds, server_info);
+            commands[i].func(client, command);
             return;
         }
     }
-    commands[i].func(client, command, readfds, server_info);
+    commands[i].func(client, command);
 }
 
 /**
@@ -47,17 +45,15 @@ static void execute_command(char **command, client_t client,
  * by parsing it and executing it
  *
  * @param client the client to handle the command of
- * @param readfds the readfds
- * @param server_info the server_info
 */
-void handle_command(client_t client, fd_set *readfds,
-    server_info_t server_info)
+void handle_command(client_t client)
 {
     char *command = my_strdup(client->command);
     char **args = str_to_word_array(command, " \t");
 
+    DEBUG_PRINT("Handling command: %s\n", get_escaped_string(client->command));
     while (args[0] && args[0][0] == '\0')
         ++args;
-    execute_command(args, client, readfds, server_info);
+    execute_command(args, client);
     client->data_status = WRITING;
 }

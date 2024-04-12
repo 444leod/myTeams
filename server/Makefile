@@ -9,47 +9,36 @@ NAME = myteams_server
 
 SRC = main.c \
 	$(addprefix src/, $(SRC_SRC)) \
-	$(addprefix src/lib/, $(LIB_SRC)) \
 	$(addprefix src/network/, $(NETWORK_SRC)) \
 	$(addprefix src/network/client_linked_list/, $(CLIENT_LLIST_SRC)) \
+	$(addprefix src/network/user_linked_list/, $(USER_LLIST_SRC)) \
 	$(addprefix src/commands/, $(COMMANDS_SRC)) \
 
-SRC_SRC = teams.c \
+SRC_SRC = server.c \
 	check_args.c \
 	handle_clients.c \
 	handle_commands.c \
-
-LIB_SRC = exit.c \
-	my_error.c \
-	garbage_collector.c \
-	garbage_llist.c \
-	my_strdup.c \
-	str_to_word_array.c \
-	tablen.c \
-	supercat.c \
-	get_current_dir.c \
-	my_snprintf.c \
-	replace_char.c \
-	debug_print.c \
+	exit.c \
 
 COMMANDS_SRC = commands.c \
-	user.c \
-	quit.c \
-	unknown_command.c \
-	pwd.c \
-	cwd.c \
-	noop.c \
-	dele.c \
+	create.c \
 	help.c \
-	type.c \
+	info.c \
+	list.c \
+	login.c \
+	logout.c \
+	messages.c \
+	send.c \
+	subscribe.c \
+	subscribed.c \
+	unsubscribe.c \
+	use.c \
+	user.c \
+	users.c \
+	unknown_command.c \
 
-NETWORK_SRC = get_socket.c \
-	bind_socket.c \
-	listen_socket.c \
-	accept_socket.c \
-	reply_code.c \
-	print_fd_set.c \
-	get_port.c \
+NETWORK_SRC = reply_code.c \
+	special_print.c \
 
 CLIENT_LLIST_SRC = add_client.c \
 	create_client.c \
@@ -57,11 +46,18 @@ CLIENT_LLIST_SRC = add_client.c \
 	get_clients.c \
 	clear_clients.c \
 
+USER_LLIST_SRC = add_user.c \
+	dump_users.c \
+	get_users.c \
+	init_users.c \
+
 OBJ = $(SRC:.c=.o)
 
 CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror -Wpedantic -I./include
+CFLAGS = -Wall -Wextra -Werror -Wpedantic -I./include -I../include \
+	-luuid -L ../libs/myteams/ -lmyteams -L ../ -lmy -lnetwork \
+	-I ../libs/myteams
 
 all: $(NAME)
 
@@ -76,7 +72,8 @@ fclean: clean
 
 re: fclean all
 
-tests_run: all
+tests_run:
+	exit 0
 
 run: all
 

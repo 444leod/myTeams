@@ -5,24 +5,24 @@
 ** unknown_command
 */
 
-#include "server_teams.h"
-#include "clientllist.h"
+#include "commands.h"
 #include "reply_code.h"
-#include <sys/select.h>
+#include "packet.h"
 
 /**
- * @brief Unknown command
- * @details Print the unknown command message
+ * @brief Function that handles unknown command
+ * @details Function that handles unknown command, if the user is not logged in
+ * it will return a NOT_LOGGED_IN packet,
+ *  else it will return a SYNTAX_ERROR packet
  *
- * @param client the client to print the unknown command message for
+ * @param client the client
+ * @param command the command
 */
-void unknown_command(client_t client, UNUSED char **args,
-    UNUSED fd_set *readfds, UNUSED server_info_t server_info)
+void unknown_command(client_t client, UNUSED char **command)
 {
-    if (client->status != STATUS_LOGGED_IN) {
-        client->current_code = NOT_LOGGED_IN;
+    if (!client->user) {
+        client->packet = build_packet(NOT_LOGGED_IN, "");
     } else {
-        client->current_code = SYNTAX_ERROR;
+        client->packet = build_packet(SYNTAX_ERROR, "");
     }
-    client->data_status = WRITING;
 }

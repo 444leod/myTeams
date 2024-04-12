@@ -9,7 +9,7 @@ with open(commit_msg_filepath, 'r') as f:
     content = f.read()
     pattern = r"^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test|del|merge|update|hotfix)(\(.+\))?: .+$"
     if re.match(pattern, content):
-        report = subprocess.run(["mango"], capture_output=True, text=True)
+        report = subprocess.run(["mango", "--exclude-files", "libs/myteams/logging_server.h", "libs/myteams/logging_client.h", "libs/myteams/libmyteams.so"], capture_output=True, text=True)
         if (report.returncode != 0):
             print("Something went wrong with coding style.")
             print(report.stdout)
