@@ -16,6 +16,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set LD_LIBRARY_PATH
+        run: echo LD_LIBRARY_PATH=$(pwd)/libs/myteams:$LD_LIBRARY_PATH >> $GITHUB_ENV
+
       - name: Test Makefile rules
         timeout-minutes: 2
         run: |
@@ -46,10 +49,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-    
+
       - name: Check the coding style with `coding-style`
         run: check.sh $(pwd) $(pwd)
-    
+
       - name: Coding style report
         run: |
           while read line; do
