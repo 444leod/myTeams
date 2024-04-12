@@ -27,6 +27,14 @@ struct special_char_s special_chars[] = {
     {0, NULL}
 };
 
+/**
+ * @brief Get the special character
+ * @details Get the special character
+ *
+ * @param str the character to get
+ *
+ * @return the special character
+*/
 UNUSED static char *get_special_char(char str)
 {
     for (int i = 0; special_chars[i].str; i++) {
@@ -36,6 +44,11 @@ UNUSED static char *get_special_char(char str)
     return NULL;
 }
 
+/**
+ * @brief Print the escaped string
+ *
+ * @param str the string to print
+*/
 void print_escaped(const char *str)
 {
     char *escaped = get_escaped_string(str);
@@ -43,6 +56,14 @@ void print_escaped(const char *str)
     printf("%s\n", escaped);
 }
 
+/**
+ * @brief Get the escaped string
+ * @details get the string with escaped special characters
+ *
+ * @param str the string to escape
+ *
+ * @return the escaped string
+*/
 char *get_escaped_string(const char *str)
 {
     char *escaped = my_malloc(sizeof(char) * (strlen(str) * 2 + 1));

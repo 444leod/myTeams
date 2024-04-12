@@ -11,6 +11,15 @@
 #include "lib.h"
 #include "garbage_collector.h"
 
+/**
+ * @brief Concatenate two strings
+ * @details Concatenate two strings into one
+ *
+ * @param dest the first string
+ * @param src the second string
+ *
+ * @return the concatenated string
+*/
 static char *my_strcat(char *dest, char *src)
 {
     char *tmp = my_malloc(strlen(dest) + strlen(src) + 1);

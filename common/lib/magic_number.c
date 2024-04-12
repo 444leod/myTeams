@@ -9,6 +9,14 @@
 #include <stdbool.h>
 #include <unistd.h>
 
+/**
+ * @brief Check if the magic number is valid
+ * @details Read the file descriptor and check if the magic number is valid
+ *
+ * @param fd the file descriptor
+ *
+ * @return true if the magic number is valid, false otherwise
+*/
 bool is_magic_number_valid(int fd)
 {
     unsigned int magic_number = 0;
@@ -18,6 +26,12 @@ bool is_magic_number_valid(int fd)
     return (magic_number == MAGIC_NUMBER);
 }
 
+/**
+ * @brief Write the magic number
+ * @details Write the magic number to the file descriptor
+ *
+ * @param fd the file descriptor
+*/
 void write_magic_number(int fd)
 {
     unsigned int magic_number = MAGIC_NUMBER;

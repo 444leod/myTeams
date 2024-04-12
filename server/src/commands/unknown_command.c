@@ -9,6 +9,15 @@
 #include "reply_code.h"
 #include "packet.h"
 
+/**
+ * @brief Function that handles unknown command
+ * @details Function that handles unknown command, if the user is not logged in
+ * it will return a NOT_LOGGED_IN packet,
+ *  else it will return a SYNTAX_ERROR packet
+ *
+ * @param client the client
+ * @param command the command
+*/
 void unknown_command(client_t client, UNUSED char **command)
 {
     if (!client->user) {
