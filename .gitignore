@@ -41,3 +41,4 @@ myteams_cli
 vgcore*
 logging_server.h
 logging_client.h
+!libmyteams.so
