@@ -48,7 +48,8 @@ OBJ = $(SRC:.c=.o)
 CC = gcc
 
 CFLAGS = -Wall -Wextra -Werror -Wpedantic -I./include -I../include \
-	-luuid -L ../libs/myteams/ -lmyteams -L ../ -lmy -lnetwork
+	-luuid -L ../libs/myteams/ -lmyteams -L ../ -lmy -lnetwork \
+	-I ../libs/myteams
 
 all: $(NAME)
 
