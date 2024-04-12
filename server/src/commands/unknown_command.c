@@ -7,12 +7,13 @@
 
 #include "commands.h"
 #include "reply_code.h"
+#include "packet.h"
 
 void unknown_command(client_t client, UNUSED char **command)
 {
     if (!client->user) {
-        client->current_code = NOT_LOGGED_IN;
+        client->packet = build_packet(NOT_LOGGED_IN, "");
     } else {
-        client->current_code = SYNTAX_ERROR;
+        client->packet = build_packet(SYNTAX_ERROR, "");
     }
 }
