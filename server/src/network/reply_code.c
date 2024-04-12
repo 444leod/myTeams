@@ -91,13 +91,12 @@ const server_message_t serverMessages[] = {
 };
 
 /**
- * @brief Check if the current code is a special reply code
- * @details Check if the current code is a special reply code, if it is, reply
- *   to the client with the special message and return true
+ * @brief Check if the code is a special reply code
+ * @details Check if the code is a special reply code
  *
- * @param client the client to check
- *
- * @return true if the current code is a special reply code
+ * @param code the code to check
+ * @return true if the code is a special reply code
+ * @return false if the code is not a special reply code
 */
 static bool special_reply_code(int code)
 {
@@ -108,6 +107,15 @@ static bool special_reply_code(int code)
     return false;
 }
 
+/**
+ * @brief Rebuild the packet with the current code
+ * @details Rebuild the packet with the current code, using the serverMessages
+ * list or the custom_messages_list
+ * If it's a custom message, it will use the client buffer to send the message
+ *
+ * @param code the code to rebuild the packet with
+ * @param client the client to rebuild the packet for
+*/
 void rebuild_packet(int code, client_t client)
 {
     packet_t *packet = client->packet;

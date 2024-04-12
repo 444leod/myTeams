@@ -64,6 +64,13 @@ static void select_wrapper(fd_set *readfds, fd_set *writefds, int max_sd)
         my_error("select wrapper failed");
 }
 
+/**
+ * @brief Check the arguments of the program
+ * @details check the arguments of the program and exit if they are invalid
+ *
+ * @param argc the number of arguments
+ * @param argv the arguments of the program
+*/
 void send_message(int socketFd, char **message)
 {
     char *str = *message;
@@ -77,6 +84,12 @@ void send_message(int socketFd, char **message)
     *message = NULL;
 }
 
+/**
+ * @brief Get the input of the user
+ * @details get the input of the user and store it in the message variable
+ *
+ * @param message the message to store
+*/
 void get_input(char **message)
 {
     char *buffer = NULL;
@@ -90,6 +103,15 @@ void get_input(char **message)
     DEBUG_PRINT("Message len is: %ld\n", strlen(*message));
 }
 
+/**
+ * @brief Trigger the action of the client
+ * @details trigger the action of the client based on the readfds and writefds
+ *
+ * @param socketFd the socket file descriptor
+ * @param readfds the readfds
+ * @param writefds the writefds
+ * @param message the message to send
+*/
 static void trigger_action(int socketFd, fd_set *readfds,
     fd_set *writefds, char **message)
 {

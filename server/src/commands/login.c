@@ -11,6 +11,16 @@
 #include "garbage_collector.h"
 #include "packet.h"
 
+/**
+ * @brief Check if the command is valid
+ * @details Check if the command is valid
+ *
+ * @param client the client
+ * @param command the command
+ *
+ * @return true if the command is valid
+ * @return false if the command is not valid
+ */
 bool is_command_valid(client_t client, char **command)
 {
     if (tablen((void **)command) != 2) {
@@ -28,22 +38,38 @@ bool is_command_valid(client_t client, char **command)
     return true;
 }
 
+/**
+ * @brief Create a user
+ * @details Create a user with the given username
+ *
+ * @param username the username
+ * @param code the code
+ *
+ * @return the created user
+ */
 user_t create_user(char *username, int *code)
 {
     user_t new_user;
-    char *username_buffer = my_malloc(sizeof(char) * 33);
+    char *username_buffer = my_malloc(sizeof(char) * MAX_NAME_LENGTH + 1);
     char *uuid_string;
 
-    memset(username_buffer, 0, sizeof(char) * 33);
+    memset(username_buffer, 0, sizeof(char) * MAX_NAME_LENGTH + 1);
     add_user_by_username(username);
     new_user = get_user_by_username(username);
     *code = USER_CREATED;
-    memcpy(username_buffer, new_user->username, 33);
+    memcpy(username_buffer, new_user->username, MAX_NAME_LENGTH + 1);
     uuid_string = get_uuid_as_string(new_user->uuid);
     server_event_user_created(uuid_string, username_buffer);
     return new_user;
 }
 
+/**
+ * @brief Login command handler. Login a user with the given username
+ * @details Login a user with the given username
+ *
+ * @param client the client
+ * @param command the command
+ */
 void login(client_t client, char **command)
 {
     user_t user;

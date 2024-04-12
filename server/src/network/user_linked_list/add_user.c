@@ -29,11 +29,17 @@ void add_user(user_t new_user)
     tmp->next = new_user;
 }
 
+/**
+ * @brief Generate and add a user to the linked list by username
+ * @details Generate a user based on a username and add it to the linked list
+ *
+ * @param username the username of the user to add
+*/
 void add_user_by_username(char *username)
 {
     user_t new_user = my_malloc(sizeof(struct user_s));
 
-    for (int i = 0; i < 33; i++)
+    for (int i = 0; i < MAX_NAME_LENGTH + 1; i++)
         new_user->username[i] = 0;
     memcpy(new_user->username, username, strlen(username));
     uuid_generate(new_user->uuid);

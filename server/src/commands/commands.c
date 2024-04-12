@@ -7,6 +7,10 @@
 
 #include "commands.h"
 
+/**
+ * @brief The commands
+ * @details The string command and its function
+*/
 const command_t commands[] = {
     {"/create", &create},
     {"/help", &help},

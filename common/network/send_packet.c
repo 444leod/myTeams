@@ -9,6 +9,13 @@
 #include "magic_number.h"
 #include <unistd.h>
 
+/**
+ * @brief Send a packet
+ * @details Send a packet
+ *
+ * @param fd the file descriptor
+ * @param packet the packet
+ */
 void send_packet(int fd, packet_t *packet)
 {
     write_magic_number(fd);

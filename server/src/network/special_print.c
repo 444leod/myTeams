@@ -12,6 +12,16 @@
 #include "lib.h"
 #include "clientllist.h"
 
+/**
+ * @brief Get the filled buffer fir read fds and write fds
+ *
+ * @param rfds the read fds
+ * @param rcount the number of read fds
+ * @param wfds the write fds
+ * @param wcount the number of write fds
+ *
+ * @return the buffer
+*/
 UNUSED static char *dev_get_full_buffer(
     int *rfds,
     int rcount,
@@ -65,6 +75,10 @@ UNUSED static void dev_print_fd_set(fd_set *readfds, fd_set *writefds)
     SOMETIMES_DEBUG(&print, 10000, "%s", buffer);
 }
 
+/**
+ * @brief Print the users (debug)
+ * @details Print the users (only in dev mode)
+*/
 UNUSED static void dev_print_users(void)
 {
     UNUSED static int print = 0;

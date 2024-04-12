@@ -20,6 +20,12 @@ user_t *get_users(void)
     return &users;
 }
 
+/**
+ * @brief Get a user by uuid
+ * @details Get a user by uuid
+ *
+ * @param uuid the uuid of the user to get
+*/
 user_t get_user_by_uuid(uuid_t uuid)
 {
     user_t *users = get_users();
@@ -33,6 +39,12 @@ user_t get_user_by_uuid(uuid_t uuid)
     return NULL;
 }
 
+/**
+ * @brief Get a user by username
+ * @details Get a user by username
+ *
+ * @param username the username of the user to get
+*/
 user_t get_user_by_username(char *username)
 {
     user_t *users = get_users();

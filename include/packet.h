@@ -9,7 +9,8 @@
 
     #include <uuid/uuid.h>
 
-typedef char username_t[33];
+#define MAX_NAME_LENGTH 32
+typedef char username_t[MAX_NAME_LENGTH + 1];
 
 enum PACKET_TYPE {
     NONE,

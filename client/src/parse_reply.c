@@ -14,12 +14,24 @@
 #include "packet_handler.h"
 #include <unistd.h>
 
+/**
+ * @brief The packet handlers
+ * @details The packet handlers, each packet has a type and a handler
+*/
 const packet_handler_t packet_handlers[] = {
     {NONE, &buffer_packet_handler},
     {USER_INFORMATION, &userinfo_packet_handler},
     {-1, &error_packet_handler}
 };
 
+/**
+ * @brief Display the message by type
+ * @details Display the message by type, using the correct handler, if the
+ *  packet sent is correct and has a type.
+ *
+ * @param type the type of the packet
+ * @param packet the packet
+*/
 void display_message_by_type(int type, packet_t *packet)
 {
     uint16_t i = 0;
@@ -34,6 +46,13 @@ void display_message_by_type(int type, packet_t *packet)
     packet_handlers[i].func(packet);
 }
 
+/**
+ * @brief Parse the reply from the server
+ * @details Parse the reply from the server, read the packet and display
+ * the message
+ *
+ * @param socketFd the socket file descriptor
+*/
 void parse_reply(int socketFd)
 {
     packet_t *packet = NULL;

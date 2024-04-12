@@ -20,6 +20,12 @@ client_t *get_clients(void)
     return &clients;
 }
 
+/**
+ * @brief Get a client by uuid
+ * @details Get a client by uuid
+ *
+ * @param uuid the uuid of the client to get
+*/
 client_t get_client_by_uuid(uuid_t uuid)
 {
     client_t *clients = get_clients();
@@ -39,6 +45,12 @@ client_t get_client_by_uuid(uuid_t uuid)
     return NULL;
 }
 
+/**
+ * @brief Get a client by fd
+ * @details Get a client by fd
+ *
+ * @param fd the fd of the client to get
+*/
 client_t get_client_by_fd(int fd)
 {
     client_t *clients = get_clients();
@@ -52,6 +64,12 @@ client_t get_client_by_fd(int fd)
     return NULL;
 }
 
+/**
+ * @brief Get a client by username
+ * @details Get a client by username
+ *
+ * @param username the username of the client to get
+*/
 client_t get_client_by_username(char *username)
 {
     client_t *clients = get_clients();

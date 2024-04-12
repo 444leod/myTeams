@@ -9,6 +9,14 @@
 #include "garbage_collector.h"
 #include "lib.h"
 
+/**
+ * @brief Read a packet from a file descriptor
+ * @details Read a packet from a file descriptor
+ *
+ * @param fd the file descriptor
+ *
+ * @return packet_t* the packet
+ */
 packet_t *read_packet(int fd)
 {
     packet_t *packet = my_malloc(PACKET_SIZE);
@@ -21,11 +29,27 @@ packet_t *read_packet(int fd)
     return packet;
 }
 
+/**
+ * @brief Get a string from a packet
+ * @details Get a string from a packet
+ *
+ * @param packet the packet
+ *
+ * @return char* the string
+ */
 char *get_string_from_packet(packet_t *packet)
 {
     return my_strdup(packet->packet_body);
 }
 
+/**
+ * @brief Get a user information from a packet
+ * @details Get a user information from a packet
+ *
+ * @param packet the packet
+ *
+ * @return user_information_t* the user information
+ */
 user_information_t *get_userinfo_from_packet(packet_t *packet)
 {
     user_information_t *userinfo = my_malloc(USER_INFORMATION_SIZE);

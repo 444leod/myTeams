@@ -15,6 +15,12 @@
 #include <stdlib.h>
 #include "logging_server.h"
 
+/**
+ * @brief Read the users from the save file
+ * @details Read the users from the save file
+ *
+ * @param fd the file descriptor
+*/
 void read_users(int fd)
 {
     user_t new_user;

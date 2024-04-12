@@ -11,6 +11,12 @@
 #include "logging_client.h"
 #include <stdio.h>
 
+/**
+ * @brief Display the user logged in
+ * @details Display the user logged in and log it
+ *
+ * @param user the user
+ */
 static void display_user_logged_in(user_information_t *user)
 {
     char *uuid = get_uuid_as_string(user->user_uuid);
@@ -20,6 +26,12 @@ static void display_user_logged_in(user_information_t *user)
         user->username, uuid);
 }
 
+/**
+ * @brief Display the user logged out
+ * @details Display the user logged out
+ *
+ * @param user the user
+ */
 static void display_user_logged_out(user_information_t *user)
 {
     char *uuid = get_uuid_as_string(user->user_uuid);
@@ -29,6 +41,12 @@ static void display_user_logged_out(user_information_t *user)
         user->username, uuid);
 }
 
+/**
+ * @brief Display the user created
+ * @details Display the user created and log it
+ *
+ * @param user the user
+ */
 static void display_user_created(user_information_t *user)
 {
     char *uuid = get_uuid_as_string(user->user_uuid);
@@ -37,6 +55,12 @@ static void display_user_created(user_information_t *user)
         user->username, uuid);
 }
 
+/**
+ * @brief Handle the userinfo packet
+ * @details Handle the userinfo packet
+ *
+ * @param packet the packet
+ */
 void userinfo_packet_handler(packet_t *packet)
 {
     user_information_t *user = get_userinfo_from_packet(packet);

@@ -10,6 +10,10 @@
 #include <unistd.h>
 #include "magic_number.h"
 
+/**
+ * @brief Dump the users to a file
+ * @details Dump the users to a file
+ */
 void dump_users(void)
 {
     user_t *users = get_users();
