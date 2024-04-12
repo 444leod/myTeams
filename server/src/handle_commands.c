@@ -54,6 +54,11 @@ void handle_command(client_t client)
     DEBUG_PRINT("Handling command: %s\n", get_escaped_string(client->command));
     while (args[0] && args[0][0] == '\0')
         ++args;
+    for (uint16_t i = 0; args[i]; i++)
+        if (args[i][0] == '\0')
+            args[i] = NULL;
+    for (uint16_t i = 0; args[i]; i++)
+        DEBUG_PRINT("Arg %d: %s\n", i, get_escaped_string(args[i]));
     execute_command(args, client);
     client->data_status = WRITING;
 }
