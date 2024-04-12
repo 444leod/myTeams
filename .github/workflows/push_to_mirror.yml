@@ -16,8 +16,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Get current path
+        id: pwd
+        run: echo "::set-output name=dir::$(pwd)"
+
       - name: Set LD_LIBRARY_PATH
-        run: echo LD_LIBRARY_PATH=$(pwd)/libs/myteams:$LD_LIBRARY_PATH >> $GITHUB_ENV
+        run: echo LD_LIBRARY_PATH=${{ steps.pwd.outputs.dir }}/libs/myteams:$LD_LIBRARY_PATH >> $GITHUB_ENV
 
       - name: Test Makefile rules
         timeout-minutes: 2
