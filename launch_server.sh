@@ -8,9 +8,6 @@
 BASE_PORT=4242
 COMMAND="./myteams_server"
 
-# //launch the command with the base port, if -1 returned, increment the port and try again
-# //after, add the current port as environment variable
-
 while [ 1 ]
 do
     echo $BASE_PORT > ./.port

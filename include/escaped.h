@@ -7,7 +7,6 @@
 
 #pragma once
 
-
 struct special_char_s {
     char str;
     char *escaped;
