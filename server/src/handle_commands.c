@@ -51,6 +51,7 @@ void handle_command(client_t client)
     char *command = my_strdup(client->command);
     char **args = str_to_word_array(command, " \t");
 
+    DEBUG_PRINT("Handling command: %s\n", get_escaped_string(client->command));
     while (args[0] && args[0][0] == '\0')
         ++args;
     execute_command(args, client);

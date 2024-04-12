@@ -42,7 +42,7 @@ client_t create_client(int fd)
     client->fd = fd;
     client->next = NULL;
     client->data_status = WRITING;
-    client->current_code = SERVICE_READY_NEW_USER;
+    client->packet = build_packet(SERVICE_READY_NEW_USER, "");
     client->user = NULL;
     return client;
 }

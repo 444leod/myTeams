@@ -6,8 +6,7 @@
 */
 
 #include <stdio.h>
-
-void my_exit(int status);
+#include "lib.h"
 
 /**
  * @brief Print an error message and exit the program

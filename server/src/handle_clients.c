@@ -23,9 +23,8 @@
 */
 static void send_buffer(client_t client)
 {
-    if (client->current_code) {
+    if (client->packet) {
         reply_code(client);
-        client->current_code = 0;
         if (client->next_commands == NULL) {
             client->data_status = READING;
             return;

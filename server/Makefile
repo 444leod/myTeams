@@ -9,7 +9,6 @@ NAME = myteams_server
 
 SRC = main.c \
 	$(addprefix src/, $(SRC_SRC)) \
-	$(addprefix src/lib/, $(LIB_SRC)) \
 	$(addprefix src/network/, $(NETWORK_SRC)) \
 	$(addprefix src/network/client_linked_list/, $(CLIENT_LLIST_SRC)) \
 	$(addprefix src/network/user_linked_list/, $(USER_LLIST_SRC)) \
@@ -19,22 +18,7 @@ SRC_SRC = server.c \
 	check_args.c \
 	handle_clients.c \
 	handle_commands.c \
-
-LIB_SRC = exit.c \
-	my_error.c \
-	garbage_collector.c \
-	garbage_llist.c \
-	my_strdup.c \
-	str_to_word_array.c \
-	tablen.c \
-	supercat.c \
-	get_current_dir.c \
-	my_snprintf.c \
-	replace_char.c \
-	debug_print.c \
-	escaped_string.c \
-	get_uuid_as_string.c \
-	magic_number.c \
+	exit.c \
 
 COMMANDS_SRC = commands.c \
 	create.c \
@@ -53,13 +37,8 @@ COMMANDS_SRC = commands.c \
 	users.c \
 	unknown_command.c \
 
-NETWORK_SRC = get_socket.c \
-	bind_socket.c \
-	listen_socket.c \
-	accept_socket.c \
-	reply_code.c \
+NETWORK_SRC = reply_code.c \
 	special_print.c \
-	get_port.c \
 
 CLIENT_LLIST_SRC = add_client.c \
 	create_client.c \
@@ -76,7 +55,8 @@ OBJ = $(SRC:.c=.o)
 
 CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror -Wpedantic -I./include -luuid
+CFLAGS = -Wall -Wextra -Werror -Wpedantic -I./include -I../include \
+	-luuid -L ../libs/myteams/ -lmyteams -L ../ -lmy -lnetwork
 
 all: $(NAME)
 

@@ -13,6 +13,7 @@
 #include "debug.h"
 #include <unistd.h>
 #include <stdlib.h>
+#include "logging_server.h"
 
 void read_users(int fd)
 {
@@ -29,6 +30,8 @@ void read_users(int fd)
         new_user->next = NULL;
         new_user->status = STATUS_NOT_LOGGED_IN;
         add_user(new_user);
+        server_event_user_loaded(
+            get_uuid_as_string(new_user->uuid), new_user->username);
     }
 }
 

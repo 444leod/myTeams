@@ -7,6 +7,8 @@
 
 #include "clientllist.h"
 #include "garbage_collector.h"
+#include "logging_server.h"
+#include "lib.h"
 #include <unistd.h>
 
 /**
@@ -22,6 +24,7 @@ static void destroy_fds(client_t tmp)
     }
     if (tmp->user)
         tmp->user->status = STATUS_NOT_LOGGED_IN;
+    server_event_user_logged_out(get_uuid_as_string(tmp->user->uuid));
 }
 
 /**

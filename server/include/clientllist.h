@@ -9,11 +9,12 @@
 
 #include <stdlib.h>
 #include <uuid/uuid.h>
+#include "packet.h"
 
 #define USER_SAVE_PATH ".save/.users"
 
 typedef struct user_s {
-    char username[33];
+    username_t username;
     uuid_t uuid;
     struct user_s *next;
     enum {
@@ -34,11 +35,12 @@ user_t get_user_by_username(char *username);
 typedef struct client_s {
     int fd;
     struct user_s *user;
+    packet_t *packet;
     char *command;
     char *next_commands;
     char *buffer;
     char **args;
-    int current_code;
+    unsigned int data_len;
     enum {
         READING,
         WRITING,
