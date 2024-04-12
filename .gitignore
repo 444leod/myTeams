@@ -39,3 +39,5 @@ myteams_cli
 .save
 .port
 vgcore*
+logging_server.h
+logging_client.h
