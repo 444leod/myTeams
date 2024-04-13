@@ -63,11 +63,7 @@ re: fclean all
 debug:
 	$(CC) $(CFLAGS) -g3
 
-dev:
-	$(CC) $(NAME_NETWORK_LIB) $(OBJ_NETWORK_SRC) $(CFLAGS) -DDEV_MODE
-	cp $(NAME_NETWORK_LIB) ../
-	$(CC) $(NAME_LIB) $(OBJ_SRC) $(CFLAGS) -DDEV_MODE
-	cp $(NAME_LIB) ../
+dev: all
 
 
 .PHONY: all clean fclean re

@@ -21,7 +21,7 @@
  * @return true if the command is valid
  * @return false if the command is not valid
  */
-bool is_command_valid(client_t client, char **command)
+static bool is_command_valid(client_t client, char **command)
 {
     if (tablen((void **)command) != 2) {
         client->packet = build_packet(SYNTAX_ERROR_IN_PARAMETERS, "");
