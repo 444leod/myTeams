@@ -77,7 +77,8 @@ void send_message(int socketFd, char **message)
 
     if (*message == NULL)
         return;
-    str[strlen(str) - 1] = 0;
+    if (str[strlen(str) - 1] == '\n' || str[strlen(str) - 1] == ' ')
+        str[strlen(str) - 1] = '\0';
     str = supercat(2, str, "\r\n");
     send(socketFd, str, strlen(str), 0);
     my_free(*message);
@@ -99,7 +100,7 @@ void get_input(char **message)
         printf("Closed connexion.\n");
         my_exit(0);
     }
-    *message = my_strdup(buffer);
+    *message = my_strndup(buffer, strlen(buffer) - 1);
     DEBUG_PRINT("Message len is: %ld\n", strlen(*message));
     process_input(message);
 }

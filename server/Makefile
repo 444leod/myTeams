@@ -39,6 +39,7 @@ COMMANDS_SRC = commands.c \
 
 NETWORK_SRC = reply_code.c \
 	special_print.c \
+	global_packet_send.c \
 
 CLIENT_LLIST_SRC = add_client.c \
 	create_client.c \

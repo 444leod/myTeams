@@ -50,7 +50,7 @@ static bool is_command_valid(client_t client, char **command)
  *
  * @return the created user
  */
-user_t create_user(char *username, int *code)
+user_t create_user(char *username)
 {
     user_t new_user;
     char *username_buffer = my_malloc(sizeof(char) * MAX_NAME_LENGTH + 1);
@@ -59,7 +59,6 @@ user_t create_user(char *username, int *code)
     memset(username_buffer, 0, sizeof(char) * MAX_NAME_LENGTH + 1);
     add_user_by_username(username);
     new_user = get_user_by_username(username);
-    *code = USER_CREATED;
     memcpy(username_buffer, new_user->username, MAX_NAME_LENGTH + 1);
     uuid_string = get_uuid_as_string(new_user->uuid);
     server_event_user_created(uuid_string, username_buffer);
@@ -76,18 +75,23 @@ user_t create_user(char *username, int *code)
 void login(client_t client, char **command)
 {
     user_t user;
-    int code;
+    packet_t *packet;
 
     if (!is_command_valid(client, command))
         return;
     user = get_user_by_username(command[1]);
+    if (user && user->status == STATUS_LOGGED_IN) {
+        add_packet_to_queue(&client->packet_queue,
+            build_packet(USER_ALREADY_LOGGED_IN, ""));
+        return;
+    }
     if (!user) {
-        user = create_user(command[1], &code);
-    } else
-        code = USER_LOGGED_IN;
+        user = create_user(command[1]);
+    }
     client->user = user;
     user->status = STATUS_LOGGED_IN;
-    add_packet_to_queue(&client->packet_queue,
-        build_packet(code, get_uuid_as_string(user->uuid)));
+    packet = build_userinfo_packet(USER_LOGGED_IN, user->username, user->uuid);
+    add_packet_to_queue(&client->packet_queue, packet);
     server_event_user_logged_in(get_uuid_as_string(user->uuid));
+    send_packet_to_logged_users(packet, client);
 }

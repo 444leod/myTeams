@@ -35,14 +35,15 @@ static void display_user_logged_in(user_information_t *user, bool is_global)
  *
  * @param user the user
  */
-static void display_user_logged_out(user_information_t *user)
+static void display_user_logged_out(user_information_t *user, bool is_global)
 {
     char *uuid = get_uuid_as_string(user->user_uuid);
 
     client_event_logged_out(uuid, user->username);
     printf("User logged out (username: \"%s\", uuid: \"%s\")\n",
         user->username, uuid);
-    my_exit(0);
+    if (!is_global)
+        my_exit(0);
 }
 
 /**
@@ -76,7 +77,7 @@ void userinfo_packet_handler(packet_t *packet)
             display_user_logged_in(user, packet->is_global);
             break;
         case USER_LOGGED_OUT:
-            display_user_logged_out(user);
+            display_user_logged_out(user, packet->is_global);
             break;
         case USER_CREATED:
             display_user_created(user, packet->is_global);

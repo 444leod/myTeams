@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <sys/select.h>
 #include "server_teams.h"
+#include <sys/select.h>
 #include <stdbool.h>
 
 typedef struct command_s {

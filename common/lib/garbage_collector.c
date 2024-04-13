@@ -88,6 +88,17 @@ void *force_malloc(size_t size)
     return variable;
 }
 
+/**
+ * @brief Realloc wrapper with garbage collector
+ * @details Realloc wrapper with garbage collector, realloc the pointer and
+ * update it in the linked list
+ *
+ * @param ptr the pointer to realloc
+ * @param size the size of the memory to allocate
+ * @param old_size the old size of the memory
+ *
+ * @return void* the pointer to the allocated memory
+*/
 void *my_realloc(void *ptr, size_t size, size_t old_size)
 {
     void *variable = my_malloc(size);

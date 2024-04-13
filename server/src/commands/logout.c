@@ -38,12 +38,14 @@ static bool is_command_valid(client_t client, char **command)
 void logout(client_t client, char **command)
 {
     user_t user = client->user;
+    packet_t *pkt;
 
     if (!is_command_valid(client, command))
         return;
-    add_packet_to_queue(&client->packet_queue,
-        build_userinfo_packet(USER_LOGGED_OUT, user->username, user->uuid));
+    pkt = build_userinfo_packet(USER_LOGGED_OUT, user->username, user->uuid);
+    add_packet_to_queue(&client->packet_queue, pkt);
     user->status = STATUS_NOT_LOGGED_IN;
     client->user = NULL;
     server_event_user_logged_out(get_uuid_as_string(user->uuid));
+    send_packet_to_logged_users(pkt, client);
 }

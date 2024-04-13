@@ -55,5 +55,4 @@ void handle_command(client_t client)
     for (size_t i = 0; args && args[i]; i++)
         DEBUG_PRINT("Arg %ld: %s\n", i, get_escaped_string(args[i]));
     execute_command(args, client);
-    client->data_status = WRITING;
 }

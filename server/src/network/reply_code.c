@@ -87,6 +87,7 @@ const server_message_t serverMessages[] = {
         "Forbidden characters used, only alphanumerical "
         "characters are allowed."},
     {NOT_LOGGED_IN, "Not logged in."},
+    {USER_ALREADY_LOGGED_IN, "User already logged in."},
     {-1, "Something went wrong with the server."}
 };
 
