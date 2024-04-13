@@ -10,6 +10,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include "server_teams.h"
+#include "data_structures.h"
 
 /**
  * @brief Create the save folder
@@ -18,6 +19,16 @@
 void create_save_folder(void)
 {
     mkdir(".save", 0777);
+}
+
+/**
+ * @brief Dump the data structures
+ * @details Dump the data structures to the save folder
+*/
+void dump_datas(void)
+{
+    dump_threads();
+    dump_users();
 }
 
 /**
@@ -39,7 +50,7 @@ static void my_clean_exit(int status, int fd)
     if (actualFd != -1)
         close(actualFd);
     create_save_folder();
-    dump_users();
+    dump_datas();
     clear_clients();
     my_free_all();
     exit(status);

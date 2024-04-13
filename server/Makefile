@@ -40,6 +40,10 @@ COMMANDS_SRC = commands.c \
 NETWORK_SRC = reply_code.c \
 	special_print.c \
 	global_packet_send.c \
+	threads/create_thread.c \
+	threads/get_threads.c \
+	threads/init_threads.c \
+	threads/dump_threads.c \
 
 CLIENT_LLIST_SRC = add_client.c \
 	create_client.c \

@@ -19,11 +19,10 @@ void dump_users(void)
     user_t *users = get_users();
     user_t tmp = *users;
     int fd = open(USER_SAVE_PATH, O_CREAT | O_WRONLY | O_TRUNC, 0666);
-    unsigned int magic_number = MAGIC_NUMBER;
 
     if (fd == -1)
         return;
-    write(fd, &magic_number, sizeof(magic_number));
+    write_magic_number(fd);
     while (tmp) {
         tmp->status = STATUS_NOT_LOGGED_IN;
         write(fd, tmp, sizeof(struct user_s));
