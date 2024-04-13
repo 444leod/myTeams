@@ -10,6 +10,13 @@
 #include "garbage_collector.h"
 #include <string.h>
 
+/**
+ * @brief Send a packet to all logged users
+ * @details Send a packet to all logged users
+ *
+ * @param packet the packet
+ * @param client the client
+ */
 void send_packet_to_logged_users(packet_t *packet, client_t client)
 {
     client_t *clients = get_clients();

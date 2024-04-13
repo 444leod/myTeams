@@ -145,7 +145,6 @@ void verify_command(char **message, char **args, int args_nbr)
     *message = NULL;
 }
 
-//must replace str to word array with quote_split
 /**
  * @brief Process the input of the user
  * @details Process the input of the user
