@@ -41,7 +41,7 @@ client_t create_client(int fd)
     initialize_client_buffers(client);
     client->fd = fd;
     client->next = NULL;
-    client->data_status = WRITING;
+    client->data_status = READING;
     client->packet_queue = NULL;
     add_packet_to_queue(&client->packet_queue, build_packet(NEW_USER, ""));
     client->user = NULL;

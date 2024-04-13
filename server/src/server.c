@@ -62,16 +62,9 @@ static void add_clients_to_set(
     client_t tmp = *clients;
 
     while (tmp) {
-        switch (tmp->data_status) {
-            case READING:
-                FD_SET(tmp->fd, readfds);
-                break;
-            case WRITING:
-                FD_SET(tmp->fd, writefds);
-                break;
-            default:
-                break;
-        }
+        FD_SET(tmp->fd, readfds);
+        if (tmp->packet_queue)
+            FD_SET(tmp->fd, writefds);
         if (tmp->fd > *max_sd)
             *max_sd = tmp->fd;
         tmp = tmp->next;
