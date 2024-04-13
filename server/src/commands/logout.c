@@ -23,11 +23,13 @@
 static bool is_command_valid(client_t client, char **command)
 {
     if (tablen((void **)command) != 1) {
-        client->packet = build_packet(SYNTAX_ERROR_IN_PARAMETERS, "");
+        add_packet_to_queue(&client->packet_queue,
+            build_packet(SYNTAX_ERROR_IN_PARAMETERS, ""));
         return false;
     }
     if (!client->user) {
-        client->packet = build_packet(NOT_LOGGED_IN, "");
+        add_packet_to_queue(&client->packet_queue,
+            build_packet(NOT_LOGGED_IN, ""));
         return false;
     }
     return true;
@@ -39,8 +41,8 @@ void logout(client_t client, char **command)
 
     if (!is_command_valid(client, command))
         return;
-    client->packet =
-        build_userinfo_packet(USER_LOGGED_OUT, user->username, user->uuid);
+    add_packet_to_queue(&client->packet_queue,
+        build_userinfo_packet(USER_LOGGED_OUT, user->username, user->uuid));
     user->status = STATUS_NOT_LOGGED_IN;
     client->user = NULL;
     server_event_user_logged_out(get_uuid_as_string(user->uuid));
