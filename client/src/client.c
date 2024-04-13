@@ -93,14 +93,21 @@ void send_message(int socketFd, char **message)
 */
 void get_input(char **message)
 {
-    char *buffer = NULL;
-    size_t size = 1024;
+    char *buffer = my_malloc(sizeof(char) * 1024);
+    size_t size = 0;
+    size_t total_size = 0;
 
-    if (getline(&buffer, &size, stdin) == -1) {
-        printf("Closed connexion.\n");
+    size = read(0, buffer, 1);
+    while (size == 1 && buffer[total_size] != '\n') {
+        total_size += size;
+        size = read(0, buffer + total_size, 1);
+    }
+    buffer[total_size] = '\0';
+    if (size == 0) {
+        printf("Exiting\n");
         my_exit(0);
     }
-    *message = my_strndup(buffer, strlen(buffer) - 1);
+    *message = my_strdup(buffer);
     DEBUG_PRINT("Message len is: %ld\n", strlen(*message));
     process_input(message);
 }
