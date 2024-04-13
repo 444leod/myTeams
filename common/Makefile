@@ -22,6 +22,7 @@ SRC_LIB = 	./lib/debug_print.c \
 	./lib/str_to_word_array.c \
 	./lib/supercat.c \
 	./lib/tablen.c \
+	./lib/quote_splitter.c \
 
 SRC_NETWORK_LIB = 	./network/accept_socket.c \
 	./network/bind_socket.c \

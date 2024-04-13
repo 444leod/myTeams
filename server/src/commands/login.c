@@ -88,6 +88,6 @@ void login(client_t client, char **command)
     client->user = user;
     user->status = STATUS_LOGGED_IN;
     add_packet_to_queue(&client->packet_queue,
-        build_packet(code, get_uuid_as_string(user->uuid)));
+        build_userinfo_packet(code, user->username, user->uuid));
     server_event_user_logged_in(get_uuid_as_string(user->uuid));
 }

@@ -62,6 +62,66 @@ void check_requirements(cmd_requirements_t cmd_requirements, int args_nbr,
 }
 
 /**
+ * @brief Remove the quotes from a string
+ * @details Remove the quotes from a string
+ *
+ * @param str the string
+ *
+ * @return the string without quotes
+*/
+static char *remove_quotes(char *str)
+{
+    if (str[0] == '"' && str[strlen(str) - 1] == '"') {
+        str[strlen(str) - 1] = '\0';
+        str++;
+    }
+    return str;
+}
+
+/**
+ * @brief Rebuild a string from an array of strings
+ * @details Rebuild a string from an array of strings
+ *
+ * @param args the array of strings
+ *
+ * @return the rebuilt string
+*/
+static char *rebuild_string(char **args)
+{
+    char *str = supercat(2, args[0], " ");
+
+    for (uint16_t i = 1; args[i]; i++) {
+        str = supercat(3, str, args[i], " ");
+    }
+    return str;
+}
+
+/**
+ * @brief Check if the parameters are quoted
+ * @details Check if the parameters are quoted
+ *
+ * @param args the arguments
+ * @param message the message
+*/
+static void check_quoted_parameters(char **args, char **message)
+{
+    if (*message == NULL)
+        return;
+    for (int i = 1; args[i]; i++) {
+        if (args[i][0] != '\"' || args[i][strlen(args[i]) - 1] != '\"') {
+            printf("parse error: missing quotes on parameter %d", i);
+            my_free(*message);
+            *message = NULL;
+            return;
+        }
+    }
+    for (uint16_t i = 1; args[i]; i++)
+        args[i] = remove_quotes(args[i]);
+    my_free(*message);
+    *message = rebuild_string(args);
+}
+
+/**
  * @brief Verify if the command given is valid
  * @details Verify if the command given is valid
  *
@@ -71,9 +131,12 @@ void check_requirements(cmd_requirements_t cmd_requirements, int args_nbr,
 */
 void verify_command(char **message, char **args, int args_nbr)
 {
+    if (args[0][strlen(args[0]) - 1] == '\n')
+        args[0][strlen(args[0]) - 1] = '\0';
     for (int i = 0; cmd_requirements[i].command; i++) {
         if (strcmp(cmd_requirements[i].command, args[0]) == 0) {
             check_requirements(cmd_requirements[i], args_nbr, message);
+            check_quoted_parameters(args, message);
             return;
         }
     }
@@ -91,14 +154,8 @@ void verify_command(char **message, char **args, int args_nbr)
 */
 void process_input(char **message)
 {
-    char **args = str_to_word_array(*message, " \t\n");
+    char **args = quote_split(*message);
 
-    for (uint16_t i = tablen((void **)args) - 1; i > 0; i--) {
-        if (args[i][0] == '\0')
-            args[i] = NULL;
-        else
-            break;
-    }
     if (args == NULL) {
         printf("Invalid command (unmatching quote)\n");
         my_free(*message);
@@ -109,6 +166,12 @@ void process_input(char **message)
         my_free(*message);
         *message = NULL;
         return;
+    }
+    for (uint16_t i = tablen((void **)args) - 1; i > 0; i--) {
+        if (args[i][0] == '\0')
+            args[i] = NULL;
+        else
+            break;
     }
     verify_command(message, args, tablen((void **)args));
 }
