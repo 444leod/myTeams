@@ -22,4 +22,4 @@ do
     fi
 done
 
-rm ./.port
+rm -f ./.port
