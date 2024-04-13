@@ -25,6 +25,7 @@ void read_users(int fd)
 {
     user_t new_user;
     int rd = 0;
+    char *username_buffer = my_malloc(sizeof(char) * (MAX_NAME_LENGTH + 1));
 
     while (1) {
         new_user = my_malloc(sizeof(struct user_s));
@@ -36,8 +37,9 @@ void read_users(int fd)
         new_user->next = NULL;
         new_user->status = STATUS_NOT_LOGGED_IN;
         add_user(new_user);
+        memcpy(username_buffer, new_user->username, MAX_NAME_LENGTH + 1);
         server_event_user_loaded(
-            get_uuid_as_string(new_user->uuid), new_user->username);
+            get_uuid_as_string(new_user->uuid), username_buffer);
     }
 }
 
