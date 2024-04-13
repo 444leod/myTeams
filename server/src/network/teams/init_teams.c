@@ -30,7 +30,7 @@ void read_teams(int fd)
     while (1) {
         new_team = my_malloc(sizeof(team_t));
         rd = read(fd, new_team, sizeof(team_t));
-        if (rd <= 0) {
+        if (rd <= 0 || rd != sizeof(team_t)) {
             my_free(new_team);
             break;
         }

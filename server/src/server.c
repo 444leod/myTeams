@@ -152,9 +152,9 @@ void teams_loop(int socketFd, server_info_t server_info)
 */
 static void init_from_saves(void)
 {
-    init_users();
-    init_threads();
     init_teams();
+    init_threads();
+    init_users();
 }
 
 /**

@@ -30,7 +30,7 @@ void read_threads(int fd)
     while (1) {
         new_thread = my_malloc(sizeof(thread_t));
         rd = read(fd, new_thread, sizeof(thread_t));
-        if (rd <= 0) {
+        if (rd <= 0 || rd != sizeof(thread_t)) {
             my_free(new_thread);
             break;
         }

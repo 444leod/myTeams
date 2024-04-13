@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include <uuid/uuid.h>
 #include "packet.h"
+#include "linked_lists.h"
+#include "data_structures.h"
 
 #define USER_SAVE_PATH ".save/.users"
 
@@ -21,6 +23,7 @@ typedef struct user_s {
         STATUS_NOT_LOGGED_IN,
         STATUS_LOGGED_IN,
     } status;
+    teams_t *subscribed_teams;
 } *user_t;
 
 void init_users(void);
