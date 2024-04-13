@@ -26,7 +26,7 @@ static void execute_command(UNUSED char **command, UNUSED client_t client)
     size_t i = 0;
 
     DEBUG_PRINT("Executing command: %s\n", command[0]);
-    if (command[0] == NULL) {
+    if (command == NULL || command[0] == NULL) {
         unknown_command(client, command);
         return;
     }
@@ -49,16 +49,11 @@ static void execute_command(UNUSED char **command, UNUSED client_t client)
 void handle_command(client_t client)
 {
     char *command = my_strdup(client->command);
-    char **args = str_to_word_array(command, " \t");
+    char **args = quote_split(command);
 
     DEBUG_PRINT("Handling command: %s\n", get_escaped_string(client->command));
-    while (args[0] && args[0][0] == '\0')
-        ++args;
-    for (uint16_t i = 0; args[i]; i++)
-        if (args[i][0] == '\0')
-            args[i] = NULL;
-    for (uint16_t i = 0; args[i]; i++)
-        DEBUG_PRINT("Arg %d: %s\n", i, get_escaped_string(args[i]));
+    for (size_t i = 0; args && args[i]; i++)
+        DEBUG_PRINT("Arg %ld: %s\n", i, get_escaped_string(args[i]));
     execute_command(args, client);
     client->data_status = WRITING;
 }
