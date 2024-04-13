@@ -68,8 +68,6 @@ void add_subscribed_teams(user_t user, int fd)
 {
     int rd = 0;
     int teams_nb = 0;
-    team_t *team = NULL;
-    uuid_t team_uuid;
 
     if (!check_is_team_subscribed(fd))
         return;
