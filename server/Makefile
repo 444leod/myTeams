@@ -42,8 +42,14 @@ NETWORK_SRC = reply_code.c \
 	global_packet_send.c \
 	threads/create_thread.c \
 	threads/get_threads.c \
+	threads/get_thread.c \
 	threads/init_threads.c \
 	threads/dump_threads.c \
+	teams/create_team.c \
+	teams/get_teams.c \
+	teams/get_team.c \
+	teams/init_teams.c \
+	teams/dump_teams.c \
 
 CLIENT_LLIST_SRC = add_client.c \
 	create_client.c \

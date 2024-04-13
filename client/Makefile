@@ -24,8 +24,9 @@ PACKET_HANDLER_SRC = buffer.c \
 	error.c \
 	userinfo.c \
 	userinfo/info.c \
-	userinfo/log.c \ \
+	userinfo/log.c \
 	thread.c \
+	team.c
 
 OBJ = $(SRC:.c=.o)
 
