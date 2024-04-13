@@ -8,6 +8,7 @@
 #include "clientllist.h"
 #include "garbage_collector.h"
 #include "logging_server.h"
+#include "server_teams.h"
 #include "lib.h"
 #include "packet.h"
 #include "reply_code.h"
