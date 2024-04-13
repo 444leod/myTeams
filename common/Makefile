@@ -22,6 +22,7 @@ SRC_LIB = 	./lib/debug_print.c \
 	./lib/str_to_word_array.c \
 	./lib/supercat.c \
 	./lib/tablen.c \
+	./lib/quote_splitter.c \
 
 SRC_NETWORK_LIB = 	./network/accept_socket.c \
 	./network/bind_socket.c \
@@ -63,11 +64,7 @@ re: fclean all
 debug:
 	$(CC) $(CFLAGS) -g3
 
-dev:
-	$(CC) $(NAME_NETWORK_LIB) $(OBJ_NETWORK_SRC) $(CFLAGS) -DDEV_MODE
-	cp $(NAME_NETWORK_LIB) ../
-	$(CC) $(NAME_LIB) $(OBJ_SRC) $(CFLAGS) -DDEV_MODE
-	cp $(NAME_LIB) ../
+dev: all
 
 
 .PHONY: all clean fclean re
