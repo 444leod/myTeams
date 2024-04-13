@@ -25,3 +25,4 @@ char *my_snprintf(const char *format, ...);
 char *replace_char(char *str, char find, char replace);
 char *get_uuid_as_string(uuid_t uuid);
 void my_exit(int status);
+char **quote_split(char *str);
