@@ -23,6 +23,7 @@ SRC_LIB = 	./lib/debug_print.c \
 	./lib/supercat.c \
 	./lib/tablen.c \
 	./lib/quote_splitter.c \
+	./lib/linked_list.c \
 
 SRC_NETWORK_LIB = 	./network/accept_socket.c \
 	./network/bind_socket.c \
