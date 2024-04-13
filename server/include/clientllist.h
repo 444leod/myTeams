@@ -43,7 +43,6 @@ typedef struct client_s {
     unsigned int data_len;
     enum {
         READING,
-        WRITING,
         PROCESSING,
     } data_status;
     struct client_s *next;

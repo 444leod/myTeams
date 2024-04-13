@@ -109,7 +109,7 @@ static void check_quoted_parameters(char **args, char **message)
         return;
     for (int i = 1; args[i]; i++) {
         if (args[i][0] != '\"' || args[i][strlen(args[i]) - 1] != '\"') {
-            printf("parse error: missing quotes on parameter %d", i);
+            printf("parse error: missing quotes on parameter %d\n", i);
             my_free(*message);
             *message = NULL;
             return;
