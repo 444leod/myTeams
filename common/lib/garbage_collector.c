@@ -88,12 +88,11 @@ void *force_malloc(size_t size)
     return variable;
 }
 
-/**
- * @brief Free wrapper (no garbage collector)
- *
- * @param pointer the pointer to free
-*/
-void force_free(void *pointer)
+void *my_realloc(void *ptr, size_t size, size_t old_size)
 {
-    free(pointer);
+    void *variable = my_malloc(size);
+
+    memcpy(variable, ptr, old_size);
+    my_free(ptr);
+    return variable;
 }
