@@ -18,4 +18,5 @@ extern const packet_handler_t packet_handlers[];
 
 void buffer_packet_handler(packet_t *packet);
 void userinfo_packet_handler(packet_t *packet);
+void thread_packet_handler(packet_t *packet);
 void error_packet_handler(packet_t *packet);

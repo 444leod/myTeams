@@ -55,11 +55,11 @@ void init_users(void)
     *clients = NULL;
     DEBUG_PRINT("Init users\n");
     if (fd == -1) {
-        printf("No save file\n");
+        printf("users: No save file\n");
         return;
     }
     if (!is_magic_number_valid(fd)) {
-        printf("Invalid magic number\n");
+        printf("users: Invalid magic number\n");
         close(fd);
         return;
     }

@@ -36,6 +36,27 @@ packet_t *build_userinfo_packet(int code, username_t username, uuid_t uuid)
 }
 
 /**
+ * @brief Build a packet with a code and a thread
+ * @details Build a packet with the given code and thread, its type is set to
+ *        THREAD
+ *
+ * @param code the code
+ * @param thread the thread
+ *
+ * @return the created packet
+*/
+packet_t *build_thread_packet(int code, thread_t *thread)
+{
+    packet_t *packet = my_malloc(PACKET_SIZE);
+
+    packet->code = code;
+    packet->packet_type = THREAD;
+    packet->is_global = false;
+    memcpy(packet->packet_body, thread, THREAD_SIZE);
+    return packet;
+}
+
+/**
  * @brief Build a packet with a string
  * @details Build a packet with the given code and buffer, its type is set to
  *        NONE

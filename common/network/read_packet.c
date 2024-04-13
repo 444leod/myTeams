@@ -57,3 +57,19 @@ user_information_t *get_userinfo_from_packet(packet_t *packet)
     memcpy(userinfo, packet->packet_body, USER_INFORMATION_SIZE);
     return userinfo;
 }
+
+/**
+ * @brief Get a thread from a packet
+ * @details Get a thread from a packet
+ *
+ * @param packet the packet
+ *
+ * @return thread_t* the thread
+ */
+thread_t *get_thread_from_packet(packet_t *packet)
+{
+    thread_t *thread = my_malloc(THREAD_SIZE);
+
+    memcpy(thread, packet->packet_body, THREAD_SIZE);
+    return thread;
+}
