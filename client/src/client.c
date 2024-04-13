@@ -101,6 +101,7 @@ void get_input(char **message)
     }
     *message = my_strdup(buffer);
     DEBUG_PRINT("Message len is: %ld\n", strlen(*message));
+    process_input(message);
 }
 
 /**

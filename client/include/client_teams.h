@@ -16,6 +16,7 @@
 #include <signal.h>
 #include <sys/select.h>
 #include <arpa/inet.h>
+#include <stdbool.h>
 #include "lib.h"
 #include "debug.h"
 #include "garbage_collector.h"
@@ -37,3 +38,5 @@ void print_fd_set(fd_set *readfds, fd_set *writefds);
 void get_port(int fd, int *port);
 void connect_to_server(int sockfd, char *ip, int port);
 void parse_reply(int socketFd);
+bool is_logged(bool change);
+void process_input(char **message);

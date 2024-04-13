@@ -8,6 +8,7 @@
 #pragma once
 
     #include <uuid/uuid.h>
+    #include <stdbool.h>
 
 #define MAX_NAME_LENGTH 32
 typedef char username_t[MAX_NAME_LENGTH + 1];
@@ -19,6 +20,7 @@ enum PACKET_TYPE {
 
 typedef struct packet_s {
     int code;
+    bool is_global;
     int packet_type;
     char packet_body[4096];
 } packet_t;

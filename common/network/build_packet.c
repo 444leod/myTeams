@@ -28,6 +28,7 @@ packet_t *build_userinfo_packet(int code, username_t username, uuid_t uuid)
 
     packet->code = code;
     packet->packet_type = USER_INFORMATION;
+    packet->is_global = false;
     memcpy(user->username, username, sizeof(username_t));
     memcpy(user->user_uuid, uuid, sizeof(uuid_t));
     memcpy(packet->packet_body, user, USER_INFORMATION_SIZE);
@@ -50,6 +51,7 @@ packet_t *build_packet(int code, char *buffer)
 
     packet->code = code;
     packet->packet_type = NONE;
+    packet->is_global = false;
     memset(packet->packet_body, 0, sizeof(packet->packet_body));
     memcpy(packet->packet_body, buffer, strlen(buffer));
     return packet;
