@@ -24,15 +24,18 @@
 static bool is_command_valid(client_t client, char **command)
 {
     if (tablen((void **)command) != 2) {
-        client->packet = build_packet(SYNTAX_ERROR_IN_PARAMETERS, "");
+        add_packet_to_queue(&client->packet_queue,
+            build_packet(SYNTAX_ERROR_IN_PARAMETERS, ""));
         return false;
     }
     if (client->user) {
-        client->packet = build_packet(ALREADY_LOGGED_IN, "");
+        add_packet_to_queue(&client->packet_queue,
+            build_packet(ALREADY_LOGGED_IN, ""));
         return false;
     }
     if (strlen(command[1]) > 32) {
-        client->packet = build_packet(NAME_TOO_LONG, "");
+        add_packet_to_queue(&client->packet_queue,
+            build_packet(NAME_TOO_LONG, ""));
         return false;
     }
     return true;
@@ -84,6 +87,7 @@ void login(client_t client, char **command)
         code = USER_LOGGED_IN;
     client->user = user;
     user->status = STATUS_LOGGED_IN;
-    client->packet = build_userinfo_packet(code, user->username, user->uuid);
+    add_packet_to_queue(&client->packet_queue,
+        build_packet(code, get_uuid_as_string(user->uuid)));
     server_event_user_logged_in(get_uuid_as_string(user->uuid));
 }

@@ -49,7 +49,7 @@ const server_message_t serverMessages[] = {
     {CHANNEL_CONTEXT_SET, "Channel context set."},
     {THREAD_CONTEXT_SET, "Thread context set."},
 
-    {SERVICE_READY_NEW_USER, "Service ready for new user."},
+    {NEW_USER, "Service ready for new user."},
 
     {MESSAGE_SENT, "Message sent."},
 
@@ -114,26 +114,26 @@ static bool special_reply_code(int code)
  * If it's a custom message, it will use the client buffer to send the message
  *
  * @param code the code to rebuild the packet with
- * @param client the client to rebuild the packet for
+ * @param packet the packet to rebuild
+ *
+ * @return the rebuilt packet
 */
-void rebuild_packet(int code, client_t client)
+packet_t *rebuild_packet(int code, packet_t *packet)
 {
-    packet_t *packet = client->packet;
     uint16_t i = 0;
 
     if (special_reply_code(code))
-        return;
+        return packet;
     for (i = 0; serverMessages[i].code != -1; i++) {
         if (serverMessages[i].code == code) {
             my_free(packet);
             packet = build_packet(code, my_strdup(serverMessages[i].message));
-            client->packet = packet;
-            return;
+            return packet;
         }
     }
     my_free(packet);
     packet = build_packet(UNKNOWN_ERROR, my_strdup(serverMessages[i].message));
-    client->packet = packet;
+    return packet;
 }
 
 /**
@@ -144,10 +144,10 @@ void rebuild_packet(int code, client_t client)
 */
 void reply_code(client_t client)
 {
+    packet_t *packet = pop_packet_from_queue(&client->packet_queue);
     int socketFd = client->fd;
-    int code = client->packet->code;
+    int code = packet->code;
 
-    rebuild_packet(code, client);
-    send_packet(socketFd, client->packet);
-    my_free(client->packet);
+    packet = rebuild_packet(code, packet);
+    send_packet(socketFd, packet);
 }

@@ -32,6 +32,7 @@ SRC_NETWORK_LIB = 	./network/accept_socket.c \
 	./network/build_packet.c \
 	./network/read_packet.c \
 	./network/send_packet.c \
+	./network/packet_queue.c \
 
 CC = gcc
 
