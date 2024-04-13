@@ -13,6 +13,8 @@
  * @brief Create a thread object
  * @details Create a thread object
  *
+ * TODO: Add the thread's channel to the constructor
+ *
  * @param title the title of the thread
  * @param body the body of the thread
  * @param creator_uuid the creator of the thread
