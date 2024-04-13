@@ -42,7 +42,8 @@ client_t create_client(int fd)
     client->fd = fd;
     client->next = NULL;
     client->data_status = WRITING;
-    client->packet = build_packet(SERVICE_READY_NEW_USER, "");
+    client->packet_queue = NULL;
+    add_packet_to_queue(&client->packet_queue, build_packet(NEW_USER, ""));
     client->user = NULL;
     return client;
 }

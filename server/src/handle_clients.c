@@ -23,7 +23,7 @@
 */
 static void send_buffer(client_t client)
 {
-    if (client->packet) {
+    if (client->packet_queue) {
         reply_code(client);
         if (client->next_commands == NULL) {
             client->data_status = READING;

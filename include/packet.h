@@ -25,6 +25,11 @@ typedef struct packet_s {
     char packet_body[4096];
 } packet_t;
 
+typedef struct packet_queue_s {
+    packet_t *packet;
+    struct packet_queue_s *next;
+} *packet_queue_t;
+
 typedef struct user_information_s {
     username_t username;
     uuid_t user_uuid;
@@ -32,6 +37,10 @@ typedef struct user_information_s {
 
     #define PACKET_SIZE sizeof(struct packet_s)
     #define USER_INFORMATION_SIZE sizeof(struct user_information_s)
+
+void add_packet_to_queue(packet_queue_t *queue, packet_t *packet);
+packet_t *pop_packet_from_queue(packet_queue_t *queue);
+void free_packet_queue(packet_queue_t *queue);
 
 void send_packet(int fd, packet_t *packet);
 

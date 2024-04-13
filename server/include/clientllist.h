@@ -35,7 +35,7 @@ user_t get_user_by_username(char *username);
 typedef struct client_s {
     int fd;
     struct user_s *user;
-    packet_t *packet;
+    packet_queue_t packet_queue;
     char *command;
     char *next_commands;
     char *buffer;
