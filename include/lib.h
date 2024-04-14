@@ -10,6 +10,7 @@
 #include <errno.h>
 #include <string.h>
 #include <uuid/uuid.h>
+#include <stdbool.h>
 #include "escaped.h"
 
 void my_error(char *str);
@@ -27,3 +28,4 @@ char *get_uuid_as_string(uuid_t uuid);
 void my_exit(int status);
 char **quote_split(char *str);
 void get_uuid_from_string(char *str, uuid_t uuid);
+bool is_uuid_valid(char *str);

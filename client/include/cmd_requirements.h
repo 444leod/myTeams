@@ -25,7 +25,7 @@ static cmd_requirements_t cmd_requirements[] = {
     {"/logout", 1, 1, true, NULL},
     {"/users", 1, 1, true, NULL},
     {"/user", 2, 2, true, NULL},
-    {"/send", 2, 2, true, NULL},
+    {"/send", 3, 3, true, NULL},
     {"/messages", 2, 2, true, NULL},
     {"/subscribe", 2, 2, true, NULL},
     {"/subscribed", 1, 2, true, NULL},

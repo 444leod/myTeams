@@ -7,6 +7,7 @@
 
 #include "packet.h"
 #include "macros.h"
+#include "reply_code.h"
 #include <stdio.h>
 
 /**

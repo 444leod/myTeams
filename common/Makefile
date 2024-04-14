@@ -13,7 +13,7 @@ SRC_LIB = 	./lib/debug_print.c \
 	./lib/garbage_collector.c \
 	./lib/garbage_llist.c \
 	./lib/get_current_dir.c \
-	./lib/get_uuid_as_string.c \
+	./lib/uuid.c \
 	./lib/magic_number.c \
 	./lib/my_error.c \
 	./lib/my_snprintf.c \
@@ -41,7 +41,7 @@ SRC_NETWORK_LIB = 	./network/accept_socket.c \
 CC = gcc
 
 CFLAGS = -I../include -Wall -Wextra -Werror -Wpedantic -luuid \
-	-I ../libs/myteams
+	-I ../libs/myteams -g
 
 OBJ_LIB = $(SRC_LIB:.c=.o)
 OBJ_NETWORK_LIB = $(SRC_NETWORK_LIB:.c=.o)
@@ -65,8 +65,7 @@ fclean: clean
 
 re: fclean all
 
-debug:
-	$(CC) $(CFLAGS) -g3
+debug: all
 
 dev: all
 
