@@ -33,6 +33,10 @@ const int custom_messages_list[] = {
     TEAM_INFO,
     CHANNEL_INFO,
     THREAD_INFO,
+    INEXISTANT_USER,
+    INEXISTANT_TEAM,
+    INEXISTANT_CHANNEL,
+    INEXISTANT_THREAD,
     -1
 };
 

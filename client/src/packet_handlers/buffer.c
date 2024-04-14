@@ -7,6 +7,8 @@
 
 #include "packet.h"
 #include "lib.h"
+#include "packet_handler.h"
+#include "reply_code.h"
 #include <stdio.h>
 
 /**

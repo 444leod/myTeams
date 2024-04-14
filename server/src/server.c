@@ -165,6 +165,7 @@ int server(int argc, char *argv[])
 
     errno = 0;
     DEBUG_PRINT("Teams server started\n");
+    init_users();
     signal(2, handle_sigint);
     check_args(argc, argv);
     server_info = init_server_info(argv);
@@ -173,7 +174,6 @@ int server(int argc, char *argv[])
     bind_socket(socketFd, server_info->port, &(server_info->ip));
     DEBUG_PRINT("Server info: %s:%d\n", server_info->ip, server_info->port);
     listen_socket(socketFd, 1024);
-    init_users();
     teams_loop(socketFd, server_info);
     close(socketFd);
     return 0;
