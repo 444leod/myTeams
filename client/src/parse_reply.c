@@ -39,6 +39,7 @@ void display_message_by_type(int type, packet_t *packet)
     uint16_t i = 0;
 
     printf("%d - ", packet->code);
+    need_to_read(1, 0);
     for (i = 0; packet_handlers[i].type != -1; i++) {
         if (packet_handlers[i].type == type) {
             packet_handlers[i].func(packet);

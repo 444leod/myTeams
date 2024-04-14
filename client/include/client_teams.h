@@ -40,3 +40,4 @@ void connect_to_server(int sockfd, char *ip, int port);
 void parse_reply(int socketFd);
 bool is_logged(bool change);
 void process_input(char **message);
+bool need_to_read(bool change, bool status);

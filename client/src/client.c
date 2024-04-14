@@ -81,6 +81,7 @@ void send_message(int socketFd, char **message)
         str[strlen(str) - 1] = '\0';
     str = supercat(2, str, "\r\n");
     send(socketFd, str, strlen(str), 0);
+    need_to_read(1, 1);
     my_free(*message);
     *message = NULL;
 }
@@ -133,6 +134,29 @@ static void trigger_action(int socketFd, fd_set *readfds,
 }
 
 /**
+ * @brief Set the fds
+ * @details set the fds of the readfds and writefds
+ *  if the user NEED to read, will not read what he wrote,
+ *  will wait for the packet.
+ *
+ * @param readfds the readfds
+ * @param writefds the writefds
+ * @param socketFd the socket file descriptor
+ * @param message the message to send
+*/
+static void set_fds(fd_set *readfds, fd_set *writefds,
+    int socketFd, char *message)
+{
+    FD_SET(socketFd, readfds);
+    if (!need_to_read(0, 0)) {
+        if (message)
+            FD_SET(socketFd, writefds);
+        else
+            FD_SET(0, readfds);
+    }
+}
+
+/**
  * @brief Main Teams loop
  * @details the main loop of the Teams server, it accepts new clients and
  *  updates the clients status, also it calls the loop_clients function
@@ -147,14 +171,11 @@ void client_loop(int socketFd, UNUSED server_info_t server_info)
     fd_set writefds;
     char *message = NULL;
 
+    need_to_read(1, 1);
     while (1) {
         FD_ZERO(&readfds);
         FD_ZERO(&writefds);
-        FD_SET(socketFd, &readfds);
-        if (message)
-            FD_SET(socketFd, &writefds);
-        else
-            FD_SET(0, &readfds);
+        set_fds(&readfds, &writefds, socketFd, message);
         select_wrapper(&readfds, &writefds, socketFd + 1);
         trigger_action(socketFd, &readfds, &writefds, &message);
     }
