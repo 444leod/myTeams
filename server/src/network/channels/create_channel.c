@@ -7,6 +7,7 @@
 
 #include "data_structures.h"
 #include "garbage_collector.h"
+#include "linked_lists.h"
 #include <string.h>
 
 /**
@@ -29,5 +30,6 @@ channel_t *create_channel(title_t title, description_t description,
         sizeof(char) * MAX_DESCRIPTION_LENGTH);
     memcpy(channel->team_uuid, team_uuid, sizeof(uuid_t));
     uuid_generate(channel->channel_uuid);
+    add_to_list((void *)channel, (node_t *)get_channels());
     return channel;
 }
