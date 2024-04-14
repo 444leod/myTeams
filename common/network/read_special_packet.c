@@ -73,3 +73,19 @@ reply_t *get_reply_from_packet(packet_t *packet)
     memcpy(reply, packet->packet_body, REPLY_SIZE);
     return reply;
 }
+
+/**
+ * @brief Get a channel from a packet
+ * @details Get a channel from a packet
+ *
+ * @param packet the packet
+ *
+ * @return channel_t* the channel
+ */
+channel_t *get_channel_from_packet(packet_t *packet)
+{
+    channel_t *channel = my_malloc(CHANNEL_SIZE);
+
+    memcpy(channel, packet->packet_body, CHANNEL_SIZE);
+    return channel;
+}

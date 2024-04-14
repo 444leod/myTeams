@@ -110,3 +110,29 @@ packet_t *build_reply_packet(int code, body_t body, uuid_t creator_uuid,
     memcpy(packet->packet_body, reply, REPLY_SIZE);
     return packet;
 }
+
+/**
+ * @brief Build a packet with a code and a channel
+ * @details Build a packet with the given code and channel, its type is set to
+ *        CHANNEL
+ *
+ * @param code the code
+ * @param channel the channel
+ *
+ * @return the created packet
+*/
+packet_t *build_channel_packet(int code, title_t channel_name,
+    description_t description, uuid_t team_uuid)
+{
+    packet_t *packet = my_malloc(PACKET_SIZE);
+    channel_t *channel = my_malloc(CHANNEL_SIZE);
+
+    packet->code = code;
+    packet->packet_type = CHANNEL;
+    packet->is_global = false;
+    memcpy(channel->channel_name, channel_name, sizeof(title_t));
+    memcpy(channel->description, description, sizeof(description_t));
+    memcpy(channel->team_uuid, team_uuid, sizeof(uuid_t));
+    memcpy(packet->packet_body, channel, CHANNEL_SIZE);
+    return packet;
+}

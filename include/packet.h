@@ -23,7 +23,8 @@ enum PACKET_TYPE {
     USER_INFORMATION,
     THREAD,
     TEAM,
-    REPLY
+    REPLY,
+    CHANNEL
 };
 
 typedef struct packet_s {
@@ -67,11 +68,19 @@ typedef struct reply_s {
     body_t body;
 } reply_t;
 
+typedef struct channel_s {
+    uuid_t channel_uuid;
+    char channel_name[MAX_NAME_LENGTH + 1];
+    char description[MAX_DESCRIPTION_LENGTH + 1];
+    uuid_t team_uuid;
+} channel_t;
+
     #define PACKET_SIZE sizeof(struct packet_s)
     #define USER_INFORMATION_SIZE sizeof(struct user_information_s)
     #define THREAD_SIZE sizeof(struct thread_s)
     #define TEAM_SIZE sizeof(struct team_s)
     #define REPLY_SIZE sizeof(struct reply_s)
+    #define CHANNEL_SIZE sizeof(struct channel_s)
 
 void add_packet_to_queue(packet_queue_t *queue, packet_t *packet);
 packet_t *pop_packet_from_queue(packet_queue_t *queue);
@@ -88,9 +97,12 @@ packet_t *build_team_packet(int code, title_t name, description_t description,
 packet_t *build_thread_packet(int code, thread_t *thread);
 packet_t *build_reply_packet(int code, body_t body, uuid_t creator_uuid,
     uuid_t thread_uuid);
+packet_t *build_channel_packet(int code, title_t title,
+    description_t description, uuid_t team_uuid);
 
 packet_t *read_packet(int fd);
 user_information_t *get_userinfo_from_packet(packet_t *packet);
 thread_t *get_thread_from_packet(packet_t *packet);
 team_t *get_team_from_packet(packet_t *packet);
 reply_t *get_reply_from_packet(packet_t *packet);
+channel_t *get_channel_from_packet(packet_t *packet);

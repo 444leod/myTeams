@@ -25,11 +25,17 @@ typedef struct replies_s {
     reply_t *reply;
 } *replies_t;
 
+typedef struct channels_s {
+    struct channels_s *next;
+    channel_t *channel;
+} *channels_t;
+
 threads_t *get_threads(void);
 thread_t *get_thread_by_uuid(uuid_t thread_uuid);
 thread_t *get_thread_by_title(char *title);
 threads_t *get_threads_by_creator(uuid_t creator_uuid);
-thread_t *create_thread(char *title, char *body, uuid_t creator_uuid);
+thread_t *create_thread(title_t title, body_t body, uuid_t creator_uuid,
+    uuid_t channel_uuid);
 void dump_threads(void);
 void init_threads(void);
 
@@ -47,3 +53,11 @@ replies_t *get_replies_by_thread(uuid_t thread_uuid);
 reply_t *create_reply(char *body, uuid_t creator_uuid, uuid_t thread_uuid);
 void dump_replies(void);
 void init_replies(void);
+
+channels_t *get_channels(void);
+channel_t *get_channel_by_uuid(uuid_t channel_uuid);
+channel_t *get_channel_by_name(char *name);
+channels_t *get_channels_by_team(uuid_t team_uuid);
+channel_t *create_channel(char *title, char *description, uuid_t team_uuid);
+void dump_channels(void);
+void init_channels(void);
