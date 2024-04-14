@@ -24,6 +24,13 @@ void add_to_list(void *new_data, node_t *list)
     tmp->next = new_node;
 }
 
+/**
+ * @brief Remove a node from a list
+ * @details Remove a node from a list based on the given pointer
+ *
+ * @param data the pointer to the node to remove
+ * @param list the list
+*/
 void remove_from_list(void *data, node_t *list)
 {
     node_t tmp = *list;
