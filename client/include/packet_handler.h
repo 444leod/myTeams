@@ -23,3 +23,4 @@ void error_packet_handler(packet_t *packet);
 void user_command_packet_handler(packet_t *packet);
 void log_command_packet_handler(packet_t *packet);
 void handle_inexistant_user_packet(packet_t *packet);
+void team_packet_handler(packet_t *packet);

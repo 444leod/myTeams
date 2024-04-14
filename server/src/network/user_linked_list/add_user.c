@@ -45,5 +45,6 @@ void add_user_by_username(char *username)
     uuid_generate(new_user->uuid);
     new_user->next = NULL;
     new_user->status = STATUS_NOT_LOGGED_IN;
+    new_user->subscribed_teams = NULL;
     add_user(new_user);
 }
