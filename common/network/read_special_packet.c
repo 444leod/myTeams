@@ -2,45 +2,13 @@
 ** EPITECH PROJECT, 2024
 ** myTeams
 ** File description:
-** read_packet
+** read_custom_packet
 */
 
 #include "packet.h"
 #include "garbage_collector.h"
 #include "lib.h"
 
-/**
- * @brief Read a packet from a file descriptor
- * @details Read a packet from a file descriptor
- *
- * @param fd the file descriptor
- *
- * @return packet_t* the packet
- */
-packet_t *read_packet(int fd)
-{
-    packet_t *packet = my_malloc(PACKET_SIZE);
-
-    memset(packet, 0, sizeof(packet_t));
-    if (read(fd, packet, PACKET_SIZE) == -1) {
-        my_free(packet);
-        return NULL;
-    }
-    return packet;
-}
-
-/**
- * @brief Get a string from a packet
- * @details Get a string from a packet
- *
- * @param packet the packet
- *
- * @return char* the string
- */
-char *get_string_from_packet(packet_t *packet)
-{
-    return my_strdup(packet->packet_body);
-}
 
 /**
  * @brief Get a user information from a packet
@@ -72,4 +40,36 @@ thread_t *get_thread_from_packet(packet_t *packet)
 
     memcpy(thread, packet->packet_body, THREAD_SIZE);
     return thread;
+}
+
+/**
+ * @brief Get a team from a packet
+ * @details Get a team from a packet
+ *
+ * @param packet the packet
+ *
+ * @return team_t* the team
+ */
+team_t *get_team_from_packet(packet_t *packet)
+{
+    team_t *team = my_malloc(TEAM_SIZE);
+
+    memcpy(team, packet->packet_body, TEAM_SIZE);
+    return team;
+}
+
+/**
+ * @brief Get a reply from a packet
+ * @details Get a reply from a packet
+ *
+ * @param packet the packet
+ *
+ * @return reply_t* the reply
+ */
+reply_t *get_reply_from_packet(packet_t *packet)
+{
+    reply_t *reply = my_malloc(REPLY_SIZE);
+
+    memcpy(reply, packet->packet_body, REPLY_SIZE);
+    return reply;
 }

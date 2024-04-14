@@ -8,6 +8,7 @@
 #include "server_teams.h"
 #include "clientllist.h"
 #include "lib.h"
+#include "data_structures.h"
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -147,6 +148,15 @@ void teams_loop(int socketFd, server_info_t server_info)
 }
 
 /**
+ * @brief Run all functions to initialize data structures from saves
+*/
+static void init_from_saves(void)
+{
+    init_users();
+    init_threads();
+}
+
+/**
  * @brief Main Teams function
  * @details the main function of the Teams server,
  *  it initializes the server_info struct, the socket and the
@@ -165,7 +175,7 @@ int server(int argc, char *argv[])
 
     errno = 0;
     DEBUG_PRINT("Teams server started\n");
-    init_users();
+    init_from_saves();
     signal(2, handle_sigint);
     check_args(argc, argv);
     server_info = init_server_info(argv);
