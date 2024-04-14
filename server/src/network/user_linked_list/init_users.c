@@ -17,6 +17,15 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+/**
+ * @brief Check if the user had subsribed teams written in the file
+ * @details Check if the user had subsribed teams written in the file
+ *  by reading a char from the file
+ *
+ * @param fd the file descriptor
+ *
+ * @return true if the user had subscribed teams, false otherwise
+*/
 bool check_is_team_subscribed(int fd)
 {
     int rd = 0;
