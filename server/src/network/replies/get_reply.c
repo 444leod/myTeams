@@ -1,29 +1,29 @@
 /*
 ** EPITECH PROJECT, 2024
-** myTeams
+** get_reply
 ** File description:
-** get_teams
+** get_reply
 */
 
 #include "data_structures.h"
 #include <string.h>
 
 /**
- * @brief Get the team by uuid
- * @details Get the team by uuid
+ * @brief Get the reply by uuid
+ * @details Get the reply by uuid
  *
- * @param team_uuid the team uuid
+ * @param reply_uuid the reply uuid
  *
- * @return team_t* the team
+ * @return reply_t* the reply
  */
-team_t *get_team_by_uuid(uuid_t team_uuid)
+reply_t *get_reply_by_uuid(uuid_t reply_uuid)
 {
-    teams_t *teams = get_teams();
-    teams_t tmp = *teams;
+    replies_t *replies = get_replies();
+    replies_t tmp = *replies;
 
     while (tmp) {
-        if (uuid_compare(tmp->team->team_uuid, team_uuid) == 0)
-            return tmp->team;
+        if (uuid_compare(tmp->reply->reply_uuid, reply_uuid) == 0)
+            return tmp->reply;
         tmp = tmp->next;
     }
     return NULL;

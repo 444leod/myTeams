@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2024
-** myTeams
+** myreplys
 ** File description:
-** create_team
+** create_reply
 */
 
 #include "data_structures.h"
@@ -10,21 +10,21 @@
 #include <string.h>
 
 /**
- * @brief Create a team object
- * @details Create a team object
+ * @brief Create a reply object
+ * @details Create a reply object
  *
- * @param name the name of the team
- * @param description the description of the team
+ * @param name the name of the reply
+ * @param description the description of the reply
  *
- * @return team_t* the team
+ * @return reply_t* the reply
  */
-team_t *create_team(char *name, char *description)
+reply_t *create_reply(char *body, uuid_t creator_uuid, uuid_t thread_uuid)
 {
-    team_t *team = my_malloc(sizeof(struct team_s));
+    reply_t *reply = my_malloc(sizeof(struct reply_s));
 
-    memcpy(team->team_name, name, sizeof(char) * MAX_NAME_LENGTH);
-    memcpy(team->description, description,
-        sizeof(char) * MAX_DESCRIPTION_LENGTH);
-    uuid_generate(team->team_uuid);
-    return team;
+    memcpy(reply->body, body, sizeof(char) * MAX_BODY_LENGTH);
+    memcpy(reply->creator_uuid, creator_uuid, sizeof(uuid_t));
+    memcpy(reply->thread_uuid, thread_uuid, sizeof(uuid_t));
+    uuid_generate(reply->reply_uuid);
+    return reply;
 }

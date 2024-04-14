@@ -29,6 +29,7 @@ void dump_datas(void)
 {
     dump_threads();
     dump_users();
+    dump_replies();
     dump_teams();
 }
 

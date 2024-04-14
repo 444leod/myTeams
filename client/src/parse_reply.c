@@ -23,6 +23,7 @@ const packet_handler_t packet_handlers[] = {
     {USER_INFORMATION, &userinfo_packet_handler},
     {THREAD, &thread_packet_handler},
     {TEAM, &team_packet_handler},
+    {REPLY, &reply_packet_handler},
     {-1, &error_packet_handler}
 };
 

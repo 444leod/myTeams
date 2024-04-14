@@ -11,6 +11,7 @@
 #include "debug.h"
 #include "garbage_collector.h"
 #include "magic_number.h"
+#include "lib.h"
 #include <unistd.h>
 #include <stdlib.h>
 #include <fcntl.h>
@@ -24,17 +25,23 @@
 */
 void read_replies(int fd)
 {
-    team_t *new_team;
+    reply_t *new_reply;
     int rd = 0;
 
     while (1) {
-        new_team = my_malloc(sizeof(team_t));
-        rd = read(fd, new_team, sizeof(team_t));
-        if (rd <= 0 || rd != sizeof(team_t)) {
-            my_free(new_team);
+        new_reply = my_malloc(sizeof(reply_t));
+        rd = read(fd, new_reply, sizeof(reply_t));
+        if (rd <= 0 || rd != sizeof(reply_t)) {
+            my_free(new_reply);
             break;
         }
-        add_to_list((void *)new_team, (node_t *)get_replies());
+        if (get_thread_by_uuid(new_reply->thread_uuid) == NULL) {
+            printf("Thread with uuid %s not found\n",
+                get_uuid_as_string(new_reply->thread_uuid));
+            my_free(new_reply);
+            continue;
+        }
+        add_to_list((void *)new_reply, (node_t *)get_replies());
     }
 }
 
