@@ -9,23 +9,6 @@
 #include "garbage_collector.h"
 #include "lib.h"
 
-
-/**
- * @brief Get a user information from a packet
- * @details Get a user information from a packet
- *
- * @param packet the packet
- *
- * @return user_information_t* the user information
- */
-user_information_t *get_userinfo_from_packet(packet_t *packet)
-{
-    user_information_t *userinfo = my_malloc(USER_INFORMATION_SIZE);
-
-    memcpy(userinfo, packet->packet_body, USER_INFORMATION_SIZE);
-    return userinfo;
-}
-
 /**
  * @brief Get a thread from a packet
  * @details Get a thread from a packet
@@ -88,4 +71,20 @@ channel_t *get_channel_from_packet(packet_t *packet)
 
     memcpy(channel, packet->packet_body, CHANNEL_SIZE);
     return channel;
+}
+
+/**
+ * @brief Get a message from a packet
+ * @details Get a message from a packet
+ *
+ * @param packet the packet
+ *
+ * @return message_t* the message
+ */
+message_t *get_message_from_packet(packet_t *packet)
+{
+    message_t *message = my_malloc(MESSAGE_SIZE);
+
+    memcpy(message, packet->packet_body, MESSAGE_SIZE);
+    return message;
 }

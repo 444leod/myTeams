@@ -54,6 +54,16 @@ NETWORK_SRC = reply_code.c \
 	replies/get_reply.c \
 	replies/init_replies.c \
 	replies/dump_replies.c \
+	channels/create_channel.c \
+	channels/get_channels.c \
+	channels/get_channel.c \
+	channels/init_channels.c \
+	channels/dump_channels.c \
+	messages/create_message.c \
+	messages/get_messages.c \
+	messages/get_message.c \
+	messages/init_messages.c \
+	messages/dump_messages.c \
 
 CLIENT_LLIST_SRC = add_client.c \
 	create_client.c \

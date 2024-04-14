@@ -25,6 +25,7 @@ const packet_handler_t packet_handlers[] = {
     {TEAM, &team_packet_handler},
     {REPLY, &reply_packet_handler},
     {CHANNEL, &channel_packet_handler},
+    {MESSAGE, &message_packet_handler},
     {-1, &error_packet_handler}
 };
 
