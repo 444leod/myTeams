@@ -58,7 +58,7 @@ static void handle_error_packets(packet_t *packet)
 {
     switch (packet->code) {
         case UNKNOWN_ERROR:
-            printf("Unknown error\n");
+            unknown_user_handler(packet);
             break;
         case INEXISTANT_USER:
             printf("Inexistant user\n");
@@ -100,8 +100,6 @@ static void handle_full_packets(packet_t *packet)
  */
 void message_packet_handler(packet_t *packet)
 {
-    message_t *message = get_message_from_packet(packet);
-
     switch (packet->code) {
         case MESSAGE_SENT:
         case MESSAGE_RECEIVED:
