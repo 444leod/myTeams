@@ -66,6 +66,26 @@ user_t create_user(char *username)
 }
 
 /**
+ * @brief Check if the user is already logged
+ * @details Check if the user is already logged
+ *
+ * @param user the user
+ * @param client the client
+ *
+ * @return true if the user is already logged
+ * @return false if the user is not already logged
+ */
+bool already_logged(user_t user, client_t client)
+{
+    if (user && user->status == STATUS_LOGGED_IN) {
+        add_packet_to_queue(&client->packet_queue,
+            build_packet(USER_ALREADY_LOGGED_IN, ""));
+        return true;
+    }
+    return false;
+}
+
+/**
  * @brief Login command handler. Login a user with the given username
  * @details Login a user with the given username
  *
@@ -80,17 +100,15 @@ void login(client_t client, char **command)
     if (!is_command_valid(client, command))
         return;
     user = get_user_by_username(command[1]);
-    if (user && user->status == STATUS_LOGGED_IN) {
-        add_packet_to_queue(&client->packet_queue,
-            build_packet(USER_ALREADY_LOGGED_IN, ""));
+    if (already_logged(user, client))
         return;
-    }
     if (!user) {
         user = create_user(command[1]);
     }
     client->user = user;
     user->status = STATUS_LOGGED_IN;
-    packet = build_userinfo_packet(USER_LOGGED_IN, user->username, user->uuid);
+    packet = build_userinfo_packet(USER_LOGGED_IN,
+        user->username, user->uuid, user->status);
     add_packet_to_queue(&client->packet_queue, packet);
     server_event_user_logged_in(get_uuid_as_string(user->uuid));
     send_packet_to_logged_users(packet, client);

@@ -36,6 +36,7 @@ typedef struct packet_queue_s {
 typedef struct user_information_s {
     username_t username;
     uuid_t user_uuid;
+    bool is_logged;
 } user_information_t;
 
 typedef struct thread_s {
@@ -57,7 +58,9 @@ void free_packet_queue(packet_queue_t *queue);
 void send_packet(int fd, packet_t *packet);
 
 packet_t *build_packet(int code, char *buffer);
-packet_t *build_userinfo_packet(int code, username_t username, uuid_t uuid);
+packet_t *build_custom_packet(int code, char *buffer, int packet_type);
+packet_t *build_userinfo_packet(int code, username_t username, uuid_t uuid,
+    bool is_logged);
 packet_t *build_thread_packet(int code, thread_t *thread);
 
 packet_t *read_packet(int fd);

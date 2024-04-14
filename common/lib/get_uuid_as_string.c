@@ -25,3 +25,17 @@ char *get_uuid_as_string(uuid_t uuid)
     uuid_unparse(uuid, str);
     return str;
 }
+
+/**
+ * @brief Get the uuid from a string
+ * @details Transform the string into a uuid_t
+ *
+ * @param str the string to transform
+ * @param uuid the uuid to fill
+ *
+ * @return void
+*/
+void get_uuid_from_string(char *str, uuid_t uuid)
+{
+    uuid_parse(str, uuid);
+}

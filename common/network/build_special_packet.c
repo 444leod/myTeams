@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** myTeams
 ** File description:
-** build_packet
+** build_custom_packet
 */
 
 #include "packet.h"
@@ -60,46 +60,53 @@ packet_t *build_thread_packet(int code, thread_t *thread)
 }
 
 /**
- * @brief Build a packet with a string
- * @details Build a packet with the given code and buffer, its type is set to
- *        NONE
+ * @brief Build a packet with a code and a team
+ * @details Build a packet with the given code and team, its type is set to
+ *        TEAM
  *
  * @param code the code
- * @param buffer the buffer
+ * @param team the team
  *
  * @return the created packet
 */
-packet_t *build_packet(int code, char *buffer)
+packet_t *build_team_packet(int code, title_t team_name,
+    description_t description, uuid_t creator_uuid)
 {
     packet_t *packet = my_malloc(PACKET_SIZE);
+    team_t *team = my_malloc(TEAM_SIZE);
 
     packet->code = code;
-    packet->packet_type = NONE;
+    packet->packet_type = TEAM;
     packet->is_global = false;
-    memset(packet->packet_body, 0, sizeof(packet->packet_body));
-    memcpy(packet->packet_body, buffer, strlen(buffer));
+    memcpy(team->team_name, team_name, sizeof(title_t));
+    memcpy(team->description, description, sizeof(description_t));
+    memcpy(team->creator_uuid, creator_uuid, sizeof(uuid_t));
+    memcpy(packet->packet_body, team, TEAM_SIZE);
     return packet;
 }
 
 /**
- * @brief Build a packet with a code and a user information
- * @details Build a packet with the given code, buffer and packet type
+ * @brief Build a packet with a code and a reply
+ * @details Build a packet with the given code and reply, its type is set to
+ *        REPLY
  *
  * @param code the code
- * @param username the username
- * @param uuid the uuid
- * @param is_logged the is_logged
+ * @param reply the reply
  *
  * @return the created packet
 */
-packet_t *build_custom_packet(int code, char *buffer, int packet_type)
+packet_t *build_reply_packet(int code, body_t body, uuid_t creator_uuid,
+    uuid_t thread_uuid)
 {
     packet_t *packet = my_malloc(PACKET_SIZE);
+    reply_t *reply = my_malloc(REPLY_SIZE);
 
     packet->code = code;
-    packet->packet_type = packet_type;
+    packet->packet_type = REPLY;
     packet->is_global = false;
-    memset(packet->packet_body, 0, sizeof(packet->packet_body));
-    memcpy(packet->packet_body, buffer, strlen(buffer));
+    memcpy(reply->body, body, sizeof(body_t));
+    memcpy(reply->creator_uuid, creator_uuid, sizeof(uuid_t));
+    memcpy(reply->thread_uuid, thread_uuid, sizeof(uuid_t));
+    memcpy(packet->packet_body, reply, REPLY_SIZE);
     return packet;
 }

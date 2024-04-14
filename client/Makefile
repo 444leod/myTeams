@@ -21,8 +21,10 @@ SRC_SRC = client.c \
 	input_processing.c \
 
 PACKET_HANDLER_SRC = buffer.c \
-	userinfo.c \
 	error.c \
+	userinfo.c \
+	userinfo/info.c \
+	userinfo/log.c \
 	thread.c \
 
 OBJ = $(SRC:.c=.o)
