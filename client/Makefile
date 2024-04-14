@@ -19,6 +19,7 @@ SRC_SRC = client.c \
 	exit.c \
 	is_logged.c \
 	input_processing.c \
+	need_to_read.c \
 
 PACKET_HANDLER_SRC = buffer.c \
 	error.c \
