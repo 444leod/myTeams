@@ -27,7 +27,8 @@ PACKET_HANDLER_SRC = buffer.c \
 	userinfo/log.c \
 	thread.c \
 	team.c \
-	reply.c
+	reply.c \
+	channel.c \
 
 COMMANDS_SRC = help.c
 
