@@ -122,6 +122,22 @@ static void check_quoted_parameters(char **args, char **message)
 }
 
 /**
+ * @brief Execute the function if it exists
+ * @details Execute the function if it exists
+ *
+ * @param function the function
+ * @param message the message
+*/
+static void execute_if_exist(cmd_requirements_t cmd, char **message)
+{
+    if (cmd.function == NULL)
+        return;
+    cmd.function();
+    my_free(*message);
+    *message = NULL;
+}
+
+/**
  * @brief Verify if the command given is valid
  * @details Verify if the command given is valid
  *
@@ -137,6 +153,7 @@ void verify_command(char **message, char **args, int args_nbr)
         if (strcmp(cmd_requirements[i].command, args[0]) == 0) {
             check_requirements(cmd_requirements[i], args_nbr, message);
             check_quoted_parameters(args, message);
+            execute_if_exist(cmd_requirements[i], message);
             return;
         }
     }

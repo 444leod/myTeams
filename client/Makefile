@@ -24,6 +24,8 @@ PACKET_HANDLER_SRC = buffer.c \
 	userinfo.c \
 	error.c
 
+COMMANDS_SRC = help.c
+
 OBJ = $(SRC:.c=.o)
 
 CC = gcc

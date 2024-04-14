@@ -13,7 +13,6 @@
 */
 const command_t commands[] = {
     {"/create", &create},
-    {"/help", &help},
     {"/info", &info},
     {"/list", &list},
     {"/login", &login},
