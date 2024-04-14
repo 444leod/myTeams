@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2024
-** myTeams
+** myreplies
 ** File description:
-** dump_teams
+** dump_replies
 */
 
 #include "linked_lists.h"
@@ -12,20 +12,20 @@
 #include <unistd.h>
 
 /**
- * @brief Dump the teams in a file
- * @details Dump the teams in a file
+ * @brief Dump the replies in a file
+ * @details Dump the replies in a file
 */
-void dump_teams(void)
+void dump_replies(void)
 {
-    teams_t *teams = get_teams();
-    teams_t tmp = *teams;
-    int fd = open(SAVE_FOLDER".teams", O_CREAT | O_WRONLY | O_TRUNC, 0666);
+    replies_t *replies = get_replies();
+    replies_t tmp = *replies;
+    int fd = open(SAVE_FOLDER".replies", O_CREAT | O_WRONLY | O_TRUNC, 0666);
 
     if (fd == -1)
         return;
     write_magic_number(fd);
     while (tmp) {
-        write(fd, tmp->team, sizeof(struct team_s));
+        write(fd, tmp->reply, sizeof(struct team_s));
         tmp = tmp->next;
     }
 }

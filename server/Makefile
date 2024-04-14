@@ -49,6 +49,11 @@ NETWORK_SRC = reply_code.c \
 	teams/get_team.c \
 	teams/init_teams.c \
 	teams/dump_teams.c \
+	replies/create_reply.c \
+	replies/get_replies.c \
+	replies/get_reply.c \
+	replies/init_replies.c \
+	replies/dump_replies.c \
 
 CLIENT_LLIST_SRC = add_client.c \
 	create_client.c \

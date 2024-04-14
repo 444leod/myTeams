@@ -154,6 +154,7 @@ static void init_from_saves(void)
 {
     init_teams();
     init_threads();
+    init_replies();
     init_users();
 }
 

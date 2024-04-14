@@ -20,6 +20,8 @@
  * @brief Read the threads from the save file
  * @details Read the threads from the save file
  *
+ * TODO: add check of if channel exists
+ *
  * @param fd the file descriptor
 */
 void read_threads(int fd)

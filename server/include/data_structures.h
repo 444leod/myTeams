@@ -20,6 +20,11 @@ typedef struct teams_s {
     team_t *team;
 } *teams_t;
 
+typedef struct replies_s {
+    struct replies_s *next;
+    reply_t *reply;
+} *replies_t;
+
 threads_t *get_threads(void);
 thread_t *get_thread_by_uuid(uuid_t thread_uuid);
 thread_t *get_thread_by_title(char *title);
@@ -34,3 +39,11 @@ team_t *get_team_by_name(char *name);
 team_t *create_team(char *name, char *description);
 void dump_teams(void);
 void init_teams(void);
+
+replies_t *get_replies(void);
+reply_t *get_reply_by_uuid(uuid_t reply_uuid);
+replies_t *get_replies_by_creator(uuid_t reply_creator);
+replies_t *get_replies_by_thread(uuid_t thread_uuid);
+reply_t *create_reply(char *body, uuid_t creator_uuid, uuid_t thread_uuid);
+void dump_replies(void);
+void init_replies(void);
