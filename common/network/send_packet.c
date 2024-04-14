@@ -19,13 +19,7 @@
  */
 void send_packet(int fd, packet_t *packet)
 {
-    char buffer;
-    int result;
-
     if (fd == -1)
-        return;
-    result = recv(fd, &buffer, 1, MSG_PEEK);
-    if (result == 0)
         return;
     write_magic_number(fd);
     write(fd, packet, PACKET_SIZE);
