@@ -17,7 +17,6 @@ typedef struct command_s {
 } command_t;
 
 void create(client_t client, char **command);
-void help(client_t client, char **command);
 void info(client_t client, char **command);
 void list(client_t client, char **command);
 void login(client_t client, char **command);

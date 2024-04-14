@@ -22,7 +22,6 @@ SRC_SRC = server.c \
 
 COMMANDS_SRC = commands.c \
 	create.c \
-	help.c \
 	info.c \
 	list.c \
 	login.c \

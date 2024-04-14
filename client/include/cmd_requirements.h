@@ -15,22 +15,25 @@ typedef struct cmd_requirements_s {
     int min_args;
     int max_args;
     bool need_logged;
+    void (*function)(void);
 } cmd_requirements_t;
 
+void help_command(void);
+
 static cmd_requirements_t cmd_requirements[] = {
-    {"/login", 2, 2, false},
-    {"/logout", 1, 1, true},
-    {"/users", 1, 1, true},
-    {"/user", 2, 2, true},
-    {"/send", 2, 2, true},
-    {"/messages", 2, 2, true},
-    {"/subscribe", 2, 2, true},
-    {"/subscribed", 1, 2, true},
-    {"/unsubscribe", 2, 2, true},
-    {"/use", 2, 4, true},
-    {"/create", 2, 3, true},
-    {"/list", 1, 1, true},
-    {"/info", 2, 2, true},
-    {"/help", 1, 1, false},
-    {NULL, 0, 0, false}
+    {"/login", 2, 2, false, NULL},
+    {"/logout", 1, 1, true, NULL},
+    {"/users", 1, 1, true, NULL},
+    {"/user", 2, 2, true, NULL},
+    {"/send", 2, 2, true, NULL},
+    {"/messages", 2, 2, true, NULL},
+    {"/subscribe", 2, 2, true, NULL},
+    {"/subscribed", 1, 2, true, NULL},
+    {"/unsubscribe", 2, 2, true, NULL},
+    {"/use", 2, 4, true, NULL},
+    {"/create", 2, 3, true, NULL},
+    {"/list", 1, 1, true, NULL},
+    {"/info", 2, 2, true, NULL},
+    {"/help", 1, 1, false, &help_command},
+    {NULL, 0, 0, false, NULL}
 };
