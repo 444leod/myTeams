@@ -104,6 +104,8 @@ static void queue_command(client_t client)
 static void trigger_action(client_t client, fd_set *readfds,
     fd_set *writefds, UNUSED server_info_t server_info)
 {
+    if (client->fd == -1)
+        return;
     if (FD_ISSET(client->fd, readfds))
         read_buffer(client);
     if (client->data_status == PROCESSING) {
@@ -135,6 +137,10 @@ void loop_clients(client_t *clients, fd_set *readfds,
 
     while (tmp) {
         tempFd = tmp->fd;
+        if (tmp->fd == -1) {
+            tmp = tmp->next;
+            continue;
+        }
         trigger_action(tmp, readfds, writefds, server_info);
         if (tmp && tmp->fd == tempFd)
             tmp = tmp->next;

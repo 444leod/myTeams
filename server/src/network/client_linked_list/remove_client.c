@@ -21,6 +21,7 @@ static void destroy_fds(client_t tmp)
 {
     if (tmp->fd != -1) {
         close(tmp->fd);
+        tmp->fd = -1;
     }
     if (tmp->user) {
         tmp->user->status = STATUS_NOT_LOGGED_IN;
