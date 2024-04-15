@@ -7,7 +7,9 @@
 
 #include "garbage_collector.h"
 #include <stdlib.h>
+#include <stdbool.h>
 #include <uuid/uuid.h>
+#include <string.h>
 
 /**
  * @brief Get the uuid as string
@@ -38,4 +40,23 @@ char *get_uuid_as_string(uuid_t uuid)
 void get_uuid_from_string(char *str, uuid_t uuid)
 {
     uuid_parse(str, uuid);
+}
+
+/**
+ * @brief Check if a string is a valid uuid
+ * @details Check if a string is a valid uuid
+ *
+ * @param str the string to check
+ *
+ * @return true if the string is a valid uuid
+*/
+bool is_uuid_valid(char *str)
+{
+    uuid_t uuid;
+
+    if (strlen(str) != 36)
+        return false;
+    if (uuid_parse(str, uuid) == -1)
+        return false;
+    return true;
 }

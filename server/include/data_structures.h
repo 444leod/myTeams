@@ -58,6 +58,7 @@ channels_t *get_channels(void);
 channel_t *get_channel_by_uuid(uuid_t channel_uuid);
 channel_t *get_channel_by_name(char *name);
 channels_t *get_channels_by_team(uuid_t team_uuid);
-channel_t *create_channel(char *title, char *description, uuid_t team_uuid);
+channel_t *create_channel(title_t title, description_t description,
+    uuid_t team_uuid);
 void dump_channels(void);
 void init_channels(void);

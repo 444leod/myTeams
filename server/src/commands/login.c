@@ -25,17 +25,17 @@ static bool is_command_valid(client_t client, char **command)
 {
     if (tablen((void **)command) != 2) {
         add_packet_to_queue(&client->packet_queue,
-            build_packet(SYNTAX_ERROR_IN_PARAMETERS, ""));
+            build_error_packet(SYNTAX_ERROR_IN_PARAMETERS, ""));
         return false;
     }
     if (client->user) {
         add_packet_to_queue(&client->packet_queue,
-            build_packet(ALREADY_LOGGED_IN, ""));
+            build_error_packet(ALREADY_LOGGED_IN, ""));
         return false;
     }
     if (strlen(command[1]) > 32) {
         add_packet_to_queue(&client->packet_queue,
-            build_packet(NAME_TOO_LONG, ""));
+            build_error_packet(NAME_TOO_LONG, ""));
         return false;
     }
     return true;
@@ -79,7 +79,7 @@ bool already_logged(user_t user, client_t client)
 {
     if (user && user->status == STATUS_LOGGED_IN) {
         add_packet_to_queue(&client->packet_queue,
-            build_packet(USER_ALREADY_LOGGED_IN, ""));
+            build_error_packet(ALREADY_LOGGED_IN, ""));
         return true;
     }
     return false;

@@ -13,7 +13,7 @@ SRC_LIB = 	./lib/debug_print.c \
 	./lib/garbage_collector.c \
 	./lib/garbage_llist.c \
 	./lib/get_current_dir.c \
-	./lib/get_uuid_as_string.c \
+	./lib/uuid.c \
 	./lib/magic_number.c \
 	./lib/my_error.c \
 	./lib/my_snprintf.c \
