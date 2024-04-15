@@ -43,6 +43,9 @@ typedef struct client_s {
     char *next_commands;
     char *buffer;
     char **args;
+    team_t *team;
+    channel_t *channel;
+    thread_t *thread;
     unsigned int data_len;
     enum {
         READING,
