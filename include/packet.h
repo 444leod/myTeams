@@ -56,8 +56,8 @@ typedef struct thread_s {
 } thread_t;
 
 typedef struct team_s {
-    uuid_t team_uuid;
-    title_t team_name;
+    uuid_t uuid;
+    title_t name;
     description_t description;
     uuid_t creator_uuid;
 } team_t;
@@ -93,8 +93,7 @@ packet_t *build_packet(int code, char *buffer);
 packet_t *build_custom_packet(int code, char *buffer, int packet_type);
 packet_t *build_userinfo_packet(int code, username_t username, uuid_t uuid,
     bool is_logged);
-packet_t *build_team_packet(int code, title_t name, description_t description,
-    uuid_t creator_uuid);
+packet_t *build_team_packet(int code, team_t *team);
 packet_t *build_thread_packet(int code, thread_t *thread);
 packet_t *build_reply_packet(int code, body_t body, uuid_t creator_uuid,
     uuid_t thread_uuid);

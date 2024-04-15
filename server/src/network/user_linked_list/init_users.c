@@ -56,11 +56,10 @@ bool read_team(int fd, user_t user)
         return false;
     team = get_team_by_uuid(team_uuid);
     if (!team) {
-        printf("team with uuid %s not found\n",
-            get_uuid_as_string(team_uuid));
+        printf("team with uuid %s not found\n", get_uuid_as_string(team_uuid));
         return true;
     }
-    add_to_list((void *)team, (node_t *)user->subscribed_teams);
+    add_to_list((void *)team, (node_t *)&user->subscribed_teams);
     return true;
 }
 

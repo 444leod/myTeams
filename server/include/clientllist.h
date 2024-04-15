@@ -23,7 +23,7 @@ typedef struct user_s {
         STATUS_NOT_LOGGED_IN,
         STATUS_LOGGED_IN,
     } status;
-    teams_t *subscribed_teams;
+    teams_t subscribed_teams;
 } *user_t;
 
 void init_users(void);
@@ -33,7 +33,7 @@ void add_user(user_t new_user);
 void dump_users(void);
 user_t get_user_by_uuid(uuid_t uuid);
 user_t get_user_by_username(char *username);
-
+bool is_user_subscribed_to_team(user_t user, uuid_t team_uuid);
 
 typedef struct client_s {
     int fd;

@@ -33,7 +33,7 @@ void write_teams_uuids(int fd, teams_t *teams)
     tmp = *teams;
     write(fd, &nb_teams, sizeof(int));
     while (tmp) {
-        write(fd, tmp->team->team_uuid, sizeof(uuid_t));
+        write(fd, tmp->team->uuid, sizeof(uuid_t));
         tmp = tmp->next;
     }
 }
@@ -56,7 +56,7 @@ void dump_users(void)
         tmp->status = STATUS_NOT_LOGGED_IN;
         write(fd, tmp, sizeof(struct user_s));
         if (tmp->subscribed_teams != NULL)
-            write_teams_uuids(fd, tmp->subscribed_teams);
+            write_teams_uuids(fd, &tmp->subscribed_teams);
         else
             write(fd, &is_subscribed, sizeof(char));
         tmp = tmp->next;

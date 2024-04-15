@@ -30,6 +30,11 @@ typedef struct channels_s {
     channel_t *channel;
 } *channels_t;
 
+typedef struct users_s {
+    struct users_s *next;
+    user_information_t *user;
+} *users_t;
+
 threads_t *get_threads(void);
 thread_t *get_thread_by_uuid(uuid_t thread_uuid);
 thread_t *get_thread_by_title(char *title);
@@ -42,6 +47,7 @@ void init_threads(void);
 teams_t *get_teams(void);
 team_t *get_team_by_uuid(uuid_t team_uuid);
 team_t *get_team_by_name(char *name);
+users_t get_team_subscribers(team_t *team);
 team_t *create_team(char *name, char *description);
 void dump_teams(void);
 void init_teams(void);
