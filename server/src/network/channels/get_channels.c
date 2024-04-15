@@ -21,15 +21,15 @@ channels_t *get_channels(void)
     return &channels;
 }
 
-channels_t *get_channels_by_team_uuid(uuid_t team_uuid)
+channels_t get_channels_by_team_uuid(uuid_t team_uuid)
 {
     channels_t *channels = get_channels();
     channels_t tmp = *channels;
-    channels_t *new_channels = NULL;
+    channels_t new_channels = NULL;
 
     while (tmp) {
         if (uuid_compare(tmp->channel->team_uuid, team_uuid) == 0)
-            add_to_list((void *)tmp->channel, (node_t *)new_channels);
+            add_to_list((void *)tmp->channel, (node_t *)&new_channels);
         tmp = tmp->next;
     }
     return new_channels;

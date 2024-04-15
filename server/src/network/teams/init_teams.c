@@ -11,6 +11,7 @@
 #include "debug.h"
 #include "garbage_collector.h"
 #include "magic_number.h"
+#include "lib.h"
 #include <unistd.h>
 #include <stdlib.h>
 #include <fcntl.h>

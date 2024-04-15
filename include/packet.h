@@ -20,6 +20,7 @@ typedef char body_t[MAX_BODY_LENGTH + 1];
 
 enum PACKET_TYPE {
     NONE,
+    ERROR,
     USER_INFORMATION,
     THREAD,
     TEAM,
@@ -110,6 +111,7 @@ packet_t *build_reply_packet(int code, body_t body, uuid_t creator_uuid,
 packet_t *build_channel_packet(int code, title_t title,
     description_t description, uuid_t team_uuid);
 packet_t *build_message_packet(int code, message_t *message);
+packet_t *build_error_packet(int code, char *buffer);
 
 packet_t *read_packet(int fd);
 user_information_t *get_userinfo_from_packet(packet_t *packet);

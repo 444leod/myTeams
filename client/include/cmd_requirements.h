@@ -30,7 +30,7 @@ static cmd_requirements_t cmd_requirements[] = {
     {"/subscribe", 2, 2, true, NULL},
     {"/subscribed", 1, 2, true, NULL},
     {"/unsubscribe", 2, 2, true, NULL},
-    {"/use", 2, 4, true, NULL},
+    {"/use", 1, 4, true, NULL},
     {"/create", 2, 3, true, NULL},
     {"/list", 1, 1, true, NULL},
     {"/info", 2, 2, true, NULL},

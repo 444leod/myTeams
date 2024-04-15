@@ -32,12 +32,14 @@ packet_t *build_thread_packet(int code, thread_t *thread)
 }
 
 /**
- * @brief Build a packet with a code and a team
+ * @brief Build a packet with a code and a team informations
  * @details Build a packet with the given code and team, its type is set to
  *        TEAM
  *
  * @param code the code
- * @param team the team
+ * @param title the title
+ * @param description the description
+ * @param creator_uuid the creator_uuid
  *
  * @return the created packet
 */
@@ -58,12 +60,14 @@ packet_t *build_team_packet(int code, title_t team_name,
 }
 
 /**
- * @brief Build a packet with a code and a reply
- * @details Build a packet with the given code and reply, its type is set to
- *        REPLY
+ * @brief Build a reply packet with a code and reply informations
+ * @details Build a packet with the given code and reply info,
+ *  its type is set to REPLY
  *
  * @param code the code
- * @param reply the reply
+ * @param body the body
+ * @param creator_uuid the creator_uuid
+ * @param thread_uuid the thread_uuid
  *
  * @return the created packet
 */
@@ -84,12 +88,14 @@ packet_t *build_reply_packet(int code, body_t body, uuid_t creator_uuid,
 }
 
 /**
- * @brief Build a packet with a code and a channel
- * @details Build a packet with the given code and channel, its type is set to
- *        CHANNEL
+ * @brief Build a packet with a code and channel informations
+ * @details Build a packet with the given code, a channel name, a description
+ * and a team uuid, its type is set to CHANNEL
  *
  * @param code the code
- * @param channel the channel
+ * @param channel_name the channel_name
+ * @param description the description
+ * @param team_uuid the team_uuid
  *
  * @return the created packet
 */

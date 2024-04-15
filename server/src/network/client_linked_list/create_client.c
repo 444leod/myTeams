@@ -21,6 +21,9 @@ static void initialize_client_buffers(client_t client)
     client->next_commands = NULL;
     client->args = NULL;
     client->buffer = NULL;
+    client->team = NULL;
+    client->channel = NULL;
+    client->thread = NULL;
 }
 
 /**
