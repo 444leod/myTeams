@@ -7,6 +7,7 @@
 
 #include "data_structures.h"
 #include "garbage_collector.h"
+#include "linked_lists.h"
 #include <string.h>
 
 /**
@@ -26,5 +27,6 @@ reply_t *create_reply(char *body, uuid_t creator_uuid, uuid_t thread_uuid)
     memcpy(reply->creator_uuid, creator_uuid, sizeof(uuid_t));
     memcpy(reply->thread_uuid, thread_uuid, sizeof(uuid_t));
     uuid_generate(reply->reply_uuid);
+    add_to_list((void *)reply, (node_t *)get_replies());
     return reply;
 }

@@ -11,34 +11,6 @@
 #include <string.h>
 
 /**
- * @brief Build a packet with a code and a user information
- * @details Build a packet with the given code and user information, its type
- *       is set to USER_INFORMATION
- *
- * @param code the code
- * @param username the username
- * @param uuid the uuid
- * @param is_logged the is_logged
- *
- * @return the created packet
-*/
-packet_t *build_userinfo_packet(int code, username_t username, uuid_t uuid,
-    bool is_logged)
-{
-    packet_t *packet = my_malloc(PACKET_SIZE);
-    user_information_t *user = my_malloc(USER_INFORMATION_SIZE);
-
-    packet->code = code;
-    packet->packet_type = USER_INFORMATION;
-    packet->is_global = false;
-    memcpy(user->username, username, sizeof(username_t));
-    memcpy(user->user_uuid, uuid, sizeof(uuid_t));
-    user->is_logged = is_logged;
-    memcpy(packet->packet_body, user, USER_INFORMATION_SIZE);
-    return packet;
-}
-
-/**
  * @brief Build a packet with a code and a thread
  * @details Build a packet with the given code and thread, its type is set to
  *        THREAD
@@ -140,5 +112,28 @@ packet_t *build_channel_packet(int code, title_t channel_name,
     memcpy(channel->description, description, sizeof(description_t));
     memcpy(channel->team_uuid, team_uuid, sizeof(uuid_t));
     memcpy(packet->packet_body, channel, CHANNEL_SIZE);
+    return packet;
+}
+
+/**
+ * @brief Build a message packet
+ * @details Build a packet with the given code and message, its type is set to
+ *       MESSAGE
+ *
+ * @param code the code
+ * @param body the body
+ * @param sender_uuid the sender_uuid
+ * @param receiver_uuid the receiver_uuid
+ *
+ * @return the created packet
+*/
+packet_t *build_message_packet(int code, message_t *message)
+{
+    packet_t *packet = my_malloc(PACKET_SIZE);
+
+    packet->code = code;
+    packet->packet_type = MESSAGE;
+    packet->is_global = false;
+    memcpy(packet->packet_body, message, MESSAGE_SIZE);
     return packet;
 }

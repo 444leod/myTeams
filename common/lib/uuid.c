@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <uuid/uuid.h>
+#include <stdbool.h>
 #include <string.h>
 
 /**

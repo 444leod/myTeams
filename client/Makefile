@@ -30,6 +30,7 @@ PACKET_HANDLER_SRC = buffer.c \
 	team.c \
 	reply.c \
 	channel.c \
+	message.c \
 
 COMMANDS_SRC = help.c
 

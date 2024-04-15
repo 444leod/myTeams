@@ -36,3 +36,19 @@ void send_packet_to_logged_users(packet_t *packet, client_t client)
         tmp = tmp->next;
     }
 }
+
+/**
+ * @brief Send a packet to a client
+ * @details Send a packet to a client
+ *
+ * @param client the client
+ * @param packet the packet
+ */
+void send_packet_to_client(client_t client, packet_t *packet)
+{
+    packet_t *new_packet = my_malloc(sizeof(packet_t));
+
+    memcpy(new_packet, packet, sizeof(packet_t));
+    new_packet->is_global = true;
+    add_packet_to_queue(&client->packet_queue, new_packet);
+}

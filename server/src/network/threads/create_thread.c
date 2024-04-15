@@ -7,6 +7,7 @@
 
 #include "data_structures.h"
 #include "garbage_collector.h"
+#include "linked_lists.h"
 #include <string.h>
 
 /**
@@ -30,5 +31,6 @@ thread_t *create_thread(title_t title, body_t body, uuid_t creator_uuid,
     memcpy(thread->channel_uuid, channel_uuid, sizeof(uuid_t));
     thread->timestamp = time(NULL);
     uuid_generate(thread->thread_uuid);
+    add_to_list((void *)thread, (node_t *)get_threads());
     return thread;
 }
