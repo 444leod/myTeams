@@ -65,8 +65,7 @@ fclean: clean
 
 re: fclean all
 
-debug:
-	$(CC) $(CFLAGS) -g3
+debug: all
 
 dev: all
 

@@ -40,6 +40,23 @@ static void execute_command(UNUSED char **command, UNUSED client_t client)
 }
 
 /**
+ * @brief Remove the quotes from a string
+ * @details Remove the quotes from a string
+ *
+ * @param str the string
+ *
+ * @return the string without quotes
+*/
+static char *remove_quotes(char *str)
+{
+    if (str[0] == '"' && str[strlen(str) - 1] == '"') {
+        str[strlen(str) - 1] = '\0';
+        str++;
+    }
+    return str;
+}
+
+/**
  * @brief Handle the command of a client
  * @details Handle the command of a client
  * by parsing it and executing it
@@ -51,6 +68,8 @@ void handle_command(client_t client)
     char *command = my_strdup(client->command);
     char **args = quote_split(command);
 
+    for (size_t i = 0; args && args[i]; i++)
+        args[i] = remove_quotes(args[i]);
     DEBUG_PRINT("Handling command: %s\n", get_escaped_string(client->command));
     for (size_t i = 0; args && args[i]; i++)
         DEBUG_PRINT("Arg %ld: %s\n", i, get_escaped_string(args[i]));

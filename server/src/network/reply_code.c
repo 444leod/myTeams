@@ -37,6 +37,9 @@ const int custom_messages_list[] = {
     INEXISTANT_TEAM,
     INEXISTANT_CHANNEL,
     INEXISTANT_THREAD,
+    MESSAGE_RECEIVED,
+    MESSAGE_SENT,
+    MESSAGES_LIST,
     -1
 };
 
@@ -54,8 +57,6 @@ const server_message_t serverMessages[] = {
     {THREAD_CONTEXT_SET, "Thread context set."},
 
     {NEW_USER, "Service ready for new user."},
-
-    {MESSAGE_SENT, "Message sent."},
 
     {TEAM_SUBSCRIBED, "Team subscribed."},
     {TEAM_UNSUBSCRIBED, "Team unsubscribed."},
