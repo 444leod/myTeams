@@ -8,6 +8,7 @@
 #include "cmd_requirements.h"
 #include "lib.h"
 #include "client_teams.h"
+#include "logging_client.h"
 
 /**
  * @brief Verify if the command given and the login status are compatible
@@ -29,6 +30,7 @@ bool verify_logged(bool need_logged)
     }
     if (is_client_logged == false && need_logged == true) {
         printf("You must be logged in to use this command\n");
+        client_error_unauthorized();
         return 0;
     }
     return 1;
@@ -62,41 +64,6 @@ void check_requirements(cmd_requirements_t cmd_requirements, int args_nbr,
 }
 
 /**
- * @brief Remove the quotes from a string
- * @details Remove the quotes from a string
- *
- * @param str the string
- *
- * @return the string without quotes
-*/
-static char *remove_quotes(char *str)
-{
-    if (str[0] == '"' && str[strlen(str) - 1] == '"') {
-        str[strlen(str) - 1] = '\0';
-        str++;
-    }
-    return str;
-}
-
-/**
- * @brief Rebuild a string from an array of strings
- * @details Rebuild a string from an array of strings
- *
- * @param args the array of strings
- *
- * @return the rebuilt string
-*/
-static char *rebuild_string(char **args)
-{
-    char *str = supercat(2, args[0], " ");
-
-    for (uint16_t i = 1; args[i]; i++) {
-        str = supercat(3, str, args[i], " ");
-    }
-    return str;
-}
-
-/**
  * @brief Check if the parameters are quoted
  * @details Check if the parameters are quoted
  *
@@ -115,10 +82,6 @@ static void check_quoted_parameters(char **args, char **message)
             return;
         }
     }
-    for (uint16_t i = 1; args[i]; i++)
-        args[i] = remove_quotes(args[i]);
-    my_free(*message);
-    *message = rebuild_string(args);
 }
 
 /**

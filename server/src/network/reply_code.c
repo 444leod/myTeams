@@ -28,8 +28,6 @@ const server_message_t serverMessages[] = {
 
     {NEW_USER, "Service ready for new user."},
 
-    {MESSAGE_SENT, "Message sent."},
-
     {TEAM_SUBSCRIBED, "Team subscribed."},
     {TEAM_UNSUBSCRIBED, "Team unsubscribed."},
     {TEAM_IS_SUBSCRIBED, "Current user is subscribed."},

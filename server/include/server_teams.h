@@ -41,3 +41,4 @@ void loop_clients(client_t *clients, fd_set *readfds,
 void handle_command(client_t client);
 void get_port(int fd, int *port);
 void send_packet_to_logged_users(packet_t *packet, client_t client);
+void send_packet_to_client(client_t client, packet_t *packet);

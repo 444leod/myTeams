@@ -26,3 +26,4 @@ void handle_inexistant_user_packet(packet_t *packet);
 void team_packet_handler(packet_t *packet);
 void reply_packet_handler(packet_t *packet);
 void channel_packet_handler(packet_t *packet);
+void message_packet_handler(packet_t *packet);

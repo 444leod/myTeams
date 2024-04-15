@@ -30,6 +30,11 @@ typedef struct channels_s {
     channel_t *channel;
 } *channels_t;
 
+typedef struct messages_s {
+    struct messages_s *next;
+    message_t *message;
+} *messages_t;
+
 typedef struct users_s {
     struct users_s *next;
     user_information_t *user;
@@ -68,3 +73,14 @@ channel_t *create_channel(title_t title, description_t description,
     uuid_t team_uuid);
 void dump_channels(void);
 void init_channels(void);
+
+messages_t *get_messages(void);
+message_t *get_message_by_uuid(uuid_t message_uuid);
+messages_t *get_messages_by_receiver(uuid_t receiver_uuid);
+messages_t *get_messages_by_sender(uuid_t sender_uuid);
+messages_t get_messages_by_sender_and_receiver(uuid_t sender_uuid,
+    uuid_t receiver_uuid);
+message_t *create_message(body_t body,
+    uuid_t sender_uuid, uuid_t receiver_uuid);
+void dump_messages(void);
+void init_messages(void);

@@ -7,6 +7,7 @@
 
 #include "data_structures.h"
 #include "garbage_collector.h"
+#include "linked_lists.h"
 #include <string.h>
 
 /**
@@ -26,5 +27,6 @@ team_t *create_team(char *name, char *description)
     memcpy(team->description, description,
         sizeof(char) * MAX_DESCRIPTION_LENGTH);
     uuid_generate(team->uuid);
+    add_to_list((void *)team, (node_t *)get_teams());
     return team;
 }
