@@ -50,7 +50,7 @@ static bool is_command_valid(client_t client, char **command)
  * @param client the client
  * @param receiver_uuid the receiver uuid
  */
-void list_message(client_t client, uuid_t receiver_uuid)
+static void list_message(client_t client, uuid_t receiver_uuid)
 {
     messages_t messages = get_messages_by_sender_and_receiver(
         client->user->uuid, receiver_uuid);
@@ -63,6 +63,13 @@ void list_message(client_t client, uuid_t receiver_uuid)
     }
 }
 
+/**
+ * @brief /messages command handler
+ * @details /messages command handler
+ *
+ * @param client the client
+ * @param command the command
+ */
 void messages(client_t client, char **command)
 {
     uuid_t receiver_uuid;

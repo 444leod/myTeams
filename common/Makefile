@@ -41,7 +41,7 @@ SRC_NETWORK_LIB = 	./network/accept_socket.c \
 CC = gcc
 
 CFLAGS = -I../include -Wall -Wextra -Werror -Wpedantic -luuid \
-	-I ../libs/myteams -g
+	-I ../libs/myteams
 
 OBJ_LIB = $(SRC_LIB:.c=.o)
 OBJ_NETWORK_LIB = $(SRC_NETWORK_LIB:.c=.o)

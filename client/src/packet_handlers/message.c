@@ -27,6 +27,12 @@ static void messages_list_handler(message_t *message)
         my_strdup(message->body));
 }
 
+/**
+ * @brief Handle the message received
+ * @details Handle the message received
+ *
+ * @param message the message
+ */
 static void message_received_handler(message_t *message)
 {
     char *uuid = get_uuid_as_string(message->sender_uuid);

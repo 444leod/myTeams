@@ -47,7 +47,7 @@ static bool is_command_valid(client_t client, char **command)
  * @return true if the parameters are good
  * @return false if the parameters are not good
  */
-bool is_param_good(client_t client, char **command)
+static bool is_param_good(client_t client, char **command)
 {
     if (!is_uuid_valid(command[1])) {
         add_packet_to_queue(&client->packet_queue,
