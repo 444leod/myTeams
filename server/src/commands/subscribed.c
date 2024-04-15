@@ -110,8 +110,6 @@ static void handle_team_subscribed_command(char *uuid, client_t client)
  */
 void subscribed(client_t client, char **command)
 {
-    uuid_t team_uuid;
-
     if (!is_command_valid(client, command))
         return;
     if (command[1] != NULL && !is_uuid_valid(command[1])) {
