@@ -60,7 +60,7 @@ bool read_team(int fd, user_t user)
             get_uuid_as_string(team_uuid));
         return true;
     }
-    add_to_list((void *)team, (node_t *)user->subscribed_teams);
+    add_to_list((void *)team, (node_t *)&user->subscribed_teams);
     return true;
 }
 
