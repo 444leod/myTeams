@@ -6,9 +6,11 @@
 */
 
 #include "commands.h"
+#include "reply_code.h"
+#include "macros.h"
 
-void my_send(client_t client, char **command)
+void my_send(client_t client, UNUSED char **command)
 {
-    (void)client;
-    (void)command;
+    add_packet_to_queue(&client->packet_queue,
+        build_packet(COMMAND_NOT_IMPLEMENTED, ""));
 }
