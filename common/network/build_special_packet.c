@@ -76,29 +76,22 @@ packet_t *build_reply_packet(int code, reply_t *reply)
 }
 
 /**
- * @brief Build a packet with a code and channel informations
- * @details Build a packet with the given code, a channel name, a description
- * and a team uuid, its type is set to CHANNEL
+ * @brief Build a packet with a code and a channel informations
+ * @details Build a packet with the given code and channel, its type is set to
+ *        CHANNEL
  *
  * @param code the code
- * @param channel_name the channel_name
- * @param description the description
- * @param team_uuid the team_uuid
+ * @param channel the channel
  *
  * @return the created packet
 */
-packet_t *build_channel_packet(int code, title_t channel_name,
-    description_t description, uuid_t team_uuid)
+packet_t *build_channel_packet(int code, channel_t *channel)
 {
     packet_t *packet = my_malloc(PACKET_SIZE);
-    channel_t *channel = my_malloc(CHANNEL_SIZE);
 
     packet->code = code;
     packet->packet_type = CHANNEL;
     packet->is_global = false;
-    memcpy(channel->channel_name, channel_name, sizeof(title_t));
-    memcpy(channel->description, description, sizeof(description_t));
-    memcpy(channel->team_uuid, team_uuid, sizeof(uuid_t));
     memcpy(packet->packet_body, channel, CHANNEL_SIZE);
     return packet;
 }

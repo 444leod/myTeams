@@ -107,8 +107,7 @@ packet_t *build_userinfo_packet(int code, username_t username, uuid_t uuid,
 packet_t *build_team_packet(int code, team_t *team);
 packet_t *build_thread_packet(int code, thread_t *thread);
 packet_t *build_reply_packet(int code, reply_t *reply);
-packet_t *build_channel_packet(int code, title_t title,
-    description_t description, uuid_t team_uuid);
+packet_t *build_channel_packet(int code, channel_t *channel);
 packet_t *build_message_packet(int code, message_t *message);
 packet_t *build_error_packet(int code, char *buffer);
 
