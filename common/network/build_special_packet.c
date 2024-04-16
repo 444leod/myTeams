@@ -60,24 +60,17 @@ packet_t *build_team_packet(int code, team_t *team)
  *  its type is set to REPLY
  *
  * @param code the code
- * @param body the body
- * @param creator_uuid the creator_uuid
- * @param thread_uuid the thread_uuid
+ * @param reply the reply
  *
  * @return the created packet
 */
-packet_t *build_reply_packet(int code, body_t body, uuid_t creator_uuid,
-    uuid_t thread_uuid)
+packet_t *build_reply_packet(int code, reply_t *reply)
 {
     packet_t *packet = my_malloc(PACKET_SIZE);
-    reply_t *reply = my_malloc(REPLY_SIZE);
 
     packet->code = code;
     packet->packet_type = REPLY;
     packet->is_global = false;
-    memcpy(reply->body, body, sizeof(body_t));
-    memcpy(reply->creator_uuid, creator_uuid, sizeof(uuid_t));
-    memcpy(reply->thread_uuid, thread_uuid, sizeof(uuid_t));
     memcpy(packet->packet_body, reply, REPLY_SIZE);
     return packet;
 }

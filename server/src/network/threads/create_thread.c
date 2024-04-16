@@ -30,7 +30,7 @@ thread_t *create_thread(title_t title, body_t body, uuid_t creator_uuid,
     memcpy(thread->creator_uuid, creator_uuid, sizeof(uuid_t));
     memcpy(thread->channel_uuid, channel_uuid, sizeof(uuid_t));
     thread->timestamp = time(NULL);
-    uuid_generate(thread->thread_uuid);
+    uuid_generate(thread->uuid);
     add_to_list((void *)thread, (node_t *)get_threads());
     return thread;
 }

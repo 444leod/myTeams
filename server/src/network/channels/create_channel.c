@@ -29,7 +29,7 @@ channel_t *create_channel(title_t title, description_t description,
     memcpy(channel->description, description,
         sizeof(char) * MAX_DESCRIPTION_LENGTH);
     memcpy(channel->team_uuid, team_uuid, sizeof(uuid_t));
-    uuid_generate(channel->channel_uuid);
+    uuid_generate(channel->uuid);
     add_to_list((void *)channel, (node_t *)get_channels());
     return channel;
 }

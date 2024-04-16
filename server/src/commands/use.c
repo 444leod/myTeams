@@ -114,7 +114,7 @@ static bool are_uuids_unrelated(client_t client)
         return false;
     }
     if (client->thread && uuid_compare(client->thread->channel_uuid,
-        client->channel->channel_uuid) != 0) {
+        client->channel->uuid) != 0) {
         add_packet_to_queue(&client->packet_queue,
             build_error_packet(INEXISTANT_THREAD, ""));
         return false;

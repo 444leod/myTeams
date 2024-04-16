@@ -48,7 +48,7 @@ typedef struct user_information_s {
 } user_information_t;
 
 typedef struct thread_s {
-    uuid_t thread_uuid;
+    uuid_t uuid;
     uuid_t creator_uuid;
     time_t timestamp;
     title_t title;
@@ -64,14 +64,15 @@ typedef struct team_s {
 } team_t;
 
 typedef struct reply_s {
-    uuid_t reply_uuid;
+    uuid_t uuid;
     uuid_t thread_uuid;
+    uuid_t team_uuid;
     uuid_t creator_uuid;
     body_t body;
 } reply_t;
 
 typedef struct channel_s {
-    uuid_t channel_uuid;
+    uuid_t uuid;
     char channel_name[MAX_NAME_LENGTH + 1];
     char description[MAX_DESCRIPTION_LENGTH + 1];
     uuid_t team_uuid;
@@ -105,8 +106,7 @@ packet_t *build_userinfo_packet(int code, username_t username, uuid_t uuid,
     bool is_logged);
 packet_t *build_team_packet(int code, team_t *team);
 packet_t *build_thread_packet(int code, thread_t *thread);
-packet_t *build_reply_packet(int code, body_t body, uuid_t creator_uuid,
-    uuid_t thread_uuid);
+packet_t *build_reply_packet(int code, reply_t *reply);
 packet_t *build_channel_packet(int code, title_t title,
     description_t description, uuid_t team_uuid);
 packet_t *build_message_packet(int code, message_t *message);

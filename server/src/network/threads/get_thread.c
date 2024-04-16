@@ -22,7 +22,7 @@ thread_t *get_thread_by_uuid(uuid_t thread_uuid)
     threads_t tmp = *threads;
 
     while (tmp) {
-        if (uuid_compare(tmp->thread->thread_uuid, thread_uuid) == 0)
+        if (uuid_compare(tmp->thread->uuid, thread_uuid) == 0)
             return tmp->thread;
         tmp = tmp->next;
     }
