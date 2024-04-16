@@ -7,6 +7,9 @@
 
 #include "commands.h"
 #include "reply_code.h"
+#include "macros.h"
+
+#include "reply_code.h"
 #include "logging_server.h"
 #include "garbage_collector.h"
 #include "packet.h"
