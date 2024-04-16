@@ -8,6 +8,8 @@
 #include "data_structures.h"
 #include "garbage_collector.h"
 #include "linked_lists.h"
+#include "logging_server.h"
+#include "lib.h"
 #include <string.h>
 
 /**
@@ -19,14 +21,19 @@
  *
  * @return team_t* the team
  */
-team_t *create_team(char *name, char *description)
+team_t *create_team(char *name, char *description, uuid_t creator_uuid)
 {
     team_t *team = my_malloc(sizeof(struct team_s));
 
     memcpy(team->name, name, sizeof(char) * MAX_NAME_LENGTH);
     memcpy(team->description, description,
         sizeof(char) * MAX_DESCRIPTION_LENGTH);
+    memcpy(team->creator_uuid, creator_uuid, sizeof(uuid_t));
     uuid_generate(team->uuid);
     add_to_list((void *)team, (node_t *)get_teams());
+    server_event_team_created(
+        get_uuid_as_string(team->uuid),
+        team->name,
+        get_uuid_as_string(creator_uuid));
     return team;
 }
