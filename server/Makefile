@@ -75,6 +75,7 @@ USER_LLIST_SRC = add_user.c \
 	dump_users.c \
 	get_users.c \
 	init_users.c \
+	is_user.c \
 
 OBJ = $(SRC:.c=.o)
 

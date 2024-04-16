@@ -43,18 +43,13 @@ packet_t *build_thread_packet(int code, thread_t *thread)
  *
  * @return the created packet
 */
-packet_t *build_team_packet(int code, title_t team_name,
-    description_t description, uuid_t creator_uuid)
+packet_t *build_team_packet(int code, team_t *team)
 {
     packet_t *packet = my_malloc(PACKET_SIZE);
-    team_t *team = my_malloc(TEAM_SIZE);
 
     packet->code = code;
     packet->packet_type = TEAM;
     packet->is_global = false;
-    memcpy(team->team_name, team_name, sizeof(title_t));
-    memcpy(team->description, description, sizeof(description_t));
-    memcpy(team->creator_uuid, creator_uuid, sizeof(uuid_t));
     memcpy(packet->packet_body, team, TEAM_SIZE);
     return packet;
 }

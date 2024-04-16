@@ -107,8 +107,8 @@ static int set_used_items(client_t client, char **command)
  */
 static bool are_uuids_unrelated(client_t client)
 {
-    if (client->channel && uuid_compare(client->channel->team_uuid,
-        client->team->team_uuid) != 0) {
+    if (client->channel &&
+        uuid_compare(client->channel->team_uuid, client->team->uuid) != 0) {
         add_packet_to_queue(&client->packet_queue,
             build_error_packet(INEXISTANT_CHANNEL, ""));
         return false;

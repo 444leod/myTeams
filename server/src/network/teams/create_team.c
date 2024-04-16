@@ -23,10 +23,10 @@ team_t *create_team(char *name, char *description)
 {
     team_t *team = my_malloc(sizeof(struct team_s));
 
-    memcpy(team->team_name, name, sizeof(char) * MAX_NAME_LENGTH);
+    memcpy(team->name, name, sizeof(char) * MAX_NAME_LENGTH);
     memcpy(team->description, description,
         sizeof(char) * MAX_DESCRIPTION_LENGTH);
-    uuid_generate(team->team_uuid);
+    uuid_generate(team->uuid);
     add_to_list((void *)team, (node_t *)get_teams());
     return team;
 }

@@ -14,36 +14,6 @@
 #include "garbage_collector.h"
 
 /**
- * @brief The custom messages list
- * @details The list of custom messages that the server can send to the client
- * it uses the client buffer to send the message
-*/
-const int custom_messages_list[] = {
-    HELP_MESSAGE,
-    USER_CREATED,
-    USER_LOGGED_IN,
-    USER_LOGGED_OUT,
-    USERS_LIST,
-    USER_INFO,
-    TEAM_LIST,
-    CHANNEL_LIST,
-    THREAD_LIST,
-    REPLY_LIST,
-    CURRENT_USER_INFO,
-    TEAM_INFO,
-    CHANNEL_INFO,
-    THREAD_INFO,
-    INEXISTANT_USER,
-    INEXISTANT_TEAM,
-    INEXISTANT_CHANNEL,
-    INEXISTANT_THREAD,
-    MESSAGE_RECEIVED,
-    MESSAGE_SENT,
-    MESSAGES_LIST,
-    -1
-};
-
-/**
  * @brief The server messages
  * @details The messages that the server can send to the client based on the
  * current code
@@ -89,25 +59,10 @@ const server_message_t serverMessages[] = {
         "characters are allowed."},
     {NOT_LOGGED_IN, "Not logged in."},
     {USER_ALREADY_LOGGED_IN, "User already logged in."},
-    {-1, "Something went wrong with the server."}
+    {EMPTY_USER_LIST, "Empty user list."},
+    {EMPTY_TEAM_LIST, "Empty team list."},
+    {-1, "Something went wrong with the server (code rebuild missing)."}
 };
-
-/**
- * @brief Check if the code is a special reply code
- * @details Check if the code is a special reply code
- *
- * @param code the code to check
- * @return true if the code is a special reply code
- * @return false if the code is not a special reply code
-*/
-static bool special_reply_code(int code)
-{
-    for (uint16_t i = 0; custom_messages_list[i] != -1; i++) {
-        if (code == custom_messages_list[i])
-            return true;
-    }
-    return false;
-}
 
 /**
  * @brief Rebuild the packet with the current code
@@ -124,7 +79,7 @@ packet_t *rebuild_packet(int code, packet_t *packet)
 {
     uint16_t i = 0;
 
-    if (special_reply_code(code))
+    if (packet->packet_type != NONE && strlen(packet->packet_body) != 0)
         return packet;
     for (i = 0; serverMessages[i].code != -1; i++) {
         if (serverMessages[i].code == code) {
