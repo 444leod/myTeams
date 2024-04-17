@@ -26,7 +26,7 @@ void bind_socket(int socketFd, int port, char **ip)
     serverAddress.sin_addr.s_addr = htons(INADDR_ANY);
     bindRes = bind(socketFd, (const struct sockaddr *)&serverAddress,
         sizeof(serverAddress));
-    if (bindRes == -1 || errno != 0)
+    if (bindRes == -1)
         my_error(supercat(2, "bind failed: ", strerror(errno)));
     inet_ntop(AF_INET, &(serverAddress.sin_addr),
         *ip, INET_ADDRSTRLEN);
