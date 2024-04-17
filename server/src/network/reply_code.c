@@ -28,15 +28,6 @@ const server_message_t serverMessages[] = {
 
     {NEW_USER, "Service ready for new user."},
 
-    {TEAM_SUBSCRIBED, "Team subscribed."},
-    {TEAM_UNSUBSCRIBED, "Team unsubscribed."},
-    {TEAM_IS_SUBSCRIBED, "Current user is subscribed."},
-    {TEAM_IS_NOT_SUBSCRIBED, "Current user is not subscribed."},
-    {TEAM_CREATED, "Team created."},
-    {CHANNEL_CREATED, "Channel created."},
-    {THREAD_CREATED, "Thread created."},
-    {REPLY_CREATED, "Reply created."},
-
     {SYNTAX_ERROR, "Syntax error, command unrecognized."},
     {SYNTAX_ERROR_IN_PARAMETERS,
         "Syntax error in parameters or arguments."},
@@ -48,7 +39,7 @@ const server_message_t serverMessages[] = {
     {DESCRIPTION_TOO_LONG, "Description too long."},
     {BODY_TOO_LONG, "Body too long."},
     {ALREADY_SUBSCRIBED, "Already subscribed."},
-    {NOT_SUBSCRIBED, "Not subscribed."},
+    {NOT_SUBSCRIBED, "You are not subscribed to this team."},
     {ALREADY_LOGGED_IN, "Already logged in."},
     {ALREADY_LOGGED_OUT, "Already logged out."},
     {ALREADY_EXISTS, "Already exists."},
@@ -59,8 +50,7 @@ const server_message_t serverMessages[] = {
         "characters are allowed."},
     {NOT_LOGGED_IN, "Not logged in."},
     {USER_ALREADY_LOGGED_IN, "User already logged in."},
-    {EMPTY_USER_LIST, "Empty user list."},
-    {EMPTY_TEAM_LIST, "Empty team list."},
+
     {-1, "Something went wrong with the server (code rebuild missing)."}
 };
 
@@ -78,18 +68,21 @@ const server_message_t serverMessages[] = {
 packet_t *rebuild_packet(int code, packet_t *packet)
 {
     uint16_t i = 0;
+    enum PACKET_TYPE type = packet->packet_type;
 
     if (packet->packet_type != NONE && strlen(packet->packet_body) != 0)
         return packet;
     for (i = 0; serverMessages[i].code != -1; i++) {
         if (serverMessages[i].code == code) {
             my_free(packet);
-            packet = build_packet(code, my_strdup(serverMessages[i].message));
+            packet = build_custom_packet(code,
+                my_strdup(serverMessages[i].message), type);
             return packet;
         }
     }
     my_free(packet);
-    packet = build_packet(UNKNOWN_ERROR, my_strdup(serverMessages[i].message));
+    packet = build_error_packet(UNKNOWN_ERROR,
+        my_strdup(serverMessages[i].message));
     return packet;
 }
 
