@@ -19,6 +19,6 @@ void listen_socket(int socketFd, int maxClients)
 {
     int listenRes = listen(socketFd, maxClients);
 
-    if (listenRes == -1 || errno != 0)
+    if (listenRes == -1)
         my_error(supercat(2, "listen failed: ", strerror(errno)));
 }
