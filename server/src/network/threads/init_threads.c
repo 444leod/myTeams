@@ -11,16 +11,22 @@
 #include "debug.h"
 #include "garbage_collector.h"
 #include "magic_number.h"
+#include "lib.h"
+#include "macros.h"
 #include <unistd.h>
 #include <stdlib.h>
 #include <fcntl.h>
 #include <stdio.h>
 
+static void print_initialized_thread(UNUSED thread_t *thread)
+{
+    DEBUG_PRINT("Thread loaded: \"%s\" (%s)\n",
+        thread->title, get_uuid_as_string(thread->uuid));
+}
+
 /**
  * @brief Read the threads from the save file
  * @details Read the threads from the save file
- *
- * TODO: add check of if channel exists
  *
  * @param fd the file descriptor
 */
@@ -36,6 +42,13 @@ void read_threads(int fd)
             my_free(new_thread);
             break;
         }
+        if (!get_channel_by_uuid(new_thread->channel_uuid)) {
+            printf("thread failed: Channel with uuid %s not found\n",
+                get_uuid_as_string(new_thread->channel_uuid));
+            my_free(new_thread);
+            continue;
+        }
+        print_initialized_thread(new_thread);
         add_to_list((void *)new_thread, (node_t *)get_threads());
     }
 }

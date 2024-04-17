@@ -11,10 +11,19 @@
 #include "debug.h"
 #include "garbage_collector.h"
 #include "magic_number.h"
+#include "lib.h"
+#include "macros.h"
 #include <unistd.h>
 #include <stdlib.h>
 #include <fcntl.h>
 #include <stdio.h>
+
+static void print_intialized_channel(UNUSED channel_t *channel)
+{
+    DEBUG_PRINT("Channel loaded: %s (%s)\n",
+        channel->channel_name,
+        get_uuid_as_string(channel->uuid));
+}
 
 /**
  * @brief Read the channels from the save file
@@ -39,6 +48,7 @@ void read_channels(int fd)
             printf("team with uuid %s not found\n", new_channel->team_uuid);
             continue;
         }
+        print_intialized_channel(new_channel);
         add_to_list((void *)new_channel, (node_t *)get_channels());
     }
 }

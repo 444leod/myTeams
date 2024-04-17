@@ -53,7 +53,7 @@ teams_t *get_teams(void);
 team_t *get_team_by_uuid(uuid_t team_uuid);
 team_t *get_team_by_name(char *name);
 users_t get_team_subscribers(team_t *team);
-team_t *create_team(char *name, char *description);
+team_t *create_team(char *name, char *description, uuid_t creator_uuid);
 void dump_teams(void);
 void init_teams(void);
 

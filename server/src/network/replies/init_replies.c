@@ -12,10 +12,17 @@
 #include "garbage_collector.h"
 #include "magic_number.h"
 #include "lib.h"
+#include "macros.h"
 #include <unistd.h>
 #include <stdlib.h>
 #include <fcntl.h>
 #include <stdio.h>
+
+static void print_initialized_reply(UNUSED reply_t *reply)
+{
+    DEBUG_PRINT("Reply loaded: \"%s\" (%s)\n",
+        reply->body, get_uuid_as_string(reply->uuid));
+}
 
 /**
  * @brief Read the replies from the save file
@@ -41,6 +48,7 @@ void read_replies(int fd)
             my_free(new_reply);
             continue;
         }
+        print_initialized_reply(new_reply);
         add_to_list((void *)new_reply, (node_t *)get_replies());
     }
 }

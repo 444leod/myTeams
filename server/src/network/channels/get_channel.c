@@ -22,7 +22,7 @@ channel_t *get_channel_by_uuid(uuid_t channel_uuid)
     channels_t tmp = *channels;
 
     while (tmp) {
-        if (uuid_compare(tmp->channel->channel_uuid, channel_uuid) == 0)
+        if (uuid_compare(tmp->channel->uuid, channel_uuid) == 0)
             return tmp->channel;
         tmp = tmp->next;
     }

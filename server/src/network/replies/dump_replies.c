@@ -25,7 +25,7 @@ void dump_replies(void)
         return;
     write_magic_number(fd);
     while (tmp) {
-        write(fd, tmp->reply, sizeof(struct team_s));
+        write(fd, tmp->reply, sizeof(struct reply_s));
         tmp = tmp->next;
     }
 }

@@ -66,14 +66,12 @@ static void handle_user_type_packet(packet_t *packet)
 }
 
 /**
- * @brief Handle the text type packet (TEAM_SUBSCRIBED, TEAM_UNSUBSCRIBED,
- *        EMPTY_TEAM_LIST, INEXISTANT_TEAM)
- * @details Handle the text type packet (TEAM_SUBSCRIBED, TEAM_UNSUBSCRIBED,
- *        EMPTY_TEAM_LIST, INEXISTANT_TEAM)
+ * @brief Handle the subscription packet (TEAM_SUBSCRIBED, TEAM_UNSUBSCRIBED)
+ * @details Handle the subscription packet (TEAM_SUBSCRIBED, TEAM_UNSUBSCRIBED)
  *
  * @param packet the packet
 */
-static void handle_text_type_packet(packet_t *packet)
+static void handle_subscription_packet(packet_t *packet)
 {
     team_t *team = get_team_from_packet(packet);
 
@@ -84,11 +82,33 @@ static void handle_text_type_packet(packet_t *packet)
         case TEAM_UNSUBSCRIBED:
             printf("You unsubscribed from team %s\n", team->name);
             break;
+    }
+}
+
+/**
+ * @brief Handle the text type packet (TEAM_SUBSCRIBED, TEAM_UNSUBSCRIBED,
+ *        EMPTY_TEAM_LIST, INEXISTANT_TEAM)
+ * @details Handle the text type packet (TEAM_SUBSCRIBED, TEAM_UNSUBSCRIBED,
+ *        EMPTY_TEAM_LIST, INEXISTANT_TEAM)
+ *
+ * @param packet the packet
+*/
+static void handle_text_type_packet(packet_t *packet)
+{
+    switch (packet->code) {
+        case TEAM_SUBSCRIBED:
+        case TEAM_UNSUBSCRIBED:
+            handle_subscription_packet(packet);
+            break;
         case NO_SUBSCRIBED_TEAMS:
             printf("You are not subscribed to any team\n");
             break;
         case INEXISTANT_TEAM:
             printf("Team does not exist\n");
+            break;
+        case ALREADY_EXISTS:
+            printf("This team already exist!\n");
+            client_error_already_exist();
             break;
         default:
             printf("Unknown packet code (%d)\n", packet->code);
@@ -118,6 +138,7 @@ void team_packet_handler(packet_t *packet)
         case TEAM_UNSUBSCRIBED:
         case EMPTY_TEAM_LIST:
         case INEXISTANT_TEAM:
+        case ALREADY_EXISTS:
         default:
             handle_text_type_packet(packet);
             break;

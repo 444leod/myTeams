@@ -22,7 +22,7 @@ reply_t *get_reply_by_uuid(uuid_t reply_uuid)
     replies_t tmp = *replies;
 
     while (tmp) {
-        if (uuid_compare(tmp->reply->reply_uuid, reply_uuid) == 0)
+        if (uuid_compare(tmp->reply->uuid, reply_uuid) == 0)
             return tmp->reply;
         tmp = tmp->next;
     }

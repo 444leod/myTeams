@@ -12,10 +12,17 @@
 #include "garbage_collector.h"
 #include "magic_number.h"
 #include "lib.h"
+#include "macros.h"
 #include <unistd.h>
 #include <stdlib.h>
 #include <fcntl.h>
 #include <stdio.h>
+
+static void print_initialized_team(UNUSED team_t *team)
+{
+    DEBUG_PRINT("Team loaded: \"%s\" (%s)\n",
+        team->name, get_uuid_as_string(team->uuid));
+}
 
 /**
  * @brief Read the teams from the save file
@@ -35,6 +42,7 @@ void read_teams(int fd)
             my_free(new_team);
             break;
         }
+        print_initialized_team(new_team);
         add_to_list((void *)new_team, (node_t *)get_teams());
     }
 }

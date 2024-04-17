@@ -13,10 +13,19 @@
 #include "magic_number.h"
 #include "clientllist.h"
 #include "lib.h"
+#include "macros.h"
 #include <unistd.h>
 #include <stdlib.h>
 #include <fcntl.h>
 #include <stdio.h>
+
+static void print_initialized_message(UNUSED message_t *message)
+{
+    DEBUG_PRINT("Message loaded: (from %s to %s) \"%s\"(%s)\n",
+        get_user_by_uuid(message->sender_uuid)->username,
+        get_user_by_uuid(message->receiver_uuid)->username,
+        message->body, get_uuid_as_string(message->message_uuid));
+}
 
 /**
  * @brief Read the messages from the save file
@@ -43,6 +52,7 @@ void read_messages(int fd)
             my_free(new_message);
             continue;
         }
+        print_initialized_message(new_message);
         add_to_list((void *)new_message, (node_t *)get_messages());
     }
 }
