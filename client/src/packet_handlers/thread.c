@@ -9,6 +9,7 @@
 #include "macros.h"
 #include "reply_code.h"
 #include "logging_client.h"
+#include "lib.h"
 #include <stdio.h>
 
 /**
@@ -24,8 +25,9 @@ void handle_thread_type_packet(packet_t *packet)
 
     switch (packet->code) {
         case THREAD_CREATED:
-            printf("Thread created by %s: \"%s\"\n",
-                get_uuid_as_string(thread->creator_uuid), thread->title);
+            printf("Thread \"%s\" created uuid: %s by %s: \"%s\"\n",
+                thread->title, uuid,
+                get_uuid_as_string(thread->creator_uuid), thread->body);
             client_event_thread_created(uuid,
                 get_uuid_as_string(thread->creator_uuid),
                 thread->timestamp,
@@ -44,6 +46,13 @@ void handle_thread_type_packet(packet_t *packet)
 void thread_packet_handler(packet_t *packet)
 {
     switch (packet->code) {
+        case THREAD_CREATED:
+            handle_thread_type_packet(packet);
+            break;
+        case ALREADY_EXISTS:
+            printf("This thread already exist!\n");
+            client_error_already_exist();
+            break;
         default:
             printf("Unknown packet code\n");
             break;

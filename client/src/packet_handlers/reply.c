@@ -9,6 +9,7 @@
 #include "macros.h"
 #include "reply_code.h"
 #include "logging_client.h"
+#include "lib.h"
 #include <stdio.h>
 
 /**

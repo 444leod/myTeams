@@ -9,6 +9,7 @@
 #include "reply_code.h"
 #include "macros.h"
 #include "logging_client.h"
+#include "lib.h"
 #include <stdio.h>
 
 /**
@@ -42,6 +43,10 @@ void channel_packet_handler(packet_t *packet)
     switch (packet->code) {
         case CHANNEL_CREATED:
             handle_channel_type_packet(packet);
+            break;
+        case ALREADY_EXISTS:
+            printf("This channel already exists\n");
+            client_error_already_exist();
             break;
         default:
             printf("Unknown packet code\n");
