@@ -109,6 +109,7 @@ static void handle_text_type_packet(packet_t *packet)
         case ALREADY_EXISTS:
             printf("This team already exist!\n");
             client_error_already_exist();
+            break;
         default:
             printf("Unknown packet code (%d)\n", packet->code);
             break;

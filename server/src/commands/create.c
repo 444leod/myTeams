@@ -135,7 +135,7 @@ static void handle_team_creation(client_t client, char **command)
 
     if (get_team_by_name(team_name)) {
         add_packet_to_queue(&client->packet_queue,
-            build_team_packet(ALREADY_EXISTS, ""));
+            build_custom_packet(ALREADY_EXISTS, "", TEAM));
         return;
     }
     team = create_team(team_name, team_description, client->user->uuid);
@@ -159,7 +159,7 @@ static void handle_channel_creation(client_t client, char **command)
 
     if (get_channel_by_name(name)) {
         add_packet_to_queue(&client->packet_queue,
-            build_channel_packet(ALREADY_EXISTS, ""));
+            build_custom_packet(ALREADY_EXISTS, "", CHANNEL));
         return;
     }
     channel = create_channel(name, description, client->team->uuid);
@@ -183,7 +183,7 @@ static void handle_thread_creation(client_t client, char **command)
 
     if (get_channel_by_name(name)) {
         add_packet_to_queue(&client->packet_queue,
-            build_thread_packet(ALREADY_EXISTS, ""));
+            build_custom_packet(ALREADY_EXISTS, "", THREAD));
         return;
     }
     packet = build_thread_packet(THREAD_CREATED,
