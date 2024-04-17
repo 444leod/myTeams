@@ -27,7 +27,7 @@ message_t *create_message(body_t message_body, uuid_t sender_uuid,
 {
     message_t *message = my_malloc(sizeof(message_t));
 
-    memcpy(message->body, message_body, sizeof(char) * MAX_BODY_LENGTH);
+    memcpy(message->body, message_body, strlen(message_body));
     memcpy(message->receiver_uuid, receiver_uuid, sizeof(uuid_t));
     memcpy(message->sender_uuid, sender_uuid, sizeof(uuid_t));
     uuid_generate(message->message_uuid);

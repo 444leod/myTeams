@@ -8,6 +8,8 @@
 #include "data_structures.h"
 #include "garbage_collector.h"
 #include "linked_lists.h"
+#include "logging_server.h"
+#include "lib.h"
 #include <string.h>
 
 /**
@@ -25,11 +27,12 @@ channel_t *create_channel(title_t title, description_t description,
 {
     channel_t *channel = my_malloc(sizeof(channel_t));
 
-    memcpy(channel->channel_name, title, sizeof(char) * MAX_NAME_LENGTH);
-    memcpy(channel->description, description,
-        sizeof(char) * MAX_DESCRIPTION_LENGTH);
+    memcpy(channel->channel_name, title, strlen(title));
+    memcpy(channel->description, description, strlen(description));
     memcpy(channel->team_uuid, team_uuid, sizeof(uuid_t));
     uuid_generate(channel->uuid);
     add_to_list((void *)channel, (node_t *)get_channels());
+    server_event_channel_created(get_uuid_as_string(team_uuid),
+        get_uuid_as_string(channel->uuid), my_strdup(title));
     return channel;
 }
