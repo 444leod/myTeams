@@ -33,7 +33,7 @@ static cmd_requirements_t cmd_requirements[] = {
     {"/use", 1, 4, true, NULL},
     {"/create", 2, 3, true, NULL},
     {"/list", 1, 1, true, NULL},
-    {"/info", 2, 2, true, NULL},
+    {"/info", 1, 1, true, NULL},
     {"/help", 1, 1, false, &help_command},
     {NULL, 0, 0, false, NULL}
 };

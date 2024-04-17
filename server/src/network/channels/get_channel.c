@@ -43,7 +43,7 @@ channel_t *get_channel_by_name(char *name)
     channels_t tmp = *channels;
 
     while (tmp) {
-        if (strcmp(tmp->channel->channel_name, name) == 0)
+        if (strcmp(tmp->channel->name, name) == 0)
             return tmp->channel;
         tmp = tmp->next;
     }

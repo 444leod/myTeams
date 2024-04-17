@@ -25,7 +25,7 @@ static bool is_command_valid(client_t client, char **command)
 {
     if (tablen((void **)command) != 2) {
         add_packet_to_queue(&client->packet_queue,
-            build_packet(SYNTAX_ERROR_IN_PARAMETERS, ""));
+            build_error_packet(SYNTAX_ERROR_IN_PARAMETERS, ""));
         return false;
     }
     return true;

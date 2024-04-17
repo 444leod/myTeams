@@ -13,6 +13,25 @@
 #include "lib.h"
 
 /**
+ * @brief Return the current context of the client
+ * @details Return the current context of the client
+ *
+ * @param client the client
+ *
+ * @return enum CONTEXT the current context
+ */
+enum CONTEXT get_current_context(client_t client)
+{
+    if (!client->team)
+        return GLOBAL_CONTEXT;
+    if (!client->channel)
+        return TEAM_CONTEXT;
+    if (!client->thread)
+        return CHANNEL_CONTEXT;
+    return THREAD_CONTEXT;
+}
+
+/**
  * @brief Check if the command is valid
  * @details Check if the command is valid
  *
@@ -26,12 +45,12 @@ static bool is_command_valid(client_t client, char **command)
 {
     if (tablen((void **)command) > 4) {
         add_packet_to_queue(&client->packet_queue,
-            build_packet(SYNTAX_ERROR_IN_PARAMETERS, ""));
+            build_error_packet(SYNTAX_ERROR_IN_PARAMETERS, ""));
         return false;
     }
     if (!client->user) {
         add_packet_to_queue(&client->packet_queue,
-            build_packet(NOT_LOGGED_IN, ""));
+            build_error_packet(NOT_LOGGED_IN, ""));
         return false;
     }
     return true;
