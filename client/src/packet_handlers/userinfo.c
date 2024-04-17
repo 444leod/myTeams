@@ -33,6 +33,7 @@ void userinfo_packet_handler(packet_t *packet)
             user_command_packet_handler(packet);
             break;
         default:
+            printf("Userinfo packet handler: Unknown packet code.\n");
             break;
     }
 }
