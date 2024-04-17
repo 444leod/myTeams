@@ -22,7 +22,7 @@ message_t *get_message_by_uuid(uuid_t message_uuid)
     messages_t tmp = *messages;
 
     while (tmp) {
-        if (uuid_compare(tmp->message->message_uuid, message_uuid) == 0)
+        if (uuid_compare(tmp->message->uuid, message_uuid) == 0)
             return tmp->message;
         tmp = tmp->next;
     }

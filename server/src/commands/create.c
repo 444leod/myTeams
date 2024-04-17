@@ -9,13 +9,6 @@
 #include "reply_code.h"
 #include "macros.h"
 
-enum CONTEXT {
-    TEAM_CONTEXT,
-    CHANNEL_CONTEXT,
-    THREAD_CONTEXT,
-    REPLY_CONTEXT
-};
-
 struct parameters {
     enum CONTEXT context;
     size_t needed_len;
@@ -24,10 +17,10 @@ struct parameters {
 };
 
 static struct parameters parameters[4] = {
+    {GLOBAL_CONTEXT, 3, MAX_NAME_LENGTH, MAX_DESCRIPTION_LENGTH},
     {TEAM_CONTEXT, 3, MAX_NAME_LENGTH, MAX_DESCRIPTION_LENGTH},
-    {CHANNEL_CONTEXT, 3, MAX_NAME_LENGTH, MAX_DESCRIPTION_LENGTH},
-    {THREAD_CONTEXT, 3, MAX_NAME_LENGTH, MAX_BODY_LENGTH},
-    {REPLY_CONTEXT, 2, MAX_BODY_LENGTH, 0}
+    {CHANNEL_CONTEXT, 3, MAX_NAME_LENGTH, MAX_BODY_LENGTH},
+    {THREAD_CONTEXT, 2, MAX_BODY_LENGTH, 0}
 };
 
 /**
@@ -212,25 +205,6 @@ static void handle_reply_creation(client_t client, char **command)
 }
 
 /**
- * @brief Return the current context of the client
- * @details Return the current context of the client
- *
- * @param client the client
- *
- * @return enum CONTEXT the current context
- */
-static enum CONTEXT get_current_context(client_t client)
-{
-    if (!client->team)
-        return TEAM_CONTEXT;
-    if (!client->channel)
-        return CHANNEL_CONTEXT;
-    if (!client->thread)
-        return THREAD_CONTEXT;
-    return REPLY_CONTEXT;
-}
-
-/**
  * @brief Create command handler. Create either a team, a channel, a thread
  *      or a reply, based on the current context
  * @details Create either a team, a channel, a thread or a reply, based on the
@@ -248,16 +222,16 @@ void create(client_t client, char **command)
     if (!is_context_valid(client, command, context))
         return;
     switch (context) {
-        case TEAM_CONTEXT:
+        case GLOBAL_CONTEXT:
             handle_team_creation(client, command);
             break;
-        case CHANNEL_CONTEXT:
+        case TEAM_CONTEXT:
             handle_channel_creation(client, command);
             break;
-        case THREAD_CONTEXT:
+        case CHANNEL_CONTEXT:
             handle_thread_creation(client, command);
             break;
-        case REPLY_CONTEXT:
+        case THREAD_CONTEXT:
             handle_reply_creation(client, command);
             break;
     }

@@ -12,5 +12,5 @@
 void list(client_t client, UNUSED char **command)
 {
     add_packet_to_queue(&client->packet_queue,
-        build_packet(COMMAND_NOT_IMPLEMENTED, ""));
+        build_error_packet(COMMAND_NOT_IMPLEMENTED, ""));
 }

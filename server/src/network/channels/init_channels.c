@@ -20,8 +20,7 @@
 
 static void print_intialized_channel(UNUSED channel_t *channel)
 {
-    DEBUG_PRINT("Channel loaded: %s (%s)\n",
-        channel->channel_name,
+    DEBUG_PRINT("Channel loaded: %s (%s)\n", channel->name,
         get_uuid_as_string(channel->uuid));
 }
 
