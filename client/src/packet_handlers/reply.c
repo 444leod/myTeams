@@ -46,7 +46,6 @@ static void handle_reply_list(packet_t *packet)
     reply_t *reply = get_reply_from_packet(packet);
     char *creator_uuid = get_uuid_as_string(reply->creator_uuid);
     char *thread_uuid = get_uuid_as_string(reply->thread_uuid);
-    char *team_uuid = get_uuid_as_string(reply->team_uuid);
 
     printf("Reply list: %s\n", my_strdup(reply->body));
     client_thread_print_replies(thread_uuid, creator_uuid, reply->timestamp,
@@ -61,8 +60,6 @@ static void handle_reply_list(packet_t *packet)
  */
 void handle_reply_type_packet(packet_t *packet)
 {
-    reply_t *reply = get_reply_from_packet(packet);
-
     switch (packet->code) {
         case REPLY_CREATED:
             handle_reply_created(packet);

@@ -51,7 +51,6 @@ static void print_team(char *format, team_t *team)
 static void handle_team_type_packet(packet_t *packet)
 {
     team_t *team = get_team_from_packet(packet);
-    char *uuid = get_uuid_as_string(team->uuid);
 
     switch (packet->code) {
         case TEAM_LIST:
