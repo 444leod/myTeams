@@ -33,6 +33,7 @@ reply_t *create_reply(char *body, uuid_t creator_uuid, uuid_t thread_uuid)
     memcpy(reply->team_uuid, channel->team_uuid, sizeof(uuid_t));
     uuid_generate(reply->uuid);
     add_to_list((void *)reply, (node_t *)get_replies());
+    reply->timestamp = time(NULL);
     server_event_reply_created(
         get_uuid_as_string(thread_uuid),
         get_uuid_as_string(creator_uuid),
