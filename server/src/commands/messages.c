@@ -27,12 +27,12 @@ static bool is_command_valid(client_t client, char **command)
 {
     if (tablen((void **)command) != 2) {
         add_packet_to_queue(&client->packet_queue,
-            build_packet(SYNTAX_ERROR_IN_PARAMETERS, ""));
+            build_error_packet(SYNTAX_ERROR_IN_PARAMETERS, ""));
         return false;
     }
     if (!client->user) {
         add_packet_to_queue(&client->packet_queue,
-            build_packet(NOT_LOGGED_IN, ""));
+            build_error_packet(NOT_LOGGED_IN, ""));
         return false;
     }
     if (!is_uuid_valid(command[1])) {

@@ -24,7 +24,7 @@ static void print_initialized_message(UNUSED message_t *message)
     DEBUG_PRINT("Message loaded: (from %s to %s) \"%s\"(%s)\n",
         get_user_by_uuid(message->sender_uuid)->username,
         get_user_by_uuid(message->receiver_uuid)->username,
-        message->body, get_uuid_as_string(message->message_uuid));
+        message->body, get_uuid_as_string(message->uuid));
 }
 
 /**
