@@ -83,11 +83,9 @@ static int set_used_items(client_t client, char **command)
         case 4:
             get_uuid_from_string(command[3], uuids[2]);
             client->thread = get_thread_by_uuid(uuids[2]);
-            break;
         case 3:
             get_uuid_from_string(command[2], uuids[1]);
             client->channel = get_channel_by_uuid(uuids[1]);
-            break;
         case 2:
             get_uuid_from_string(command[1], uuids[0]);
             client->team = get_team_by_uuid(uuids[0]);
@@ -111,12 +109,14 @@ static bool are_uuids_unrelated(client_t client)
         uuid_compare(client->channel->team_uuid, client->team->uuid) != 0) {
         add_packet_to_queue(&client->packet_queue,
             build_error_packet(INEXISTANT_CHANNEL, ""));
+        printf("uuids are unrelated!\n");
         return false;
     }
     if (client->thread && uuid_compare(client->thread->channel_uuid,
         client->channel->uuid) != 0) {
         add_packet_to_queue(&client->packet_queue,
             build_error_packet(INEXISTANT_THREAD, ""));
+        printf("uuids are unrelated!\n");
         return false;
     }
     return true;
@@ -146,6 +146,30 @@ static bool is_special_case(client_t client, char **command)
 }
 
 /**
+ * @brief Check if the user can create the team
+ * @details Check if the user can create the team by checking if the
+ *        user is subscribed to the team
+ *
+ * @param client the client
+ * @param command the command
+ *
+ * @return true if the user can create the team
+ * @return false if the user can't create the team
+ */
+static bool can_user_create(client_t client, char **command)
+{
+    uuid_t team_uuid;
+
+    get_uuid_from_string(command[1], team_uuid);
+    if (!is_user_subscribed_to_team(client->user, team_uuid)) {
+        add_packet_to_queue(&client->packet_queue,
+            build_error_packet(NOT_SUBSCRIBED, ""));
+        return false;
+    }
+    return true;
+}
+
+/**
  * @brief /use command handler
  * @details /use command handler
  *
@@ -165,8 +189,7 @@ void use(client_t client, char **command)
     client->channel = NULL;
     client->thread = NULL;
     code = set_used_items(client, command);
-    if (!are_uuids_unrelated(client)) {
-        printf("uuids are unrelated\n");
+    if (!are_uuids_unrelated(client) || !can_user_create(client, command)) {
         client->team = old_iteams[0];
         client->channel = old_iteams[1];
         client->thread = old_iteams[2];
