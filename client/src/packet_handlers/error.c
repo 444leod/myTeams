@@ -57,9 +57,12 @@ void error_packet_handler(UNUSED packet_t *packet)
         case INEXISTANT_USER:
             handle_inexistant_item_packet(packet);
             return;
-        case NOT_SUBSCRIBED:
-            printf("You are not subscribed to the given team!\n");
-            return;
+        default:
+            if (strlen(packet->packet_body) > 0) {
+                printf("Error: %s\n", packet->packet_body);
+                return;
+            }
+            break;
     }
     printf("Something went wrong with this packet handling.\n");
 }
