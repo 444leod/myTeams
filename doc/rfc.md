@@ -41,6 +41,9 @@ The MyTeams CLI client supports the following features:
 - Resource creation, listing, and information retrieval.
 
 ## Commands
+
+Commands send by the client to the server are prefixed with a `/` character and they end with the CRLF (`"/r/n"`) sequence.
+
 ### /help
 - Description: Show help.
 
