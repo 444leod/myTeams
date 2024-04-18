@@ -50,3 +50,4 @@ void get_port(int fd, int *port);
 void send_packet_to_logged_users(packet_t *packet, client_t client);
 void send_packet_to_client(client_t client, packet_t *packet);
 enum CONTEXT get_current_context(client_t client);
+bool is_context_valid(client_t client);
