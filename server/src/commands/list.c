@@ -67,8 +67,11 @@ static void handle_team_list(client_t client)
 static void handle_channel_list(client_t client)
 {
     packet_t *packet;
-    channels_t channels = get_channels_by_team(client->team->uuid);
+    channels_t channels;
+    uuid_t team_uuid;
 
+    get_uuid_from_string(client->team_uuid, team_uuid);
+    channels = get_channels_by_team(team_uuid);
     if (!channels) {
         add_packet_to_queue(&client->packet_queue,
             build_custom_packet(EMPTY_CHANNEL_LIST, "", CHANNEL));
@@ -90,11 +93,14 @@ static void handle_channel_list(client_t client)
 static void handle_thread_list(client_t client)
 {
     packet_t *packet;
-    threads_t threads = get_threads_by_channel(client->channel->uuid);
+    threads_t threads;
+    uuid_t channel_uuid;
 
+    get_uuid_from_string(client->channel_uuid, channel_uuid);
+    threads = get_threads_by_channel(channel_uuid);
     if (!threads) {
         add_packet_to_queue(&client->packet_queue,
-            build_error_packet(EMPTY_THREAD_LIST, ""));
+            build_custom_packet(EMPTY_THREAD_LIST, "", THREAD));
         return;
     }
     while (threads) {
@@ -113,8 +119,11 @@ static void handle_thread_list(client_t client)
 static void handle_reply_list(client_t client)
 {
     packet_t *packet;
-    replies_t replies = get_replies_by_thread(client->thread->uuid);
+    replies_t replies;
+    uuid_t thread_uuid;
 
+    get_uuid_from_string(client->thread_uuid, thread_uuid);
+    replies = get_replies_by_thread(thread_uuid);
     if (!replies) {
         add_packet_to_queue(&client->packet_queue,
             build_error_packet(EMPTY_REPLY_LIST, ""));
@@ -138,7 +147,7 @@ void list(client_t client, UNUSED char **command)
 {
     enum CONTEXT context = get_current_context(client);
 
-    if (!is_command_valid(client, command))
+    if (!is_command_valid(client, command) || !is_context_valid(client))
         return;
     switch (context) {
         case GLOBAL_CONTEXT:

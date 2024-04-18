@@ -56,8 +56,13 @@ static void handle_user_info(client_t client)
  */
 static void handle_team_info(client_t client)
 {
-    packet_t *packet = build_team_packet(TEAM_INFO, client->team);
+    team_t *team;
+    uuid_t team_uuid;
+    packet_t *packet;
 
+    get_uuid_from_string(client->team_uuid, team_uuid);
+    team = get_team_by_uuid(team_uuid);
+    packet = build_team_packet(TEAM_INFO, team);
     add_packet_to_queue(&client->packet_queue, packet);
 }
 
@@ -69,8 +74,13 @@ static void handle_team_info(client_t client)
  */
 static void handle_channel_info(client_t client)
 {
-    packet_t *packet = build_channel_packet(CHANNEL_INFO, client->channel);
+    channel_t *channel;
+    uuid_t channel_uuid;
+    packet_t *packet;
 
+    get_uuid_from_string(client->channel_uuid, channel_uuid);
+    channel = get_channel_by_uuid(channel_uuid);
+    packet = build_channel_packet(CHANNEL_INFO, channel);
     add_packet_to_queue(&client->packet_queue, packet);
 }
 
@@ -82,8 +92,13 @@ static void handle_channel_info(client_t client)
  */
 static void handle_thread_info(client_t client)
 {
-    packet_t *packet = build_thread_packet(THREAD_INFO, client->thread);
+    thread_t *thread;
+    uuid_t thread_uuid;
+    packet_t *packet;
 
+    get_uuid_from_string(client->thread_uuid, thread_uuid);
+    thread = get_thread_by_uuid(thread_uuid);
+    packet = build_thread_packet(THREAD_INFO, thread);
     add_packet_to_queue(&client->packet_queue, packet);
 }
 
@@ -98,7 +113,7 @@ void info(client_t client, UNUSED char **command)
 {
     enum CONTEXT context = get_current_context(client);
 
-    if (!is_command_valid(client, command))
+    if (!is_command_valid(client, command) || !is_context_valid(client))
         return;
     switch (context) {
         case GLOBAL_CONTEXT:

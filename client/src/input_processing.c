@@ -29,8 +29,8 @@ bool verify_logged(bool need_logged)
         return 0;
     }
     if (is_client_logged == false && need_logged == true) {
-        printf("You must be logged in to use this command\n");
         client_error_unauthorized();
+        printf("You must be logged in to use this command\n");
         return 0;
     }
     return 1;

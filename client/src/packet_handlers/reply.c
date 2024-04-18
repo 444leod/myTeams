@@ -26,13 +26,13 @@ static void handle_reply_created(packet_t *packet)
     char *thread_uuid = get_uuid_as_string(reply->thread_uuid);
     char *team_uuid = get_uuid_as_string(reply->team_uuid);
 
-    printf("Reply from %s on thread %s: \"%s\"\n", creator_uuid, thread_uuid,
-        reply->body);
     client_event_thread_reply_received(team_uuid, thread_uuid,
         creator_uuid, reply->body);
     if (!packet->is_global)
         client_print_reply_created(thread_uuid, creator_uuid, reply->timestamp,
             reply->body);
+    printf("Reply from %s on thread %s: \"%s\"\n", creator_uuid, thread_uuid,
+        reply->body);
 }
 
 /**
@@ -47,9 +47,9 @@ static void handle_reply_list(packet_t *packet)
     char *creator_uuid = get_uuid_as_string(reply->creator_uuid);
     char *thread_uuid = get_uuid_as_string(reply->thread_uuid);
 
-    printf("Reply list: %s\n", my_strdup(reply->body));
     client_thread_print_replies(thread_uuid, creator_uuid, reply->timestamp,
         reply->body);
+    printf("Reply list: %s\n", my_strdup(reply->body));
 }
 
 /**

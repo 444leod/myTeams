@@ -149,8 +149,8 @@ static void handle_errors(packet_t *packet)
             printf("Team does not exist\n");
             break;
         case ALREADY_EXISTS:
-            printf("This team already exist!\n");
             client_error_already_exist();
+            printf("This team already exist!\n");
             break;
     }
 }
