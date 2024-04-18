@@ -137,3 +137,105 @@ The most important part of a response packet is the type of the packet, which ca
 - `REPLY` = 5
 - `CHANNEL` = 6
 - `MESSAGE` = 7
+
+## Packet Structures
+
+The server works by sending packets containing C-style structs, below are the ASCII tables representing the C-style structs used for sending and receiving packets in the server.
+
+#### `packet_t` Struct
+```
++-------------------+--------------+-----------------+-------------------------+
+| Field             | Type         | Size            | Description             |
++-------------------+--------------+-----------------+-------------------------+
+| code              | int          | 4 bytes         | Reply code              |
+| is_global         | bool         | 1 byte          | Global flag             |
+| packet_type       | int          | 4 bytes         | Type of packet          |
+| packet_body       | char[4096]   | 4096 bytes      | Body of the packet      |
++-------------------+--------------+-----------------+-------------------------+
+```
+
+#### `packet_queue_t` Struct
+```
++-------------------+--------------+-------------------------------------------+
+| Field             | Type         | Description                               |
++-------------------+--------------+-------------------------------------------+
+| packet            | packet_t*    | Pointer to a packet                       |
+| next              | packet_queue_t* | Pointer to the next packet in the queue |
++-------------------+--------------+-------------------------------------------+
+```
+
+#### `user_information_t` Struct
+```
++-------------------+------------------+---------------------+---------------------+
+| Field             | Type             | Size                | Description         |
++-------------------+------------------+---------------------+---------------------+
+| user_uuid         | uuid_t           | 16 bytes            | UUID of the user    |
+| username          | username_t       | MAX_NAME_LENGTH + 1 | Username            |
+| is_logged         | bool             | 1 byte              | Logged-in status    |
++-------------------+------------------+---------------------+---------------------+
+```
+
+#### `thread_t` Struct
+```
++-------------------+----------------------+---------------------+-------------------------+
+| Field             | Type                 | Size                | Description             |
++-------------------+----------------------+---------------------+-------------------------+
+| uuid              | uuid_t               | 16 bytes            | UUID of the thread      |
+| creator_uuid      | uuid_t               | 16 bytes            | UUID of the creator     |
+| timestamp         | time_t               | 8 bytes             | Creation timestamp      |
+| title             | title_t              | MAX_NAME_LENGTH + 1 | Title of the thread     |
+| body              | body_t               | MAX_BODY_LENGTH + 1 | Body of the thread      |
+| channel_uuid      | uuid_t               | 16 bytes            | UUID of the channel     |
++-------------------+----------------------+---------------------+-------------------------+
+```
+
+#### `team_t` Struct
+```
++-------------------+----------------------+---------------------+-------------------------+
+| Field             | Type                 | Size                | Description             |
++-------------------+----------------------+---------------------+-------------------------+
+| uuid              | uuid_t               | 16 bytes            | UUID of the team        |
+| name              | title_t              | MAX_NAME_LENGTH + 1 | Name of the team        |
+| description       | description_t        | MAX_DESC_LENGTH + 1 | Description of the team |
+| creator_uuid      | uuid_t               | 16 bytes            | UUID of the creator     |
++-------------------+----------------------+---------------------+-------------------------+
+```
+
+#### `reply_t` Struct
+```
++-------------------+----------------------+---------------------+-------------------------+
+| Field             | Type                 | Size                | Description             |
++-------------------+----------------------+---------------------+-------------------------+
+| uuid              | uuid_t               | 16 bytes            | UUID of the reply       |
+| thread_uuid       | uuid_t               | 16 bytes            | UUID of the thread      |
+| team_uuid         | uuid_t               | 16 bytes            | UUID of the team        |
+| creator_uuid      | uuid_t               | 16 bytes            | UUID of the creator     |
+| body              | body_t               | MAX_BODY_LENGTH + 1 | Body of the reply       |
+| timestamp         | time_t               | 8 bytes             | Creation timestamp      |
++-------------------+----------------------+---------------------+-------------------------+
+```
+
+#### `channel_t` Struct
+```
++-------------------+----------------------+---------------------+-------------------------+
+| Field             | Type                 | Size                | Description             |
++-------------------+----------------------+---------------------+-------------------------+
+| uuid              | uuid_t               | 16 bytes            | UUID of the channel     |
+| name              | char[MAX_NAME_LENGTH+1] | MAX_NAME_LENGTH + 1 | Name of the channel     |
+| description       | char[MAX_DESC_LENGTH+1] | MAX_DESC_LENGTH + 1 | Description of the channel |
+| team_uuid         | uuid_t               | 16 bytes            | UUID of the team        |
++-------------------+----------------------+---------------------+-------------------------+
+```
+
+#### `message_t` Struct
+```
++-------------------+----------------------+---------------------+-------------------------+
+| Field             | Type                 | Size                | Description             |
++-------------------+----------------------+---------------------+-------------------------+
+| uuid              | uuid_t               | 16 bytes            | UUID of the message     |
+| sender_uuid       | uuid_t               | 16 bytes            | UUID of the sender      |
+| receiver_uuid     | uuid_t               | 16 bytes            | UUID of the receiver    |
+| timestamp         | time_t               | 8 bytes             | Creation timestamp      |
+| body              | body_t               | MAX_BODY_LENGTH + 1 | Body of the message     |
++-------------------+----------------------+---------------------+-------------------------+
+```
