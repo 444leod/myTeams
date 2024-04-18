@@ -11,6 +11,7 @@
 #include "garbage_collector.h"
 #include "packet.h"
 #include "lib.h"
+#pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
 
 /**
  * @brief Check if the command is a special case

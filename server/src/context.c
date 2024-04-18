@@ -144,7 +144,7 @@ static bool can_user_create(client_t client)
     get_uuid_from_string(client->team_uuid, team_uuid);
     if (!is_user_subscribed_to_team(client->user, team_uuid)) {
         add_packet_to_queue(&client->packet_queue,
-            build_error_packet(NOT_SUBSCRIBED, ""));
+            build_custom_packet(NOT_SUBSCRIBED, client->team_uuid, TEAM));
         return false;
     }
     return true;
