@@ -37,6 +37,27 @@ static void send_buffer(client_t client)
 }
 
 /**
+ * @brief Remove a client from the client list
+ * @details Remove a client from the client list
+ *
+ * @param fd the fd of the client to remove
+*/
+static bool is_read_special_case(client_t client, int valread)
+{
+    if (valread == -1) {
+        remove_client(client->fd);
+        client->fd = -1;
+        printf("Read failed with fd %d: %s\n", client->fd, strerror(errno));
+        return true;
+    }
+    if (valread == 0) {
+        remove_client(client->fd);
+        return true;
+    }
+    return false;
+}
+
+/**
  * @brief Read the buffer of a client
  *
  * @param client the client to read the buffer of
@@ -47,12 +68,8 @@ static void read_buffer(client_t client)
     int valread = 0;
 
     valread = read(client->fd, buffer, 1024);
-    if (valread == -1)
-        my_error(supercat(2, "read failed: ", strerror(errno)));
-    if (valread == 0) {
-        remove_client(client->fd);
+    if (is_read_special_case(client, valread))
         return;
-    }
     buffer[valread] = '\0';
     if (valread > 0) {
         if (client->next_commands)

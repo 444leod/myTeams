@@ -82,7 +82,7 @@ OBJ = $(SRC:.c=.o)
 
 CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror -Wpedantic -Wno-error=implicit-fallthrough \
+CFLAGS = -Wall -Wextra -Werror -Wpedantic \
 	-I./include -I../include \
 	-luuid -L ../libs/myteams/ -lmyteams -L ../ -lmy -lnetwork \
 	-I ../libs/myteams

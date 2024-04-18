@@ -48,7 +48,28 @@ void send_packet_to_client(client_t client, packet_t *packet)
 {
     packet_t *new_packet = my_malloc(sizeof(packet_t));
 
+    if (!client || client->fd == -1) {
+        my_free(new_packet);
+        return;
+    }
     memcpy(new_packet, packet, sizeof(packet_t));
     new_packet->is_global = true;
     add_packet_to_queue(&client->packet_queue, new_packet);
+}
+
+/**
+ * @brief Send a packet to all clients
+ * @details Send a packet to all clients
+ *
+ * @param clients the clients
+ * @param packet the packet
+ */
+void send_packet_to_clients(clients_t clients, packet_t *packet)
+{
+    clients_t tmp = clients;
+
+    while (tmp) {
+        send_packet_to_client(tmp->client, packet);
+        tmp = tmp->next;
+    }
 }

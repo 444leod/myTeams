@@ -24,10 +24,6 @@ bool verify_logged(bool need_logged)
 {
     bool is_client_logged = is_logged(0);
 
-    if (need_logged == false && is_client_logged == true) {
-        printf("You are already logged in\n");
-        return 0;
-    }
     if (is_client_logged == false && need_logged == true) {
         client_error_unauthorized();
         printf("You must be logged in to use this command\n");

@@ -37,8 +37,7 @@ static void message_received_handler(message_t *message)
 {
     char *uuid = get_uuid_as_string(message->sender_uuid);
 
-    client_event_private_message_received(uuid,
-        my_strdup(message->body));
+    client_event_private_message_received(uuid, my_strdup(message->body));
     printf("Message received from %s: \"%s\"\n", uuid, message->body);
 }
 

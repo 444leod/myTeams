@@ -34,9 +34,8 @@ message_t *create_message(body_t message_body, uuid_t sender_uuid,
     message->timestamp = time(NULL);
     add_to_list((void *)message, (node_t *)get_messages());
     server_event_private_message_sended(
-        my_strdup(message_body),
         get_uuid_as_string(sender_uuid),
-        get_uuid_as_string(receiver_uuid)
-        );
+        get_uuid_as_string(receiver_uuid),
+        my_strdup(message_body));
     return message;
 }

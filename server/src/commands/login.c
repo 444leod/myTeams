@@ -28,11 +28,6 @@ static bool is_command_valid(client_t client, char **command)
             build_error_packet(SYNTAX_ERROR_IN_PARAMETERS, ""));
         return false;
     }
-    if (client->user) {
-        add_packet_to_queue(&client->packet_queue,
-            build_error_packet(ALREADY_LOGGED_IN, ""));
-        return false;
-    }
     if (strlen(command[1]) > 32) {
         add_packet_to_queue(&client->packet_queue,
             build_error_packet(NAME_TOO_LONG, ""));
@@ -66,23 +61,37 @@ user_t create_user(char *username)
 }
 
 /**
- * @brief Check if the user is already logged
- * @details Check if the user is already logged
+ * @brief Check if the user is already logged, if so, handle it.
+ * @details Check if the user is already logged, if so, handle it.
  *
- * @param user the user
  * @param client the client
+ * @param user the user
  *
- * @return true if the user is already logged
+ * @return true if the user is already logged and the case has been handled
  * @return false if the user is not already logged
  */
-bool already_logged(user_t user, client_t client)
+static bool is_already_logged_case(client_t client, user_t user)
 {
-    if (user && user->status == STATUS_LOGGED_IN) {
-        add_packet_to_queue(&client->packet_queue,
-            build_error_packet(ALREADY_LOGGED_IN, ""));
-        return true;
-    }
-    return false;
+    packet_t *packet;
+
+    if (client->user == NULL)
+        return false;
+    packet = build_userinfo_packet(USER_LOGGED_OUT, client->user->username,
+        client->user->uuid, client->user->status);
+    server_event_user_logged_out(get_uuid_as_string(client->user->uuid));
+    send_packet_to_logged_users(packet, NULL);
+    if (user == NULL)
+        return false;
+    if (get_clients_by_user(client->user, client) == NULL)
+        client->user->status = STATUS_NOT_LOGGED_IN;
+    client->user = user;
+    user->status = STATUS_LOGGED_IN;
+    packet = build_userinfo_packet(USER_LOGGED_IN,
+        user->username, user->uuid, user->status);
+    add_packet_to_queue(&client->packet_queue, packet);
+    server_event_user_logged_in(get_uuid_as_string(user->uuid));
+    send_packet_to_logged_users(packet, client);
+    return true;
 }
 
 /**
@@ -100,11 +109,10 @@ void login(client_t client, char **command)
     if (!is_command_valid(client, command))
         return;
     user = get_user_by_username(command[1]);
-    if (already_logged(user, client))
+    if (is_already_logged_case(client, user))
         return;
-    if (!user) {
+    if (!user)
         user = create_user(command[1]);
-    }
     client->user = user;
     user->status = STATUS_LOGGED_IN;
     packet = build_userinfo_packet(USER_LOGGED_IN,

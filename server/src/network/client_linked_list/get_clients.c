@@ -8,6 +8,7 @@
 #include "clientllist.h"
 #include <string.h>
 #include <uuid/uuid.h>
+#include <stdio.h>
 
 /**
  * @brief Get the clients
@@ -43,6 +44,34 @@ client_t get_client_by_uuid(uuid_t uuid)
         tmp = tmp->next;
     }
     return NULL;
+}
+
+/**
+ * @brief Get all the clients logged to the given user
+ * @details Get all the clients logged to the given user
+ *
+ * @param user the user to get the clients from
+ * @param current_client the current client
+ *
+ * @return clients_t the clients linked list
+*/
+clients_t get_clients_by_user(user_t user, client_t current_client)
+{
+    clients_t clients = NULL;
+    client_t *tmp = get_clients();
+    client_t current = *tmp;
+
+    while (current) {
+        if (current == current_client) {
+            current = current->next;
+            continue;
+        }
+        if (current->user && current->user == user) {
+            add_to_list((void *)current, (node_t *)&clients);
+        }
+        current = current->next;
+    }
+    return clients;
 }
 
 /**

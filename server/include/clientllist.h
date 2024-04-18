@@ -54,6 +54,11 @@ typedef struct client_s {
     struct client_s *next;
 } *client_t;
 
+typedef struct clients_s {
+    struct clients_s *next;
+    client_t client;
+} *clients_t;
+
 void add_client(client_t new_client);
 void remove_client(int fd);
 client_t create_client(int fd);
@@ -61,4 +66,5 @@ client_t *get_clients(void);
 client_t get_client_by_fd(int fd);
 client_t get_client_by_username(char *username);
 client_t get_client_by_uuid(uuid_t uuid);
+clients_t get_clients_by_user(user_t user, client_t current_client);
 void clear_clients(void);
