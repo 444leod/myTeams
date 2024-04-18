@@ -51,18 +51,18 @@ void handle_channel_type_packet(channel_t *channel, int code, bool is_global)
 {
     switch (code) {
         case CHANNEL_CREATED:
-            print_channel("Channel created: %s (uuid: \"%s\") %s\n", channel);
             log_channel(client_event_channel_created, channel);
             if (!is_global)
                 log_channel(client_print_channel_created, channel);
+            print_channel("Channel created: %s (uuid: \"%s\") %s\n", channel);
             break;
         case CHANNEL_INFO:
-            print_channel("Channel info: %s (uuid: \"%s\") %s\n", channel);
             log_channel(client_print_channel, channel);
+            print_channel("Channel info: %s (uuid: \"%s\") %s\n", channel);
             break;
         case CHANNEL_LIST:
-            print_channel("Channel list: %s (uuid: \"%s\") %s\n", channel);
             log_channel(client_team_print_channels, channel);
+            print_channel("Channel list: %s (uuid: \"%s\") %s\n", channel);
             break;
     }
 }

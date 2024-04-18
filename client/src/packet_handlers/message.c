@@ -22,9 +22,9 @@ static void messages_list_handler(message_t *message)
 {
     char *uuid = get_uuid_as_string(message->sender_uuid);
 
-    printf("Messages list from %s: \"%s\"\n", uuid, message->body);
     client_private_message_print_messages(uuid, message->timestamp,
         my_strdup(message->body));
+    printf("Messages list from %s: \"%s\"\n", uuid, message->body);
 }
 
 /**
@@ -37,9 +37,9 @@ static void message_received_handler(message_t *message)
 {
     char *uuid = get_uuid_as_string(message->sender_uuid);
 
-    printf("Message received from %s: \"%s\"\n", uuid, message->body);
     client_event_private_message_received(uuid,
         my_strdup(message->body));
+    printf("Message received from %s: \"%s\"\n", uuid, message->body);
 }
 
 /**
@@ -50,8 +50,8 @@ static void unknown_user_handler(packet_t *packet)
 {
     char *uuid = my_strdup(packet->packet_body);
 
-    printf("Unknown user with uuid %s\n", uuid);
     client_error_unknown_user(uuid);
+    printf("Unknown user with uuid %s\n", uuid);
 }
 
 /**

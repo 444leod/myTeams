@@ -61,18 +61,18 @@ void handle_thread_type_packet(packet_t *packet)
 
     switch (packet->code) {
         case THREAD_CREATED:
-            print_thread("Thread created: ", thread);
             log_thread(client_event_thread_created, thread);
             if (!packet->is_global)
                 log_thread(client_print_thread_created, thread);
+            print_thread("Thread created: ", thread);
             break;
         case THREAD_INFO:
-            print_thread("Thread info: ", thread);
             log_thread(client_print_thread, thread);
+            print_thread("Thread info: ", thread);
             break;
         case THREAD_LIST:
-            print_thread("Thread list: ", thread);
             log_thread(client_channel_print_threads, thread);
+            print_thread("Thread list: ", thread);
             break;
     }
 }
@@ -87,15 +87,15 @@ static void handle_text_packet(packet_t *packet)
 {
     switch (packet->code) {
         case ALREADY_EXISTS:
-            printf("This thread already exist!\n");
             client_error_already_exist();
+            printf("This thread already exist!\n");
             break;
         case EMPTY_THREAD_LIST:
             printf("Empty thread list.\n");
             break;
         case INEXISTANT_THREAD:
-            printf("Thread does not exist\n");
             client_error_unknown_thread(my_strdup(packet->packet_body));
+            printf("Thread does not exist\n");
             break;
     }
 }
