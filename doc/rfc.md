@@ -140,7 +140,8 @@ The most important part of a response packet is the type of the packet, which ca
 
 ## Packet Structures
 
-The server works by sending packets containing C-style structs, below are the ASCII tables representing the C-style structs used for sending and receiving packets in the server.
+The server works by sending packets containing C-style structs, below are the ASCII tables representing the C-style structs used for sending and receiving packets in the server. Those struct are written in hexadecimal format directly into the socket.
+Note that all strings should be null-terminated.
 
 #### `packet_t` Struct
 ```
@@ -154,25 +155,15 @@ The server works by sending packets containing C-style structs, below are the AS
 +-------------------+--------------+-----------------+-------------------------+
 ```
 
-#### `packet_queue_t` Struct
-```
-+-------------------+--------------+-------------------------------------------+
-| Field             | Type         | Description                               |
-+-------------------+--------------+-------------------------------------------+
-| packet            | packet_t*    | Pointer to a packet                       |
-| next              | packet_queue_t* | Pointer to the next packet in the queue |
-+-------------------+--------------+-------------------------------------------+
-```
-
 #### `user_information_t` Struct
 ```
-+-------------------+------------------+---------------------+---------------------+
-| Field             | Type             | Size                | Description         |
-+-------------------+------------------+---------------------+---------------------+
-| user_uuid         | uuid_t           | 16 bytes            | UUID of the user    |
-| username          | username_t       | MAX_NAME_LENGTH + 1 | Username            |
-| is_logged         | bool             | 1 byte              | Logged-in status    |
-+-------------------+------------------+---------------------+---------------------+
++-------------------+------------------+---------------------+-----------------+
+| Field             | Type             | Size                | Description     |
++-------------------+------------------+---------------------+-----------------+
+| user_uuid         | uuid_t           | 16 bytes            | UUID of the user|
+| username          | username_t       | MAX_NAME_LENGTH + 1 | Username        |
+| is_logged         | bool             | 1 byte              | Logged-in status|
++-------------------+------------------+---------------------+-----------------+
 ```
 
 #### `thread_t` Struct
