@@ -39,5 +39,6 @@ void get_port(int fd, int *port);
 void connect_to_server(int sockfd, char *ip, int port);
 void parse_reply(int socketFd);
 bool is_logged(bool change);
+char *get_uuid(bool change, char *user_uuid);
 void process_input(char **message);
 bool need_to_read(bool change, bool status);

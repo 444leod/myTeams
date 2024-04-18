@@ -80,9 +80,6 @@ packet_t *rebuild_packet(int code, packet_t *packet)
             return packet;
         }
     }
-    my_free(packet);
-    packet = build_error_packet(UNKNOWN_ERROR,
-        my_strdup(serverMessages[i].message));
     return packet;
 }
 

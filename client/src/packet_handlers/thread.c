@@ -30,18 +30,23 @@ static void log_thread(
 }
 
 /**
- * @brief Print the thread structure following the given format
- * @details Print the thread structure following the given format
+ * @brief Print the thread structure with the given start
+ * @details Print the thread structure with the given start
  *
- * @param format the format
+ * @param start the start
  * @param thread the thread
 */
-static void print_thread(char *format, thread_t *thread)
+static void print_thread(char *start, thread_t *thread)
 {
     char *uuid = get_uuid_as_string(thread->uuid);
     char *creator_uuid = get_uuid_as_string(thread->creator_uuid);
 
-    printf(format, thread->title, uuid, creator_uuid, thread->body);
+    printf(start);
+    printf("\"%s\" (uuid: \"%s\") by %s: \"%s\"\n",
+        thread->title,
+        uuid,
+        creator_uuid,
+        thread->body);
 }
 
 /**
@@ -56,20 +61,41 @@ void handle_thread_type_packet(packet_t *packet)
 
     switch (packet->code) {
         case THREAD_CREATED:
-            print_thread(
-                "Thread created: \"%s\" (uuid: \"%s\") by %s: \"%s\"\n",
-                thread);
+            print_thread("Thread created: ", thread);
             log_thread(client_event_thread_created, thread);
+            if (!packet->is_global)
+                log_thread(client_print_thread_created, thread);
             break;
         case THREAD_INFO:
-            print_thread("Thread info: \"%s\" (uuid: \"%s\") by %s: \"%s\"\n",
-                thread);
+            print_thread("Thread info: ", thread);
             log_thread(client_print_thread, thread);
             break;
         case THREAD_LIST:
-            print_thread("Thread list: \"%s\" (uuid: \"%s\") by %s: \"%s\"\n",
-                thread);
+            print_thread("Thread list: ", thread);
             log_thread(client_channel_print_threads, thread);
+            break;
+    }
+}
+
+/**
+ * @brief Handle the text packets
+ * @details Handle the text packets
+ *
+ * @param packet the packet
+ */
+static void handle_text_packet(packet_t *packet)
+{
+    switch (packet->code) {
+        case ALREADY_EXISTS:
+            printf("This thread already exist!\n");
+            client_error_already_exist();
+            break;
+        case EMPTY_THREAD_LIST:
+            printf("Empty thread list.\n");
+            break;
+        case INEXISTANT_THREAD:
+            printf("Thread does not exist\n");
+            client_error_unknown_thread(my_strdup(packet->packet_body));
             break;
     }
 }
@@ -88,12 +114,12 @@ void thread_packet_handler(packet_t *packet)
         case THREAD_LIST:
             handle_thread_type_packet(packet);
             break;
+        case EMPTY_THREAD_LIST:
         case ALREADY_EXISTS:
-            printf("This thread already exist!\n");
-            client_error_already_exist();
+            handle_text_packet(packet);
             break;
         default:
-            printf("Unknown packet code\n");
+            printf("Thread packet handler: Unknown packet code.\n");
             break;
     }
 }

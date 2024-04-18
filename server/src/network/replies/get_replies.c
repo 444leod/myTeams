@@ -51,15 +51,15 @@ replies_t *get_replies_by_creator(uuid_t creator_uuid)
  *
  * @return replies_t* the replies linked list
  */
-replies_t *get_replies_by_thread(uuid_t thread_uuid)
+replies_t get_replies_by_thread(uuid_t thread_uuid)
 {
     replies_t *replies = get_replies();
     replies_t tmp = *replies;
-    replies_t *new_replies = NULL;
+    replies_t new_replies = NULL;
 
     while (tmp) {
         if (uuid_compare(tmp->reply->thread_uuid, thread_uuid) == 0)
-            add_to_list((void *)tmp->reply, (node_t *)new_replies);
+            add_to_list((void *)tmp->reply, (node_t *)&new_replies);
         tmp = tmp->next;
     }
     return new_replies;

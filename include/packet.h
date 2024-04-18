@@ -69,6 +69,7 @@ typedef struct reply_s {
     uuid_t team_uuid;
     uuid_t creator_uuid;
     body_t body;
+    time_t timestamp;
 } reply_t;
 
 typedef struct channel_s {

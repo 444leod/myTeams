@@ -25,8 +25,10 @@ static void display_user_logged_in(user_information_t *user, bool is_global)
     client_event_logged_in(uuid, user->username);
     printf("User logged in (username: \"%s\", uuid: \"%s\")\n",
         user->username, uuid);
-    if (!is_global)
+    if (!is_global) {
         is_logged(true);
+        get_uuid(true, uuid);
+    }
 }
 
 /**
@@ -58,8 +60,10 @@ static void display_user_created(user_information_t *user, bool is_global)
 
     printf("User created (username: \"%s\", uuid: \"%s\")\n",
         user->username, uuid);
-    if (!is_global)
+    if (!is_global) {
         is_logged(true);
+        get_uuid(true, uuid);
+    }
 }
 
 /**

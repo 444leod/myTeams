@@ -63,14 +63,11 @@ static void unknown_user_handler(packet_t *packet)
 static void handle_error_packets(packet_t *packet)
 {
     switch (packet->code) {
-        case UNKNOWN_ERROR:
+        case INEXISTANT_USER:
             unknown_user_handler(packet);
             break;
-        case INEXISTANT_USER:
-            printf("Inexistant user\n");
-            break;
-        default:
-            printf("Unknown packet code (%d)\n", packet->code);
+        case EMPTY_MESSAGE_LIST:
+            printf("Empty message list.\n");
             break;
     }
 }
@@ -112,12 +109,12 @@ void message_packet_handler(packet_t *packet)
         case MESSAGES_LIST:
             handle_full_packets(packet);
             break;
-        case UNKNOWN_ERROR:
         case INEXISTANT_USER:
+        case EMPTY_MESSAGE_LIST:
             handle_error_packets(packet);
             break;
         default:
-            printf("Unknown packet code (%d)\n", packet->code);
+            printf("Message packet handler: Unknown packet code.\n");
             break;
     }
 }
