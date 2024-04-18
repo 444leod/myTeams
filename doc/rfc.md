@@ -143,8 +143,27 @@ The most important part of a response packet is the type of the packet, which ca
 The server works by sending packets containing C-style structs, below are the ASCII tables representing the C-style structs used for sending and receiving packets in the server. Those struct are written in hexadecimal format directly into the socket.
 Note that all strings should be null-terminated.
 
+### Type Definitions
+
+#### `username_t` Type
+
+A string representing a username, with a maximum length of 32 characters.
+
+#### `title_t` Type
+
+A string representing a title, with a maximum length of 32 characters.
+
+#### `description_t` Type
+
+A string representing a description, with a maximum length of 255 characters.
+
+#### `body_t` Type
+
+A string representing a body, with a maximum length of 512 characters.
+
+
 #### `packet_t` Struct
-```
+```c
 +-------------------+--------------+-----------------+-------------------------+
 | Field             | Type         | Size            | Description             |
 +-------------------+--------------+-----------------+-------------------------+
@@ -156,7 +175,7 @@ Note that all strings should be null-terminated.
 ```
 
 #### `user_information_t` Struct
-```
+```c
 +-------------------+------------------+---------------------+-----------------+
 | Field             | Type             | Size                | Description     |
 +-------------------+------------------+---------------------+-----------------+
@@ -167,7 +186,7 @@ Note that all strings should be null-terminated.
 ```
 
 #### `thread_t` Struct
-```
+```c
 +-------------------+----------------------+---------------------+-------------------------+
 | Field             | Type                 | Size                | Description             |
 +-------------------+----------------------+---------------------+-------------------------+
@@ -181,7 +200,7 @@ Note that all strings should be null-terminated.
 ```
 
 #### `team_t` Struct
-```
+```c
 +-------------------+----------------------+---------------------+-------------------------+
 | Field             | Type                 | Size                | Description             |
 +-------------------+----------------------+---------------------+-------------------------+
@@ -193,7 +212,7 @@ Note that all strings should be null-terminated.
 ```
 
 #### `reply_t` Struct
-```
+```c
 +-------------------+----------------------+---------------------+-------------------------+
 | Field             | Type                 | Size                | Description             |
 +-------------------+----------------------+---------------------+-------------------------+
@@ -207,7 +226,7 @@ Note that all strings should be null-terminated.
 ```
 
 #### `channel_t` Struct
-```
+```c
 +-------------------+----------------------+---------------------+-------------------------+
 | Field             | Type                 | Size                | Description             |
 +-------------------+----------------------+---------------------+-------------------------+
@@ -219,7 +238,7 @@ Note that all strings should be null-terminated.
 ```
 
 #### `message_t` Struct
-```
+```c
 +-------------------+----------------------+---------------------+-------------------------+
 | Field             | Type                 | Size                | Description             |
 +-------------------+----------------------+---------------------+-------------------------+
