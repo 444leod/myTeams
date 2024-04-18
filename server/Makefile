@@ -19,6 +19,7 @@ SRC_SRC = server.c \
 	handle_clients.c \
 	handle_commands.c \
 	exit.c \
+	context.c \
 
 COMMANDS_SRC = commands.c \
 	create.c \
