@@ -13,6 +13,26 @@
 #include "lib.h"
 
 /**
+ * @brief Check if the command is a special case
+ * @details Check if the command is a special case, if so, handle it
+ *
+ * @param client the client
+ * @param command the command
+ *
+ * @return true if the command is a special case
+ * @return false if the command is not a special case
+ */
+static bool is_special_case(client_t client, char **command)
+{
+    if (tablen((void **)command) == 1) {
+        add_packet_to_queue(&client->packet_queue,
+            build_packet(GLOBAL_CONTEXT_SET, ""));
+        return true;
+    }
+    return false;
+}
+
+/**
  * @brief Check if the command is valid
  * @details Check if the command is valid
  *
@@ -26,43 +46,13 @@ static bool is_command_valid(client_t client, char **command)
 {
     if (tablen((void **)command) > 4) {
         add_packet_to_queue(&client->packet_queue,
-            build_packet(SYNTAX_ERROR_IN_PARAMETERS, ""));
+            build_error_packet(SYNTAX_ERROR_IN_PARAMETERS, ""));
         return false;
     }
     if (!client->user) {
         add_packet_to_queue(&client->packet_queue,
-            build_packet(NOT_LOGGED_IN, ""));
+            build_error_packet(NOT_LOGGED_IN, ""));
         return false;
-    }
-    return true;
-}
-
-/**
- * @brief Check if the uuids given are real
- * @details Check if the uuids given are real
- *
- * @param client the client
- * @param command the command
- *
- * @return true if the uuids are valid
- * @return false if the uuids are not valid
- */
-static bool are_uuid_valid(client_t client, char **command)
-{
-    int codes[3] = {INEXISTANT_TEAM, INEXISTANT_CHANNEL, INEXISTANT_THREAD};
-    void *(*func[])(uuid_t) = {
-        (void *(*)(unsigned char *))get_team_by_uuid,
-        (void *(*)(unsigned char *))get_channel_by_uuid,
-        (void *(*)(unsigned char *))get_thread_by_uuid};
-    uuid_t uuid;
-
-    for (int i = 1; i < tablen((void **)command); i++) {
-        get_uuid_from_string(command[i], uuid);
-        if (!is_uuid_valid(command[i]) || !func[i - 1](uuid)) {
-            add_packet_to_queue(&client->packet_queue,
-                build_error_packet(codes[i - 1], command[i]));
-            return false;
-        }
     }
     return true;
 }
@@ -76,97 +66,18 @@ static bool are_uuid_valid(client_t client, char **command)
  */
 static int set_used_items(client_t client, char **command)
 {
-    uuid_t uuids[3] = {0};
     int code[3] = {TEAM_CONTEXT_SET, CHANNEL_CONTEXT_SET, THREAD_CONTEXT_SET};
 
     switch (tablen((void **)command)) {
         case 4:
-            get_uuid_from_string(command[3], uuids[2]);
-            client->thread = get_thread_by_uuid(uuids[2]);
+            client->thread_uuid = command[3];
         case 3:
-            get_uuid_from_string(command[2], uuids[1]);
-            client->channel = get_channel_by_uuid(uuids[1]);
+            client->channel_uuid = command[2];
         case 2:
-            get_uuid_from_string(command[1], uuids[0]);
-            client->team = get_team_by_uuid(uuids[0]);
+            client->team_uuid = command[1];
             break;
     }
     return code[tablen((void **)command) - 2];
-}
-
-/**
- * @brief Check if the uuids are unrelated
- * @details Check if the uuids are unrelated
- *
- * @param client the client
- *
- * @return true if the uuids are unrelated
- * @return false if the uuids are related
- */
-static bool are_uuids_unrelated(client_t client)
-{
-    if (client->channel &&
-        uuid_compare(client->channel->team_uuid, client->team->uuid) != 0) {
-        add_packet_to_queue(&client->packet_queue,
-            build_error_packet(INEXISTANT_CHANNEL, ""));
-        printf("uuids are unrelated!\n");
-        return false;
-    }
-    if (client->thread && uuid_compare(client->thread->channel_uuid,
-        client->channel->uuid) != 0) {
-        add_packet_to_queue(&client->packet_queue,
-            build_error_packet(INEXISTANT_THREAD, ""));
-        printf("uuids are unrelated!\n");
-        return false;
-    }
-    return true;
-}
-
-/**
- * @brief Check if the command is a special case
- * @details Check if the command is a special case, if so, handle it
- *
- * @param client the client
- * @param command the command
- *
- * @return true if the command is a special case
- * @return false if the command is not a special case
- */
-static bool is_special_case(client_t client, char **command)
-{
-    if (tablen((void **)command) == 1) {
-        client->team = NULL;
-        client->channel = NULL;
-        client->thread = NULL;
-        add_packet_to_queue(&client->packet_queue,
-            build_packet(GLOBAL_CONTEXT_SET, ""));
-        return true;
-    }
-    return false;
-}
-
-/**
- * @brief Check if the user can create the team
- * @details Check if the user can create the team by checking if the
- *        user is subscribed to the team
- *
- * @param client the client
- * @param command the command
- *
- * @return true if the user can create the team
- * @return false if the user can't create the team
- */
-static bool can_user_create(client_t client, char **command)
-{
-    uuid_t team_uuid;
-
-    get_uuid_from_string(command[1], team_uuid);
-    if (!is_user_subscribed_to_team(client->user, team_uuid)) {
-        add_packet_to_queue(&client->packet_queue,
-            build_error_packet(NOT_SUBSCRIBED, ""));
-        return false;
-    }
-    return true;
 }
 
 /**
@@ -178,22 +89,15 @@ static bool can_user_create(client_t client, char **command)
  */
 void use(client_t client, char **command)
 {
-    void *old_iteams[3] = {client->team, client->channel, client->thread};
     int code = 0;
 
-    if (!is_command_valid(client, command) || is_special_case(client, command))
+    if (!is_command_valid(client, command))
         return;
-    if (!are_uuid_valid(client, command))
+    client->team_uuid = NULL;
+    client->channel_uuid = NULL;
+    client->thread_uuid = NULL;
+    if (is_special_case(client, command))
         return;
-    client->team = NULL;
-    client->channel = NULL;
-    client->thread = NULL;
     code = set_used_items(client, command);
-    if (!are_uuids_unrelated(client) || !can_user_create(client, command)) {
-        client->team = old_iteams[0];
-        client->channel = old_iteams[1];
-        client->thread = old_iteams[2];
-        return;
-    }
     add_packet_to_queue(&client->packet_queue, build_packet(code, ""));
 }

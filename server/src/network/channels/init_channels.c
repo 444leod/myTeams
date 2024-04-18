@@ -20,8 +20,7 @@
 
 static void print_intialized_channel(UNUSED channel_t *channel)
 {
-    DEBUG_PRINT("Channel loaded: %s (%s)\n",
-        channel->channel_name,
+    DEBUG_PRINT("Channel loaded: %s (%s)\n", channel->name,
         get_uuid_as_string(channel->uuid));
 }
 
@@ -44,8 +43,8 @@ void read_channels(int fd)
             break;
         }
         if (get_team_by_uuid(new_channel->team_uuid) == NULL) {
-            my_free(new_channel);
             printf("team with uuid %s not found\n", new_channel->team_uuid);
+            my_free(new_channel);
             continue;
         }
         print_intialized_channel(new_channel);

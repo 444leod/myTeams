@@ -27,7 +27,7 @@ channel_t *create_channel(title_t title, description_t description,
 {
     channel_t *channel = my_malloc(sizeof(channel_t));
 
-    memcpy(channel->channel_name, title, strlen(title));
+    memcpy(channel->name, title, strlen(title));
     memcpy(channel->description, description, strlen(description));
     memcpy(channel->team_uuid, team_uuid, sizeof(uuid_t));
     uuid_generate(channel->uuid);

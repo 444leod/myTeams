@@ -57,6 +57,7 @@ bool read_team(int fd, user_t user)
     team = get_team_by_uuid(team_uuid);
     if (!team) {
         printf("team with uuid %s not found\n", get_uuid_as_string(team_uuid));
+        my_free(team);
         return true;
     }
     add_to_list((void *)team, (node_t *)&user->subscribed_teams);

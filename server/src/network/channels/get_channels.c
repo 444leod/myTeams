@@ -21,7 +21,15 @@ channels_t *get_channels(void)
     return &channels;
 }
 
-channels_t get_channels_by_team_uuid(uuid_t team_uuid)
+/**
+ * @brief Get a channel by its team uuid
+ * @details Get a channel by its team uuid
+ *
+ * @param team_uuid the team uuid
+ *
+ * @return channels_t the channels (linked list)
+ */
+channels_t get_channels_by_team(uuid_t team_uuid)
 {
     channels_t *channels = get_channels();
     channels_t tmp = *channels;

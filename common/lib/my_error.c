@@ -16,6 +16,6 @@
 */
 void my_error(char *str)
 {
-    fprintf(stderr, "Error: %s\n", str);
+    fprintf(stdout, "Error: %s\n", str);
     my_exit(84);
 }

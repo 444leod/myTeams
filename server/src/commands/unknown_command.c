@@ -22,9 +22,9 @@ void unknown_command(client_t client, UNUSED char **command)
 {
     if (!client->user) {
         add_packet_to_queue(&client->packet_queue,
-            build_packet(NOT_LOGGED_IN, ""));
+            build_error_packet(NOT_LOGGED_IN, ""));
     } else {
         add_packet_to_queue(&client->packet_queue,
-            build_packet(SYNTAX_ERROR, ""));
+            build_error_packet(SYNTAX_ERROR, ""));
     }
 }

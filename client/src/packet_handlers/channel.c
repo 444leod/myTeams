@@ -13,21 +13,79 @@
 #include <stdio.h>
 
 /**
+ * @brief Execute the given logging function using the channel structure
+ * @details Execute the given logging function using the channel structure
+ *
+ * @param f the logging function
+ * @param channel the channel
+*/
+static void log_channel(
+    int (*f) (const char *, const char *, const char *), channel_t *channel)
+{
+    char *uuid = get_uuid_as_string(channel->uuid);
+
+    f(uuid, channel->name, channel->description);
+}
+
+/**
+ * @brief Print the channel structure following the given format
+ * @details Print the channel structure following the given format
+ *
+ * @param format the format
+ * @param channel the channel
+*/
+static void print_channel(char *format, channel_t *channel)
+{
+    char *uuid = get_uuid_as_string(channel->uuid);
+
+    printf(format, channel->name, uuid, channel->description);
+}
+
+/**
  * @brief Handle the channel type packets
  * @details Handle the channel type packets
  *
  * @param packet the packet
  */
-void handle_channel_type_packet(packet_t *packet)
+void handle_channel_type_packet(channel_t *channel, int code, bool is_global)
 {
-    channel_t *channel = get_channel_from_packet(packet);
-    char *uuid = get_uuid_as_string(channel->uuid);
-
-    switch (packet->code) {
+    switch (code) {
         case CHANNEL_CREATED:
-            printf("Channel created with uuid: %s\n", uuid);
-            client_event_channel_created(uuid, channel->channel_name,
-                channel->description);
+            log_channel(client_event_channel_created, channel);
+            if (!is_global)
+                log_channel(client_print_channel_created, channel);
+            print_channel("Channel created: %s (uuid: \"%s\") %s\n", channel);
+            break;
+        case CHANNEL_INFO:
+            log_channel(client_print_channel, channel);
+            print_channel("Channel info: %s (uuid: \"%s\") %s\n", channel);
+            break;
+        case CHANNEL_LIST:
+            log_channel(client_team_print_channels, channel);
+            print_channel("Channel list: %s (uuid: \"%s\") %s\n", channel);
+            break;
+    }
+}
+
+/**
+ * @brief Handle the text type packets
+ * @details Handle the text type packets
+ *
+ * @param packet the packet
+ */
+static void handle_text_type_packet(packet_t *packet)
+{
+    switch (packet->code) {
+        case EMPTY_CHANNEL_LIST:
+            printf("Empty channel list\n");
+            break;
+        case ALREADY_EXISTS:
+            client_error_already_exist();
+            printf("This channel already exists\n");
+            break;
+        case INEXISTANT_CHANNEL:
+            client_error_unknown_channel(my_strdup(packet->packet_body));
+            printf("This channel does not exist\n");
             break;
     }
 }
@@ -40,16 +98,22 @@ void handle_channel_type_packet(packet_t *packet)
  */
 void channel_packet_handler(packet_t *packet)
 {
-    switch (packet->code) {
+    int code = packet->code;
+
+    switch (code) {
+        case CHANNEL_INFO:
+        case CHANNEL_LIST:
         case CHANNEL_CREATED:
-            handle_channel_type_packet(packet);
+            handle_channel_type_packet(get_channel_from_packet(packet),
+                code, packet->is_global);
             break;
+        case EMPTY_CHANNEL_LIST:
         case ALREADY_EXISTS:
-            printf("This channel already exists\n");
-            client_error_already_exist();
+        case INEXISTANT_CHANNEL:
+            handle_text_type_packet(packet);
             break;
         default:
-            printf("Unknown packet code\n");
+            printf("Channel packet handler: Unknown packet code.\n");
             break;
     }
 }

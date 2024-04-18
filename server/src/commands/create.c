@@ -9,13 +9,6 @@
 #include "reply_code.h"
 #include "macros.h"
 
-enum CONTEXT {
-    TEAM_CONTEXT,
-    CHANNEL_CONTEXT,
-    THREAD_CONTEXT,
-    REPLY_CONTEXT
-};
-
 struct parameters {
     enum CONTEXT context;
     size_t needed_len;
@@ -24,10 +17,10 @@ struct parameters {
 };
 
 static struct parameters parameters[4] = {
+    {GLOBAL_CONTEXT, 3, MAX_NAME_LENGTH, MAX_DESCRIPTION_LENGTH},
     {TEAM_CONTEXT, 3, MAX_NAME_LENGTH, MAX_DESCRIPTION_LENGTH},
-    {CHANNEL_CONTEXT, 3, MAX_NAME_LENGTH, MAX_DESCRIPTION_LENGTH},
-    {THREAD_CONTEXT, 3, MAX_NAME_LENGTH, MAX_BODY_LENGTH},
-    {REPLY_CONTEXT, 2, MAX_BODY_LENGTH, 0}
+    {CHANNEL_CONTEXT, 3, MAX_NAME_LENGTH, MAX_BODY_LENGTH},
+    {THREAD_CONTEXT, 2, MAX_BODY_LENGTH, 0}
 };
 
 /**
@@ -85,17 +78,17 @@ static bool is_command_valid(client_t client, char **command)
 }
 
 /**
- * @brief Check if the context is valid
- * @details Check if the context is valid
+ * @brief Check if the arguments are correct for the given context
+ * @details Check if the arguments are correct for the given context
  *
  * @param client the client
  * @param command the command
  * @param context the context
  *
- * @return true if the context is valid
- * @return false if the context is not valid
+ * @return true if the arguments are correct
+ * @return false if the arguments are not correct
  */
-static bool is_context_valid(client_t client, char **command,
+static bool are_arguments_correct(client_t client, char **command,
     enum CONTEXT context)
 {
     size_t command_len = tablen((void **)command);
@@ -132,6 +125,7 @@ static void handle_team_creation(client_t client, char **command)
     char *team_name = command[1];
     char *team_description = command[2];
     team_t *team;
+    packet_t *packet;
 
     if (get_team_by_name(team_name)) {
         add_packet_to_queue(&client->packet_queue,
@@ -139,8 +133,8 @@ static void handle_team_creation(client_t client, char **command)
         return;
     }
     team = create_team(team_name, team_description, client->user->uuid);
-    add_packet_to_queue(&client->packet_queue,
-        build_team_packet(TEAM_CREATED, team));
+    packet = build_team_packet(TEAM_CREATED, team);
+    add_packet_to_queue(&client->packet_queue, packet);
 }
 
 /**
@@ -156,16 +150,18 @@ static void handle_channel_creation(client_t client, char **command)
     char *description = command[2];
     channel_t *channel;
     packet_t *packet;
+    uuid_t team_uuid;
 
+    get_uuid_from_string(client->team_uuid, team_uuid);
     if (get_channel_by_name(name)) {
         add_packet_to_queue(&client->packet_queue,
             build_custom_packet(ALREADY_EXISTS, "", CHANNEL));
         return;
     }
-    channel = create_channel(name, description, client->team->uuid);
+    channel = create_channel(name, description, team_uuid);
     packet = build_channel_packet(CHANNEL_CREATED, channel);
     add_packet_to_queue(&client->packet_queue, packet);
-    send_to_logged_subscribers(client->team->uuid, packet, client);
+    send_to_logged_subscribers(team_uuid, packet, client);
 }
 
 /**
@@ -177,19 +173,24 @@ static void handle_channel_creation(client_t client, char **command)
 */
 static void handle_thread_creation(client_t client, char **command)
 {
-    char *name = command[1];
+    char *title = command[1];
     char *body = command[2];
     packet_t *packet;
+    thread_t *thread;
+    uuid_t team_uuid;
+    uuid_t channel_uuid;
 
-    if (get_channel_by_name(name)) {
+    get_uuid_from_string(client->team_uuid, team_uuid);
+    get_uuid_from_string(client->channel_uuid, channel_uuid);
+    if (get_thread_by_title(title)) {
         add_packet_to_queue(&client->packet_queue,
             build_custom_packet(ALREADY_EXISTS, "", THREAD));
         return;
     }
-    packet = build_thread_packet(THREAD_CREATED,
-        create_thread(name, body, client->user->uuid, client->channel->uuid));
+    thread = create_thread(title, body, client->user->uuid, channel_uuid);
+    packet = build_thread_packet(THREAD_CREATED, thread);
     add_packet_to_queue(&client->packet_queue, packet);
-    send_to_logged_subscribers(client->team->uuid, packet, client);
+    send_to_logged_subscribers(team_uuid, packet, client);
 }
 
 /**
@@ -204,30 +205,15 @@ static void handle_reply_creation(client_t client, char **command)
     char *reply_body = command[1];
     packet_t *packet;
     reply_t *reply;
+    uuid_t thread_uuid;
+    uuid_t team_uuid;
 
-    reply = create_reply(reply_body, client->user->uuid, client->thread->uuid);
+    get_uuid_from_string(client->thread_uuid, thread_uuid);
+    get_uuid_from_string(client->team_uuid, team_uuid);
+    reply = create_reply(reply_body, client->user->uuid, thread_uuid);
     packet = build_reply_packet(REPLY_CREATED, reply);
     add_packet_to_queue(&client->packet_queue, packet);
-    send_to_logged_subscribers(client->team->uuid, packet, client);
-}
-
-/**
- * @brief Return the current context of the client
- * @details Return the current context of the client
- *
- * @param client the client
- *
- * @return enum CONTEXT the current context
- */
-static enum CONTEXT get_current_context(client_t client)
-{
-    if (!client->team)
-        return TEAM_CONTEXT;
-    if (!client->channel)
-        return CHANNEL_CONTEXT;
-    if (!client->thread)
-        return THREAD_CONTEXT;
-    return REPLY_CONTEXT;
+    send_to_logged_subscribers(team_uuid, packet, client);
 }
 
 /**
@@ -243,21 +229,21 @@ void create(client_t client, char **command)
 {
     enum CONTEXT context = get_current_context(client);
 
-    if (!is_command_valid(client, command))
+    if (!is_command_valid(client, command) || !is_context_valid(client))
         return;
-    if (!is_context_valid(client, command, context))
+    if (!are_arguments_correct(client, command, context))
         return;
     switch (context) {
-        case TEAM_CONTEXT:
+        case GLOBAL_CONTEXT:
             handle_team_creation(client, command);
             break;
-        case CHANNEL_CONTEXT:
+        case TEAM_CONTEXT:
             handle_channel_creation(client, command);
             break;
-        case THREAD_CONTEXT:
+        case CHANNEL_CONTEXT:
             handle_thread_creation(client, command);
             break;
-        case REPLY_CONTEXT:
+        case THREAD_CONTEXT:
             handle_reply_creation(client, command);
             break;
     }

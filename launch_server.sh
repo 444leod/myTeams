@@ -16,7 +16,6 @@ do
     if [ $? -eq 84 ]
     then
         BASE_PORT=$((BASE_PORT+1))
-        clear
     else
         break
     fi

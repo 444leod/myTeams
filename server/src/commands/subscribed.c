@@ -26,12 +26,12 @@ static bool is_command_valid(client_t client, char **command)
 {
     if (tablen((void **)command) > 2) {
         add_packet_to_queue(&client->packet_queue,
-            build_packet(SYNTAX_ERROR_IN_PARAMETERS, ""));
+            build_error_packet(SYNTAX_ERROR_IN_PARAMETERS, ""));
         return false;
     }
     if (!client->user) {
         add_packet_to_queue(&client->packet_queue,
-            build_packet(NOT_LOGGED_IN, ""));
+            build_error_packet(NOT_LOGGED_IN, ""));
         return false;
     }
     return true;
@@ -50,7 +50,7 @@ static void list_team_subscribers(client_t client, team_t *team)
     while (teams_subscribers) {
         user_info = teams_subscribers->user;
         add_packet_to_queue(&client->packet_queue,
-            build_userinfo_packet(USER_INFO, user_info->username,
+            build_userinfo_packet(USERS_LIST, user_info->username,
             user_info->user_uuid, user_info->is_logged));
         teams_subscribers = teams_subscribers->next;
     }
@@ -74,7 +74,7 @@ static void list_subscribed_teams(client_t client)
     }
     while (tmp) {
         add_packet_to_queue(&client->packet_queue,
-            build_team_packet(TEAM_INFO, tmp->team));
+            build_team_packet(TEAM_LIST, tmp->team));
         tmp = tmp->next;
     }
 }

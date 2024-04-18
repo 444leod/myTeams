@@ -22,9 +22,9 @@ static void messages_list_handler(message_t *message)
 {
     char *uuid = get_uuid_as_string(message->sender_uuid);
 
-    printf("Messages list from %s: \"%s\"\n", uuid, message->body);
     client_private_message_print_messages(uuid, message->timestamp,
         my_strdup(message->body));
+    printf("Messages list from %s: \"%s\"\n", uuid, message->body);
 }
 
 /**
@@ -37,9 +37,9 @@ static void message_received_handler(message_t *message)
 {
     char *uuid = get_uuid_as_string(message->sender_uuid);
 
-    printf("Message received from %s: \"%s\"\n", uuid, message->body);
     client_event_private_message_received(uuid,
         my_strdup(message->body));
+    printf("Message received from %s: \"%s\"\n", uuid, message->body);
 }
 
 /**
@@ -50,8 +50,8 @@ static void unknown_user_handler(packet_t *packet)
 {
     char *uuid = my_strdup(packet->packet_body);
 
-    printf("Unknown user with uuid %s\n", uuid);
     client_error_unknown_user(uuid);
+    printf("Unknown user with uuid %s\n", uuid);
 }
 
 /**
@@ -63,14 +63,11 @@ static void unknown_user_handler(packet_t *packet)
 static void handle_error_packets(packet_t *packet)
 {
     switch (packet->code) {
-        case UNKNOWN_ERROR:
+        case INEXISTANT_USER:
             unknown_user_handler(packet);
             break;
-        case INEXISTANT_USER:
-            printf("Inexistant user\n");
-            break;
-        default:
-            printf("Unknown packet code (%d)\n", packet->code);
+        case EMPTY_MESSAGE_LIST:
+            printf("Empty message list.\n");
             break;
     }
 }
@@ -112,12 +109,12 @@ void message_packet_handler(packet_t *packet)
         case MESSAGES_LIST:
             handle_full_packets(packet);
             break;
-        case UNKNOWN_ERROR:
         case INEXISTANT_USER:
+        case EMPTY_MESSAGE_LIST:
             handle_error_packets(packet);
             break;
         default:
-            printf("Unknown packet code (%d)\n", packet->code);
+            printf("Message packet handler: Unknown packet code.\n");
             break;
     }
 }

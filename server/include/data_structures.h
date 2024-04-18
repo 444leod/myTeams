@@ -43,7 +43,8 @@ typedef struct users_s {
 threads_t *get_threads(void);
 thread_t *get_thread_by_uuid(uuid_t thread_uuid);
 thread_t *get_thread_by_title(char *title);
-threads_t *get_threads_by_creator(uuid_t creator_uuid);
+threads_t get_threads_by_creator(uuid_t creator_uuid);
+threads_t get_threads_by_channel(uuid_t channel_uuid);
 thread_t *create_thread(title_t title, body_t body, uuid_t creator_uuid,
     uuid_t channel_uuid);
 void dump_threads(void);
@@ -60,7 +61,7 @@ void init_teams(void);
 replies_t *get_replies(void);
 reply_t *get_reply_by_uuid(uuid_t reply_uuid);
 replies_t *get_replies_by_creator(uuid_t reply_creator);
-replies_t *get_replies_by_thread(uuid_t thread_uuid);
+replies_t get_replies_by_thread(uuid_t thread_uuid);
 reply_t *create_reply(char *body, uuid_t creator_uuid, uuid_t thread_uuid);
 void dump_replies(void);
 void init_replies(void);
@@ -68,7 +69,7 @@ void init_replies(void);
 channels_t *get_channels(void);
 channel_t *get_channel_by_uuid(uuid_t channel_uuid);
 channel_t *get_channel_by_name(char *name);
-channels_t *get_channels_by_team(uuid_t team_uuid);
+channels_t get_channels_by_team(uuid_t team_uuid);
 channel_t *create_channel(title_t title, description_t description,
     uuid_t team_uuid);
 void dump_channels(void);

@@ -42,8 +42,8 @@ typedef struct packet_queue_s {
 } *packet_queue_t;
 
 typedef struct user_information_s {
-    username_t username;
     uuid_t user_uuid;
+    username_t username;
     bool is_logged;
 } user_information_t;
 
@@ -69,17 +69,18 @@ typedef struct reply_s {
     uuid_t team_uuid;
     uuid_t creator_uuid;
     body_t body;
+    time_t timestamp;
 } reply_t;
 
 typedef struct channel_s {
     uuid_t uuid;
-    char channel_name[MAX_NAME_LENGTH + 1];
+    char name[MAX_NAME_LENGTH + 1];
     char description[MAX_DESCRIPTION_LENGTH + 1];
     uuid_t team_uuid;
 } channel_t;
 
 typedef struct message_s {
-    uuid_t message_uuid;
+    uuid_t uuid;
     uuid_t sender_uuid;
     uuid_t receiver_uuid;
     time_t timestamp;

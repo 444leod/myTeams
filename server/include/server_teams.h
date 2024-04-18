@@ -28,6 +28,13 @@ typedef struct server_info_s {
     char *ip;
 } *server_info_t;
 
+enum CONTEXT {
+    GLOBAL_CONTEXT,
+    TEAM_CONTEXT,
+    CHANNEL_CONTEXT,
+    THREAD_CONTEXT,
+};
+
 int server(int argc, char *argv[]);
 void check_args(int argc, char *argv[]);
 int get_socket(void);
@@ -42,3 +49,5 @@ void handle_command(client_t client);
 void get_port(int fd, int *port);
 void send_packet_to_logged_users(packet_t *packet, client_t client);
 void send_packet_to_client(client_t client, packet_t *packet);
+enum CONTEXT get_current_context(client_t client);
+bool is_context_valid(client_t client);
