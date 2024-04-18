@@ -20,6 +20,8 @@
   - [/list](#list)
   - [/info](#info)
 - [Reply Code](#reply-code)
+- [Packet Structures](#packet-structures)
+  - [Type Definitions](#type-definitions)
 
 ## Introduction
 This document outlines the specification for the Command Line Interface (CLI) client of MyTeams.
