@@ -26,11 +26,11 @@ static void handle_reply_created(packet_t *packet)
     char *thread_uuid = get_uuid_as_string(reply->thread_uuid);
     char *team_uuid = get_uuid_as_string(reply->team_uuid);
 
-    client_event_thread_reply_received(team_uuid, thread_uuid,
-        creator_uuid, reply->body);
     if (!packet->is_global)
         client_print_reply_created(thread_uuid, creator_uuid, reply->timestamp,
             reply->body);
+    client_event_thread_reply_received(team_uuid, thread_uuid,
+        creator_uuid, reply->body);
     printf("Reply from %s on thread %s: \"%s\"\n", creator_uuid, thread_uuid,
         reply->body);
 }

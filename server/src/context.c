@@ -76,7 +76,8 @@ static bool check_channel_relation(client_t client)
     team = get_team_by_uuid(team_uuid);
     if (uuid_compare(channel->team_uuid, team->uuid) != 0) {
         add_packet_to_queue(&client->packet_queue,
-            build_error_packet(INEXISTANT_CHANNEL, ""));
+            build_custom_packet(INEXISTANT_CHANNEL, client->channel_uuid,
+                CHANNEL));
         return false;
     }
     return true;
@@ -104,7 +105,8 @@ static bool check_thread_relation(client_t client)
     channel = get_channel_by_uuid(channel_uuid);
     if (uuid_compare(thread->channel_uuid, channel->uuid) != 0) {
         add_packet_to_queue(&client->packet_queue,
-            build_error_packet(INEXISTANT_THREAD, ""));
+            build_custom_packet(INEXISTANT_THREAD, client->thread_uuid,
+                THREAD));
         return false;
     }
     return true;

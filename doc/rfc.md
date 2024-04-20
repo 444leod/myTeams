@@ -35,9 +35,10 @@ The MyTeams RFC supports the following features:
 
 ## Commands
 
-Commands send by the client to the server are prefixed with a `/` character and they end with the CRLF (`"/r/n"`) sequence.
-The server wait for a string CRLF null-terminated, following the format of each commands.
-Each command parameters must be between double quotes (\" \")
+Commands send by the client to the server must be ASCII formated. They are prefixed with a `/` character and they end with the CRLF (`"/r/n"`) sequence.
+A command may have parameters, each of them must be double quoted and spaced by 1 space.
+Commands are documented below, each parameter is between [], if the parameter is started by a ?, the parameter is optional. Otherwise, the parameter is mandatory.
+Parameters must be given in the correct order.
 
 ### /help
 - Description: Show help.
@@ -77,32 +78,49 @@ Each command parameters must be between double quotes (\" \")
 - Usage: `/unsubscribe [“team_uuid”]`
 
 ### /use
-- Description: Set the command context to a team/channel/thread or none.
+- Description: Set the command context to a team/channel/thread or global.
+  - No parameter: global context.
+  - 1 parameter (team_uuid): team context.
+  - 2 parameters (team_uuid and channel_uuid): channel context.
+  - 3 parameters (team_uuid, channel_uuid and thread_uuid): thread context.
 - Usage: `/use ?[“team_uuid”] ?[“channel_uuid”] ?[“thread_uuid”]`
 
 ### /create
-- Description: Create a new resource based on the context.
+- Description: Create a new resource based on the set context.
+- Need: Subscription for team context resource creation.
 - Usage:
-  - `/create [“team_name”] [“team_description”]` (When the context is not defined)
-  - `/create [“channel_name”] [“channel_description”]` (When `team_uuid` is defined)
-  - `/create [“thread_title”] [“thread_message”]` (When `team_uuid` and `channel_uuid` are defined)
-  - `/create [“comment_body”]` (When `team_uuid`, `channel_uuid`, and `thread_uuid` are defined)
+  - `/create [“team_name”] [“team_description”]` (When the context is set to global context)
+    - Will create a new team.
+  - `/create [“channel_name”] [“channel_description”]` (When the context is team context.)
+    - Will create a new channel in the used team.
+  - `/create [“thread_title”] [“thread_message”]` (When the context is channel context.)
+    - Will create a new thread in the used channel from the used team.
+  - `/create [“comment_body”]` (When the context is thread context.)
+    - Will create a new reply in the used thread from the used channel from the used team.
 
 ### /list
 - Description: List all existing resources based on the context.
 - Usage:
-  - `/list` (When the context is not defined)
-  - `/list` (When `team_uuid` is defined)
-  - `/list` (When `team_uuid` and `channel_uuid` are defined)
-  - `/list` (When `team_uuid`, `channel_uuid`, and `thread_uuid` are defined)
+  - `/list` (When the context is set to global context)
+    - Will list the existant teams.
+  - `/list` (When the context is set to team context.)
+    - Will list the channels of the used team.
+  - `/list` (When the context is set to channel context.)
+    - Will list the threads of the used channel from the used team.
+  - `/list` (When the context is set to thread context.)
+    - Will list the replies of the used thread of the used channel of the used team.
 
 ### /info
 - Description: Display details of the current resource based on the context.
 - Usage:
-  - `/info` (When the context is not defined)
-  - `/info` (When `team_uuid` is defined)
-  - `/info` (When `team_uuid` and `channel_uuid` are defined)
-  - `/info` (When `team_uuid`, `channel_uuid`, and `thread_uuid` are defined)
+  - `/info` (When the context is set to global context)
+    - Will give informations about the current logged user.
+  - `/info` (When the context is set to team context.)
+    - Will give informations about the current used team.
+  - `/info` (When the context is set to channel context.)
+    - Will give informations about the current used channel from the used team.
+  - `/info` (When the context is set to thread context.)
+    - Will give informations about the current used thread from the used channel from the used team.
 
 ## Reply Code
 
@@ -152,7 +170,6 @@ The most important part of a response packet is the type of the packet, which ca
   MESSAGE_SENT = 220
   MESSAGE_RECEIVED = 221
   MESSAGES_LIST = 222
-  THREAD_REPLY_RECEIVED = 223
 
   TEAM_SUBSCRIBED = 230
   TEAM_UNSUBSCRIBED = 231
@@ -218,13 +235,72 @@ The most important part of a response packet is the type of the packet, which ca
 
 ## Packet Structures
 
-The server works by sending packets containing either null-terminated string or C-style structs, below are the ASCII tables representing the C-style structs used for sending and receiving packets in the server. Those struct are written in hexadecimal format directly into the socket.
+The server works by sending packets containing either null-terminated string or C-style structs, below are the ASCII tables representing the C-style structs used for sending packets in the server. Those struct are written in hexadecimal format directly into the socket.
 Note that all strings should be null-terminated.
 As some case doesn't need entire structures but only the previous user argument or a message, packet body may also contain a plain null-terminated string (like unknown team returning the given team uuid.).
 
 List type commands will send each element of the list as a packet one by one.
 
 To ensure the server is legit, the server will send a magic number written in 4 bytes before any packet.
+The magic number is reprensented as `0xdeadbeef` in hexadecimal.
+
+Here is an ASCII table showing which codes use which structure:
+```c
++-------------------+-----------------------+
+|  Code             |       Structure       |
++-------------------+-----------------------+
+| USERS_LIST        |   user_information_t  |
+| USER_INFO         |                       |
+| USER_CREATED      |                       |
+| USER_LOGGED_IN    |                       |
+| USER_LOGGED_OUT   |                       |
+| NEW_USER          |                       |
++-------------------+-----------------------+
+| MESSAGE_SENT      |      message_t        |
+| MESSAGE_RECEIVED  |                       |
+| MESSAGES_LIST     |                       |
++-------------------+-----------------------+
+| TEAM_CREATED      |        team_t         |
+| TEAM_INFO         |                       |
+| TEAM_LIST         |                       |
+| TEAM_SUBSCRIBED   |                       |
+| TEAM_UNSUBSCRIBED |                       |
++-------------------+-----------------------+
+| CHANNEL_CREATED   |       channel_t       |
+| CHANNEL_INFO      |                       |
+| CHANNEL_LIST      |                       |
++-------------------+-----------------------+
+| THREAD_CREATED    |      thread_t         |
+| THREAD_INFO       |                       |
+| THREAD_LIST       |                       |
++-------------------+-----------------------+
+| REPLY_CREATED     |        reply_t        |
+| REPLY_INFO        |                       |
+| REPLY_LIST        |                       |
++-------------------+-----------------------+
+```
+
+Here is an ASCII table showing which codes send what string in their body
+```
++---------------------+-----------------------+
+|  Code               |    string content     |
++---------------------+-----------------------+
+| INEXISTANT_USER     |    user_uuid given    |
+|                     |    by the user        |
++---------------------+-----------------------+
+| ALREADY_SUBSCRIBED  |    team_uuid given    |
+| NOT_SUBSCRIBED      |      by the user      |
+| INEXISTANT_TEAM     |                       |
++---------------------+-----------------------+
+| INEXISTANT_CHANNEL  |  channel_uuid given   |
+|                     |      by the user      |
++---------------------+-----------------------+
+| INEXISTANT_THREAD   |   thread_uuid given   |
+|                     |      by the user      |
++---------------------+-----------------------+
+```
+
+Any other packet will send a standart string if it's type is NONE, corresponding with the code for the user to display it, or an empty body if it's type is not NONE so the user display it's own message.
 
 ### Type Definitions
 
@@ -321,14 +397,14 @@ MAX_NAME_LENGTH: 512 characters (bytes)
 
 #### `channel_t` Struct
 ```c
-+-------------------+----------------------+---------------------+-------------------------+
-| Field             | Type                 | Size                | Description             |
-+-------------------+----------------------+---------------------+-------------------------+
-| uuid              | uuid_t               | 16 bytes            | UUID of the channel     |
-| name              | char[MAX_NAME_LENGTH+1] | MAX_NAME_LENGTH + 1 | Name of the channel     |
-| description       | char[MAX_DESC_LENGTH+1] | MAX_DESC_LENGTH + 1 | Description of the channel |
-| team_uuid         | uuid_t               | 16 bytes            | UUID of the team        |
-+-------------------+----------------------+---------------------+-------------------------+
++-------------------+--------------------------+------------------------+-----------------------------+
+| Field             | Type                     | Size                   | Description                 |
++-------------------+--------------------------+------------------------+-----------------------------+
+| uuid              | uuid_t                   | 16 bytes               | UUID of the channel         |
+| name              | char[MAX_NAME_LENGTH+1]  | MAX_NAME_LENGTH + 1    | Name of the channel         |
+| description       | char[MAX_DESC_LENGTH+1]  | MAX_DESC_LENGTH + 1    | Description of the channel  |
+| team_uuid         | uuid_t                   | 16 bytes               | UUID of the team            |
++-------------------+--------------------------+------------------------+-----------------------------+
 ```
 
 #### `message_t` Struct
