@@ -16,6 +16,33 @@
 #include "lib.h"
 
 /**
+ * @brief Send the given packet to all the logged subscribers of the team
+ * @details Send the given packet to all the logged subscribers of the team
+ *        except the current client
+ * @param team_uuid the team uuid
+ * @param packet the packet
+ * @param current_client the current client
+*/
+static void send_to_logged_subscribers(
+    uuid_t team_uuid,
+    packet_t *packet,
+    client_t current_client)
+{
+    client_t client;
+    team_t *team = get_team_by_uuid(team_uuid);
+    users_t subscribers = get_team_subscribers(team);
+
+    while (subscribers) {
+        if (subscribers->user->is_logged && uuid_compare
+            (subscribers->user->user_uuid, current_client->user->uuid) != 0) {
+            client = get_client_by_uuid(subscribers->user->user_uuid);
+            send_packet_to_client(client, packet);
+        }
+        subscribers = subscribers->next;
+    }
+}
+
+/**
  * @brief Check if the command is valid
  * @details Check if the command is valid
  *
@@ -49,15 +76,15 @@ static bool is_command_valid(client_t client, char **command)
  */
 static void subscribe_to_team(client_t client, team_t *team)
 {
+    packet_t *packet = build_team_packet(TEAM_SUBSCRIBED, team);
+
     server_event_user_subscribed(
         get_uuid_as_string(team->uuid),
         get_uuid_as_string(client->user->uuid)
     );
     add_to_list((void *)team, (node_t *)&client->user->subscribed_teams);
-    add_packet_to_queue(
-        &client->packet_queue,
-        build_team_packet(TEAM_SUBSCRIBED, team)
-    );
+    add_packet_to_queue(&client->packet_queue, packet);
+    send_to_logged_subscribers(team->uuid, packet, client);
 }
 
 /**

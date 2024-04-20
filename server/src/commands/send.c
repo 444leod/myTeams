@@ -73,14 +73,15 @@ static bool is_param_good(client_t client, char **command)
 static void create_and_send_to_user(client_t client, uuid_t receiver_uuid,
     body_t body)
 {
-    client_t receiver = get_client_by_uuid(receiver_uuid);
+    clients_t receivers = get_clients_by_user(
+        get_user_by_uuid(receiver_uuid), NULL);
     message_t *message = create_message(body, client->user->uuid,
         receiver_uuid);
 
     add_packet_to_queue(&client->packet_queue,
         build_message_packet(MESSAGE_SENT, message));
-    if (receiver) {
-        send_packet_to_client(receiver,
+    if (receivers) {
+        send_packet_to_clients(receivers,
             build_message_packet(MESSAGE_RECEIVED, message));
     }
 }
@@ -106,7 +107,7 @@ void my_send(client_t client, char **command)
     if (!receiver) {
         add_packet_to_queue(&client->packet_queue,
             build_custom_packet(INEXISTANT_USER,
-            get_uuid_as_string(receiver_uuid), MESSAGE));
+            command[1], MESSAGE));
         return;
     }
     create_and_send_to_user(client, receiver_uuid, body);

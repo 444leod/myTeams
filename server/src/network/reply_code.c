@@ -45,9 +45,6 @@ const server_message_t serverMessages[] = {
     {ALREADY_EXISTS, "Already exists."},
     {UNSUFFICIENT_PERMISSIONS,
         "Unsufficient permissions to perform this action."},
-    {FORBIDDEN_CHARACTERS,
-        "Forbidden characters used, only alphanumerical "
-        "characters are allowed."},
     {NOT_LOGGED_IN, "Not logged in."},
     {USER_ALREADY_LOGGED_IN, "User already logged in."},
 

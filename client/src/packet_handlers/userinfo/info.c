@@ -52,8 +52,8 @@ void handle_inexistant_user_packet(packet_t *packet)
 {
     char *uuid = my_strdup(packet->packet_body);
 
-    client_error_unknown_user(uuid);
     printf("User with uuid %s does not exist.\n", uuid);
+    client_error_unknown_user(uuid);
 }
 
 /**

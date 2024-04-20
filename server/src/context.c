@@ -144,7 +144,7 @@ static bool can_user_create(client_t client)
     get_uuid_from_string(client->team_uuid, team_uuid);
     if (!is_user_subscribed_to_team(client->user, team_uuid)) {
         add_packet_to_queue(&client->packet_queue,
-            build_error_packet(NOT_SUBSCRIBED, ""));
+            build_custom_packet(NOT_SUBSCRIBED, client->team_uuid, TEAM));
         return false;
     }
     return true;
@@ -174,11 +174,12 @@ enum CONTEXT get_current_context(client_t client)
  * @details Check if the context is valid to do any action
  *
  * @param client the client
+ * @param need_subscription if the user needs to be subscribed to the team
  *
  * @return true if the context is valid
  * @return false if the context is not valid
  */
-bool is_context_valid(client_t client)
+bool is_context_valid(client_t client, bool need_subscription)
 {
     enum CONTEXT current_context = get_current_context(client);
 
@@ -186,7 +187,8 @@ bool is_context_valid(client_t client)
         return true;
     if (!are_uuid_valid(client) || !are_uuids_unrelated(client))
         return false;
-    if (current_context != GLOBAL_CONTEXT && !can_user_create(client))
+    if (need_subscription && current_context != GLOBAL_CONTEXT
+        && !can_user_create(client))
         return false;
     return true;
 }

@@ -49,11 +49,15 @@ void logout(client_t client, char **command)
 
     if (!is_command_valid(client, command))
         return;
+    client->user = NULL;
     pkt = build_userinfo_packet(USER_LOGGED_OUT,
         user->username, user->uuid, user->status);
-    add_packet_to_queue(&client->packet_queue, pkt);
-    user->status = STATUS_NOT_LOGGED_IN;
-    client->user = NULL;
     server_event_user_logged_out(get_uuid_as_string(user->uuid));
+    if (get_clients_by_user(user, NULL) == NULL) {
+        user->status = STATUS_NOT_LOGGED_IN;
+        add_packet_to_queue(&client->packet_queue, pkt);
+        send_packet_to_logged_users(pkt, NULL);
+        return;
+    }
     send_packet_to_logged_users(pkt, client);
 }

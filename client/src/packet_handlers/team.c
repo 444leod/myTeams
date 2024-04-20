@@ -152,6 +152,10 @@ static void handle_errors(packet_t *packet)
             client_error_already_exist();
             printf("This team already exist!\n");
             break;
+        case NOT_SUBSCRIBED:
+            client_error_unauthorized();
+            printf("You are not subscribed to this team\n");
+            break;
     }
 }
 
@@ -176,6 +180,7 @@ static void handle_text_type_packet(packet_t *packet)
             break;
         case INEXISTANT_TEAM:
         case ALREADY_EXISTS:
+        case NOT_SUBSCRIBED:
             handle_errors(packet);
             break;
         default:
@@ -208,7 +213,7 @@ void team_packet_handler(packet_t *packet)
         case INEXISTANT_TEAM:
         case NO_SUBSCRIBED_TEAMS:
         case ALREADY_EXISTS:
-        default:
+        case NOT_SUBSCRIBED:
             handle_text_type_packet(packet);
             break;
     }

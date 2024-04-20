@@ -11,6 +11,7 @@
 #include "macros.h"
 #include "lib.h"
 #include "clientllist.h"
+#include "garbage_collector.h"
 
 /**
  * @brief Get the filled buffer fir read fds and write fds
@@ -73,6 +74,7 @@ UNUSED static void dev_print_fd_set(fd_set *readfds, fd_set *writefds)
     }
     buffer = dev_get_full_buffer(rfds, rcount, wfds, wcount);
     SOMETIMES_DEBUG(&print, 10000, "%s", buffer);
+    my_free(buffer);
 }
 
 /**

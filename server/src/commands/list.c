@@ -147,7 +147,7 @@ void list(client_t client, UNUSED char **command)
 {
     enum CONTEXT context = get_current_context(client);
 
-    if (!is_command_valid(client, command) || !is_context_valid(client))
+    if (!is_command_valid(client, command) || !is_context_valid(client, false))
         return;
     switch (context) {
         case GLOBAL_CONTEXT:

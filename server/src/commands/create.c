@@ -36,15 +36,16 @@ static void send_to_logged_subscribers(
     packet_t *packet,
     client_t current_client)
 {
-    client_t client;
+    clients_t clients;
     team_t *team = get_team_by_uuid(team_uuid);
     users_t subscribers = get_team_subscribers(team);
+    user_t user;
 
     while (subscribers) {
-        if (subscribers->user->is_logged && uuid_compare
-            (subscribers->user->user_uuid, current_client->user->uuid) != 0) {
-            client = get_client_by_uuid(subscribers->user->user_uuid);
-            send_packet_to_client(client, packet);
+        user = get_user_by_uuid(subscribers->user->user_uuid);
+        if (subscribers->user->is_logged) {
+            clients = get_clients_by_user(user, current_client);
+            send_packet_to_clients(clients, packet);
         }
         subscribers = subscribers->next;
     }
@@ -135,6 +136,7 @@ static void handle_team_creation(client_t client, char **command)
     team = create_team(team_name, team_description, client->user->uuid);
     packet = build_team_packet(TEAM_CREATED, team);
     add_packet_to_queue(&client->packet_queue, packet);
+    send_packet_to_logged_users(packet, client);
 }
 
 /**
@@ -229,7 +231,7 @@ void create(client_t client, char **command)
 {
     enum CONTEXT context = get_current_context(client);
 
-    if (!is_command_valid(client, command) || !is_context_valid(client))
+    if (!is_command_valid(client, command) || !is_context_valid(client, true))
         return;
     if (!are_arguments_correct(client, command, context))
         return;

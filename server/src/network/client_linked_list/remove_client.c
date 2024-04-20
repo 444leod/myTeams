@@ -26,8 +26,9 @@ static void destroy_fds(client_t tmp)
         close(tmp->fd);
         tmp->fd = -1;
     }
-    if (tmp->user) {
-        tmp->user->status = STATUS_NOT_LOGGED_IN;
+    if (tmp->user){
+        if (get_clients_by_user(tmp->user, tmp) == NULL)
+            tmp->user->status = STATUS_NOT_LOGGED_IN;
         server_event_user_logged_out(get_uuid_as_string(tmp->user->uuid));
         send_packet_to_logged_users(build_userinfo_packet(USER_LOGGED_OUT,
             tmp->user->username, tmp->user->uuid, tmp->user->status), tmp);
@@ -59,5 +60,4 @@ void remove_client(int fd)
         return;
     destroy_fds(tmp);
     prev->next = tmp->next;
-    my_free(tmp);
 }

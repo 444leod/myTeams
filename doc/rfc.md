@@ -1,8 +1,7 @@
-# MyTeams CLI RFC Documentation
+# MyTeams RFC Documentation
 
 ## Table of Contents
 - [Introduction](#introduction)
-- [Usage](#usage)
 - [Features](#features)
 - [Commands](#commands)
   - [/help](#help)
@@ -24,18 +23,10 @@
   - [Type Definitions](#type-definitions)
 
 ## Introduction
-This document outlines the specification for the Command Line Interface (CLI) client of MyTeams.
-
-## Usage
-```
-∼/B-NWP-400> ./myteams_cli –help
-USAGE: ./myteams_cli ip port
-```
-- `ip`: The server IP address on which the server socket listens.
-- `port`: The port number on which the server socket listens.
+This document outlines the specification of the MyTeams.
 
 ## Features
-The MyTeams CLI client supports the following features:
+The MyTeams RFC supports the following features:
 - User authentication and management.
 - Retrieval of user lists and details.
 - Sending messages to specific users.
@@ -45,6 +36,8 @@ The MyTeams CLI client supports the following features:
 ## Commands
 
 Commands send by the client to the server are prefixed with a `/` character and they end with the CRLF (`"/r/n"`) sequence.
+The server wait for a string CRLF null-terminated, following the format of each commands.
+Each command parameters must be between double quotes (\" \")
 
 ### /help
 - Description: Show help.
@@ -84,7 +77,7 @@ Commands send by the client to the server are prefixed with a `/` character and 
 - Usage: `/unsubscribe [“team_uuid”]`
 
 ### /use
-- Description: Set the command context to a team/channel/thread.
+- Description: Set the command context to a team/channel/thread or none.
 - Usage: `/use ?[“team_uuid”] ?[“channel_uuid”] ?[“thread_uuid”]`
 
 ### /create
@@ -143,29 +136,117 @@ The most important part of a response packet is the type of the packet, which ca
 - `CHANNEL` = 6
 - `MESSAGE` = 7
 
+### SERVER KNOWN CODES:
+
+```
+  COMMAND_OK = 200
+  HELP_MESSAGE = 201
+
+  USERS_LIST = 211
+  USER_INFO = 212
+  USER_CREATED = 213
+  USER_LOGGED_IN = 214
+  USER_LOGGED_OUT = 215
+  NEW_USER = 216
+
+  MESSAGE_SENT = 220
+  MESSAGE_RECEIVED = 221
+  MESSAGES_LIST = 222
+  THREAD_REPLY_RECEIVED = 223
+
+  TEAM_SUBSCRIBED = 230
+  TEAM_UNSUBSCRIBED = 231
+  NO_SUBSCRIBED_TEAMS = 232
+
+  TEAM_CREATED = 240
+  CHANNEL_CREATED = 241
+  THREAD_CREATED = 242
+  REPLY_CREATED = 243
+
+  TEAM_LIST = 250
+  CHANNEL_LIST = 251
+  THREAD_LIST = 252
+  REPLY_LIST = 253
+
+  CURRENT_USER_INFO = 260
+  TEAM_INFO = 261
+  CHANNEL_INFO = 262
+  THREAD_INFO = 263
+
+  GLOBAL_CONTEXT_SET = 270
+  TEAM_CONTEXT_SET = 271
+  CHANNEL_CONTEXT_SET = 272
+  THREAD_CONTEXT_SET = 273
+```
+
+### SERVER KNOWN ERROR CODES
+
+```
+  SYNTAX_ERROR = 500
+  SYNTAX_ERROR_IN_PARAMETERS = 501
+  COMMAND_NOT_IMPLEMENTED = 502
+  BAD_COMMAND_SEQUENCE = 503
+  COMMAND_NOT_IMPLEMENTED_FOR_PARAMETER = 504
+  NAME_TOO_LONG = 506
+  DESCRIPTION_TOO_LONG = 507
+  BODY_TOO_LONG = 508
+  ALREADY_EXISTS = 509
+
+  UNSUFFICIENT_PERMISSIONS = 510
+  NOT_LOGGED_IN = 511
+  USER_ALREADY_LOGGED_IN = 512
+  ALREADY_LOGGED_IN = 513
+  ALREADY_LOGGED_OUT = 514
+  NOT_SUBSCRIBED = 515
+  ALREADY_SUBSCRIBED = 516
+
+  EMPTY_MESSAGE_LIST = 520
+
+  EMPTY_TEAM_LIST = 551
+  EMPTY_CHANNEL_LIST = 552
+  EMPTY_THREAD_LIST = 553
+  EMPTY_USER_LIST = 554
+  EMPTY_REPLY_LIST = 555
+
+  INEXISTANT_TEAM = 570
+  INEXISTANT_CHANNEL = 571
+  INEXISTANT_THREAD = 572
+  INEXISTANT_USER = 573
+
+  UNKNOWN_ERROR = 590
+```
+
 ## Packet Structures
 
-The server works by sending packets containing C-style structs, below are the ASCII tables representing the C-style structs used for sending and receiving packets in the server. Those struct are written in hexadecimal format directly into the socket.
+The server works by sending packets containing either null-terminated string or C-style structs, below are the ASCII tables representing the C-style structs used for sending and receiving packets in the server. Those struct are written in hexadecimal format directly into the socket.
 Note that all strings should be null-terminated.
+As some case doesn't need entire structures but only the previous user argument or a message, packet body may also contain a plain null-terminated string (like unknown team returning the given team uuid.).
+
+List type commands will send each element of the list as a packet one by one.
+
+To ensure the server is legit, the server will send a magic number written in 4 bytes before any packet.
 
 ### Type Definitions
 
 #### `username_t` Type
 
-A string representing a username, with a maximum length of 32 characters.
+A string representing a username, with a maximum length of 33 characters.
 
 #### `title_t` Type
 
-A string representing a title, with a maximum length of 32 characters.
+A string representing a title, with a maximum length of 33 characters.
 
 #### `description_t` Type
 
-A string representing a description, with a maximum length of 255 characters.
+A string representing a description, with a maximum length of 256 characters.
 
 #### `body_t` Type
 
-A string representing a body, with a maximum length of 512 characters.
+A string representing a body, with a maximum length of 513 characters.
 
+### `uuid_t` Type
+
+A string representing an C uiid generated by libuuid C library.
 
 #### `packet_t` Struct
 ```c
@@ -177,6 +258,14 @@ A string representing a body, with a maximum length of 512 characters.
 | packet_type       | int          | 4 bytes         | Type of packet          |
 | packet_body       | char[4096]   | 4096 bytes      | Body of the packet      |
 +-------------------+--------------+-----------------+-------------------------+
+```
+The next given structures will be rawly written into the packet_t body.
+
+There are multiple constants user in all structures to follow the same size.
+```
+MAX_NAME_LENGTH: 32 characters (bytes)
+MAX_DESCRIPTION_LENGTH: 255 characters (bytes)
+MAX_NAME_LENGTH: 512 characters (bytes)
 ```
 
 #### `user_information_t` Struct
