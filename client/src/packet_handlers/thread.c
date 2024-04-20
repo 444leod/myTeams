@@ -61,9 +61,9 @@ void handle_thread_type_packet(packet_t *packet)
 
     switch (packet->code) {
         case THREAD_CREATED:
-            log_thread(client_event_thread_created, thread);
             if (!packet->is_global)
                 log_thread(client_print_thread_created, thread);
+            log_thread(client_event_thread_created, thread);
             print_thread("Thread created: ", thread);
             break;
         case THREAD_INFO:

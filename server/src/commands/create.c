@@ -231,7 +231,7 @@ void create(client_t client, char **command)
 {
     enum CONTEXT context = get_current_context(client);
 
-    if (!is_command_valid(client, command) || !is_context_valid(client))
+    if (!is_command_valid(client, command) || !is_context_valid(client, true))
         return;
     if (!are_arguments_correct(client, command, context))
         return;

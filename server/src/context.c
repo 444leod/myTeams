@@ -76,7 +76,8 @@ static bool check_channel_relation(client_t client)
     team = get_team_by_uuid(team_uuid);
     if (uuid_compare(channel->team_uuid, team->uuid) != 0) {
         add_packet_to_queue(&client->packet_queue,
-            build_error_packet(INEXISTANT_CHANNEL, ""));
+            build_custom_packet(INEXISTANT_CHANNEL, client->channel_uuid,
+                CHANNEL));
         return false;
     }
     return true;
@@ -104,7 +105,8 @@ static bool check_thread_relation(client_t client)
     channel = get_channel_by_uuid(channel_uuid);
     if (uuid_compare(thread->channel_uuid, channel->uuid) != 0) {
         add_packet_to_queue(&client->packet_queue,
-            build_error_packet(INEXISTANT_THREAD, ""));
+            build_custom_packet(INEXISTANT_THREAD, client->thread_uuid,
+                THREAD));
         return false;
     }
     return true;
@@ -174,11 +176,12 @@ enum CONTEXT get_current_context(client_t client)
  * @details Check if the context is valid to do any action
  *
  * @param client the client
+ * @param need_subscription if the user needs to be subscribed to the team
  *
  * @return true if the context is valid
  * @return false if the context is not valid
  */
-bool is_context_valid(client_t client)
+bool is_context_valid(client_t client, bool need_subscription)
 {
     enum CONTEXT current_context = get_current_context(client);
 
@@ -186,7 +189,8 @@ bool is_context_valid(client_t client)
         return true;
     if (!are_uuid_valid(client) || !are_uuids_unrelated(client))
         return false;
-    if (current_context != GLOBAL_CONTEXT && !can_user_create(client))
+    if (need_subscription && current_context != GLOBAL_CONTEXT
+        && !can_user_create(client))
         return false;
     return true;
 }
