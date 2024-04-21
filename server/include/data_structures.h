@@ -43,6 +43,8 @@ typedef struct users_s {
 threads_t *get_threads(void);
 thread_t *get_thread_by_uuid(uuid_t thread_uuid);
 thread_t *get_thread_by_title(char *title);
+thread_t *get_thread_by_title_by_channel_uuid(char *title,
+    uuid_t channel_uuid);
 threads_t get_threads_by_creator(uuid_t creator_uuid);
 threads_t get_threads_by_channel(uuid_t channel_uuid);
 thread_t *create_thread(title_t title, body_t body, uuid_t creator_uuid,
@@ -70,6 +72,7 @@ channels_t *get_channels(void);
 channel_t *get_channel_by_uuid(uuid_t channel_uuid);
 channel_t *get_channel_by_name(char *name);
 channels_t get_channels_by_team(uuid_t team_uuid);
+channel_t *get_channel_by_name_by_team_uuid(char *name, uuid_t team_uuid);
 channel_t *create_channel(title_t title, description_t description,
     uuid_t team_uuid);
 void dump_channels(void);

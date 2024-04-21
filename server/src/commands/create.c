@@ -155,7 +155,7 @@ static void handle_channel_creation(client_t client, char **command)
     uuid_t team_uuid;
 
     get_uuid_from_string(client->team_uuid, team_uuid);
-    if (get_channel_by_name(name)) {
+    if (get_channel_by_name_by_team_uuid(name, team_uuid)) {
         add_packet_to_queue(&client->packet_queue,
             build_custom_packet(ALREADY_EXISTS, "", CHANNEL));
         return;
@@ -184,7 +184,7 @@ static void handle_thread_creation(client_t client, char **command)
 
     get_uuid_from_string(client->team_uuid, team_uuid);
     get_uuid_from_string(client->channel_uuid, channel_uuid);
-    if (get_thread_by_title(title)) {
+    if (get_thread_by_title_by_channel_uuid(title, channel_uuid)) {
         add_packet_to_queue(&client->packet_queue,
             build_custom_packet(ALREADY_EXISTS, "", THREAD));
         return;

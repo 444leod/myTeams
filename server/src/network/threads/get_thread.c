@@ -49,3 +49,26 @@ thread_t *get_thread_by_title(char *title)
     }
     return NULL;
 }
+
+/**
+ * @brief Get the thread by title by channel uuid
+ * @details Get the thread by title by channel uuid
+ *
+ * @param title the title
+ * @param channel_uuid the channel uuid
+ *
+ * @return thread_t* the thread
+ */
+thread_t *get_thread_by_title_by_channel_uuid(char *title, uuid_t channel_uuid)
+{
+    threads_t *threads = get_threads();
+    threads_t tmp = *threads;
+
+    while (tmp) {
+        if (strcmp(tmp->thread->title, title) == 0 &&
+            uuid_compare(tmp->thread->channel_uuid, channel_uuid) == 0)
+            return tmp->thread;
+        tmp = tmp->next;
+    }
+    return NULL;
+}
