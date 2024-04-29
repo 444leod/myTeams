@@ -105,8 +105,8 @@ static void handle_subscription_packet(packet_t *packet)
 
     switch (packet->code) {
         case TEAM_SUBSCRIBED:
-            client_print_subscribed(get_uuid_as_string(team->uuid),
-                get_uuid(false, NULL));
+            client_print_subscribed(get_uuid(false, NULL),
+                get_uuid_as_string(team->uuid));
             printf("You subscribed to team %s\n", team->name);
             break;
         case TEAM_UNSUBSCRIBED:
